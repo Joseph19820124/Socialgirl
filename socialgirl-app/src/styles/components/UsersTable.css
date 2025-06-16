@@ -1,0 +1,93 @@
+/* Users Table Specific Styles - Only unique columns */
+
+/* Users-specific columns only */
+.about-col { 
+    text-align: left; 
+    width: 350px;
+    min-width: 250px;
+}
+
+.media-col { 
+    text-align: right; 
+    width: 80px;
+    min-width: 70px;
+    font-family: 'Courier New', monospace;
+    font-weight: 500;
+}
+
+/* Content Styling */
+.about {
+    max-width: 100%; /* Use full column width */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 400;
+    color: #d1d5db;
+    display: block;
+    cursor: help;
+}
+
+.about:hover {
+    color: #00f5ff;
+}
+
+.media {
+    font-weight: 600;
+    color: #00f5ff;
+    font-family: 'Orbitron', sans-serif;
+}
+
+/* Visit Button: Similar to Watch button but with different styling */
+.visit-btn {
+    color: #9146ff;
+    text-decoration: none;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    padding: 8px 16px;
+    border-radius: 4px;
+    background: #000;
+    border: 2px solid #9146ff;
+    transition: all 0.3s ease;
+    display: inline-block;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    position: relative;
+    overflow: hidden;
+}
+
+.visit-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(145, 70, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.visit-btn:hover::before {
+    left: 100%;
+}
+
+.visit-btn:hover {
+    background: rgba(145, 70, 255, 0.1);
+    box-shadow: 0 0 15px rgba(145, 70, 255, 0.4);
+    transform: translateY(-1px);
+}
+
+/* Skeleton for users table */
+.skeleton.about { 
+    width: 250px; 
+}
+
+.skeleton.media { 
+    width: 45px; 
+    margin-left: auto; 
+}
+
+/* Update media stat class thresholds */
+.media.high-stats { color: #00ff88; }
+.media.medium-stats { color: #ffb800; }
+.media.low-stats { color: #ff6b6b; }

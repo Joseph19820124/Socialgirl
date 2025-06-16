@@ -1,0 +1,25 @@
+/* Section Title Variation 1: Tech Bracket */
+.section-title-v1 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 24px;
+    font-weight: 600;
+    color: #efeff1;
+    margin-bottom: 16px;
+    padding: 0;
+    position: relative;
+    display: inline-block;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.section-title-v1::before {
+    content: '[ ';
+    color: #00f5ff;
+    font-weight: 700;
+}
+
+.section-title-v1::after {
+    content: ' ]';
+    color: #00f5ff;
+    font-weight: 700;
+}

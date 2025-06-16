@@ -1,0 +1,211 @@
+.table-wrapper {
+    background: linear-gradient(135deg, #18181b 0%, #1f1f23 100%);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+    border: 1px solid #464649;
+    margin-bottom: 24px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    background: linear-gradient(135deg, #1f1f23 0%, #2a2a2e 100%);
+    color: #efeff1;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 600;
+    padding: 12px 10px;
+    text-align: left;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 2px solid #9146ff;
+    border-right: 1px solid #464649;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    user-select: none;
+}
+
+th:hover {
+    background: linear-gradient(135deg, #2a2a2e 0%, #35353a 100%);
+    color: #00f5ff;
+}
+
+th::after {
+    content: '⇅';
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    font-size: 12px;
+    color: #9146ff;
+}
+
+th:hover::after {
+    opacity: 1;
+}
+
+th.sort-active::after {
+    opacity: 1;
+    color: #00f5ff;
+}
+
+th.sort-asc::after {
+    content: '↑';
+}
+
+th.sort-desc::after {
+    content: '↓';
+}
+
+th:last-child {
+    border-right: none;
+}
+
+td {
+    padding: 10px;
+    border-bottom: 1px solid #2f2f35;
+    border-right: 1px solid #2f2f35;
+    font-size: 12px;
+    vertical-align: middle;
+    transition: all 0.3s ease;
+}
+
+td:last-child {
+    border-right: none;
+}
+
+tr {
+    transition: all 0.15s ease-out;
+}
+
+tr:hover td {
+    background: linear-gradient(135deg, #1f1f23 0%, #252529 100%);
+    transform: scale(1.001);
+    box-shadow: 
+        0 2px 12px rgba(145, 70, 255, 0.1),
+        inset 0 1px 0 rgba(145, 70, 255, 0.15);
+}
+
+tr:hover {
+    position: relative;
+    z-index: 10;
+}
+
+tr:hover .username {
+    color: #00f5ff;
+    text-shadow: 0 0 5px rgba(0, 245, 255, 0.2);
+}
+
+tr:hover .watch-btn {
+    border-color: #9146ff;
+    box-shadow: 0 0 8px rgba(145, 70, 255, 0.3);
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+/* Column Alignments and Widths - Consistent with Users Table */
+.username-col { 
+    text-align: left; 
+    width: 140px;
+    min-width: 120px;
+}
+
+.followers-col { 
+    text-align: right; 
+    width: 100px;
+    min-width: 90px;
+    font-family: 'Courier New', monospace;
+    font-weight: 500;
+}
+
+.views-col, .comments-col, .shares-col { 
+    text-align: right; 
+    width: 80px;
+    min-width: 70px;
+    font-family: 'Courier New', monospace;
+    font-weight: 500;
+}
+
+.likes-col {
+    text-align: right; 
+    width: 80px;
+    min-width: 70px;
+    font-family: 'Courier New', monospace;
+    font-weight: 500;
+}
+
+.title-col { 
+    text-align: left; 
+    width: 250px;
+    min-width: 200px;
+}
+
+.url-col { 
+    text-align: center; 
+    width: 80px;
+    min-width: 80px;
+}
+
+.username {
+    font-weight: 600;
+    color: #9146ff;
+    display: flex;
+    align-items: center;
+}
+
+.followers, .views, .comments, .shares {
+    font-weight: 600;
+    color: #00f5ff;
+    font-family: 'Orbitron', sans-serif;
+}
+
+.title {
+    max-width: 250px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 500;
+}
+
+/* Watch Button: Neon Cyber Style */
+.watch-btn {
+    color: #00f5ff;
+    text-decoration: none;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    padding: 8px 16px;
+    border-radius: 4px;
+    background: #000;
+    border: 2px solid #00f5ff;
+    transition: all 0.3s ease;
+    display: inline-block;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    position: relative;
+    overflow: hidden;
+}
+
+.watch-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0, 245, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.watch-btn:hover::before {
+    left: 100%;
+}

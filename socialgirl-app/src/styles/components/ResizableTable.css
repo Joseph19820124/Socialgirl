@@ -1,0 +1,114 @@
+/* Resize Handle Styles */
+.resize-handle {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 4px;
+    height: 100%;
+    background: transparent;
+    cursor: col-resize;
+    user-select: none;
+    z-index: 10;
+    transition: all 0.2s ease;
+}
+
+.resize-handle:hover {
+    background: linear-gradient(180deg, #9146ff 0%, #00f5ff 100%);
+    box-shadow: 0 0 8px rgba(145, 70, 255, 0.6);
+    width: 6px;
+}
+
+.resize-handle:active {
+    background: linear-gradient(180deg, #a855f7 0%, #06b6d4 100%);
+    box-shadow: 0 0 12px rgba(145, 70, 255, 0.8);
+}
+
+/* Likes Column Styles */
+.likes-col {
+    text-align: right;
+    font-family: 'Courier New', monospace;
+    font-weight: 500;
+}
+
+.likes {
+    font-weight: 600;
+    color: #ff69b4; /* Pink color for likes */
+    font-family: 'Orbitron', sans-serif;
+}
+
+.likes.high-stats { 
+    color: #ff1493; /* Deep pink for high likes */
+}
+
+.likes.medium-stats { 
+    color: #ff69b4; /* Medium pink for medium likes */
+}
+
+.likes.low-stats { 
+    color: #ffc0cb; /* Light pink for low likes */
+}
+
+/* Skeleton for likes column */
+.skeleton.likes { 
+    width: 50px; 
+    margin-left: auto; 
+}
+
+/* Table resizing states - Performance optimized */
+.table-wrapper.resizing {
+    user-select: none;
+}
+
+.table-wrapper.resizing th {
+    cursor: col-resize;
+}
+
+/* Performance optimization: Disable transitions during resize */
+table.resizing th,
+table.resizing td {
+    transition: none !important;
+}
+
+/* Enhanced header positioning for resize handles */
+th {
+    position: relative;
+    overflow: visible;
+    will-change: width; /* Optimize for width changes */
+}
+
+/* Smooth width transitions when not actively resizing */
+th:not(.resizing) {
+    transition: width 0.2s ease;
+}
+
+td:not(.resizing) {
+    transition: width 0.2s ease;
+}
+
+/* GPU acceleration for better performance */
+.resize-handle {
+    transform: translateZ(0); /* Force GPU layer */
+    backface-visibility: hidden;
+}
+
+/* Prevent text selection during resize */
+.no-select {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Visual feedback during resize */
+body.col-resizing {
+    cursor: col-resize !important;
+}
+
+body.col-resizing * {
+    cursor: col-resize !important;
+}
+
+/* Performance: Contain layout during resize */
+table.resizing {
+    contain: layout style;
+}

@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KenTab Enhanced - Header Variations</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&family=Exo+2:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Ensure Orbitron is used everywhere */
+        * {
+            font-family: 'Orbitron', sans-serif !important;
+        }
+
+        body {
+            font-family: 'Orbitron', sans-serif;
+            background: linear-gradient(135deg, #0e0e10 0%, #1a1a1d 100%);
+            color: #efeff1;
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* ===== HEADER VARIATION 1: FLOATING GLASS ===== */
+        .header-v1 {
+            background: rgba(24, 24, 27, 0.85);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(70, 70, 73, 0.5);
+            padding: 16px 32px;
+            margin-bottom: 32px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            animation: slideDown 0.8s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .header-v1::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #9146ff, #00f5ff, transparent);
+            animation: scan 3s linear infinite;
+        }
+
+        @keyframes scan {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .logo-v1 {
+            font-size: 32px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #9146ff, #00f5ff);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .logo-v1:hover {
+            transform: scale(1.05) rotate(-2deg);
+            filter: drop-shadow(0 0 20px #9146ff);
+        }
+
+        .logo-v1::before {
+            content: '⚡';
+            font-size: 28px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        .nav-v1 {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-item-v1 {
+            padding: 12px 20px;
+            border-radius: 12px;
+            text-decoration: none;
+            color: #efeff1;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-item-v1::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(145, 70, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .nav-item-v1:hover::before {
+            left: 100%;
+        }
+
+        .nav-item-v1:hover {
+            background: rgba(145, 70, 255, 0.1);
+            border: 1px solid rgba(145, 70, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(145, 70, 255, 0.3);
+        }
+
+        .search-v1 {
+            position: relative;
+        }
+
+        .search-input-v1 {
+            background: rgba(31, 31, 35, 0.8);
+            border: 1px solid #464649;
+            border-radius: 25px;
+            padding: 12px 20px 12px 45px;
+            color: #efeff1;
+            font-size: 14px;
+            width: 250px;
+            transition: all 0.3s ease;
+        }
+
+        .search-input-v1:focus {
+            outline: none;
+            border-color: #9146ff;
+            box-shadow: 0 0 20px rgba(145, 70, 255, 0.3);
+            width: 300px;
+        }
+
+        .search-icon-v1 {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9146ff;
+            font-size: 16px;
+        }
+
+        /* ===== HEADER VARIATION 2: NEON CYBER ===== */
+        .header-v2 {
+            background: linear-gradient(135deg, #1a1a1d 0%, #0e0e10 100%);
+            border: 2px solid #9146ff;
+            padding: 20px 32px;
+            margin-bottom: 32px;
+            border-radius: 0;
+            box-shadow: 
+                0 0 20px rgba(145, 70, 255, 0.5),
+                inset 0 0 20px rgba(145, 70, 255, 0.1);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            animation: neonGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes neonGlow {
+            from {
+                box-shadow: 
+                    0 0 20px rgba(145, 70, 255, 0.5),
+                    inset 0 0 20px rgba(145, 70, 255, 0.1);
+            }
+            to {
+                box-shadow: 
+                    0 0 30px rgba(145, 70, 255, 0.8),
+                    inset 0 0 30px rgba(145, 70, 255, 0.2);
+            }
+        }
+
+        /* Logo Style: Futuristic Outline */
+        .logo-v8 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: transparent;
+            -webkit-text-stroke: 2px #00f5ff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .logo-v8:hover {
+            -webkit-text-stroke: 2px #9146ff;
+            color: rgba(145, 70, 255, 0.1);
+            transform: scale(1.05);
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .nav-v2 {
+            display: flex;
+            align-items: center;
+            gap: 0;
+        }
+
+        .nav-item-v2 {
+            padding: 15px 25px;
+            text-decoration: none;
+            color: #efeff1;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-left: 1px solid #464649;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 12px;
+        }
+
+        .nav-item-v2:last-of-type {
+            margin-right: 15px;
+        }
+
+        .nav-item-v2:first-child {
+            border-left: none;
+        }
+
+        .nav-item-v2:hover {
+            background: rgba(145, 70, 255, 0.2);
+            color: #9146ff;
+            text-shadow: none;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(145, 70, 255, 0.3);
+        }
+
+        .search-v2 {
+            position: relative;
+        }
+
+        .search-input-v2 {
+            background: #000;
+            border: 2px solid #00f5ff;
+            border-radius: 0;
+            padding: 15px 25px 15px 50px;
+            color: #00f5ff;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 14px;
+            width: 280px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+
+        .search-input-v2:focus {
+            outline: none;
+            box-shadow: 0 0 25px #00f5ff;
+            background: rgba(0, 245, 255, 0.1);
+        }
+
+        .search-icon-v2 {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #00f5ff;
+            font-size: 18px;
+            animation: searchPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes searchPulse {
+            0%, 100% { transform: translateY(-50%) scale(1); }
+            50% { transform: translateY(-50%) scale(1.2); }
+        }
+
+        /* ===== HEADER VARIATION 3: GRADIENT WAVE ===== */
+        .header-v3 {
+            background: linear-gradient(45deg, #9146ff, #00f5ff, #9146ff, #00f5ff);
+            background-size: 400% 400%;
+            animation: gradientWave 4s ease-in-out infinite;
+            padding: 18px 32px;
+            margin-bottom: 32px;
+            border-radius: 15px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            overflow: hidden;
+        }
+
+        @keyframes gradientWave {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .header-v3::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            right: 2px;
+            bottom: 2px;
+            background: linear-gradient(135deg, #18181b 0%, #1f1f23 100%);
+            border-radius: 13px;
+            z-index: 1;
+        }
+
+        .header-v3 > * {
+            position: relative;
+            z-index: 2;
+        }
+
+        .logo-v3 {
+            font-size: 34px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #9146ff, #00f5ff);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+        }
+
+        .logo-v3:hover {
+            transform: scale(1.08) rotateY(15deg);
+            filter: drop-shadow(0 0 25px #9146ff);
+        }
+
+        .logo-v3::before {
+            content: '💎';
+            font-size: 30px;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .nav-v3 {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .nav-item-v3 {
+            padding: 14px 22px;
+            border-radius: 25px;
+            text-decoration: none;
+            color: #efeff1;
+            font-weight: 500;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            overflow: hidden;
+        }
+
+        .nav-item-v3::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            background: linear-gradient(135deg, #9146ff, #00f5ff);
+            transition: width 0.4s ease;
+            border-radius: 25px;
+        }
+
+        .nav-item-v3:hover::before {
+            width: 100%;
+        }
+
+        .nav-item-v3:hover {
+            color: #000;
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 6px 20px rgba(145, 70, 255, 0.4);
+        }
+
+        .nav-item-v3 span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .search-v3 {
+            position: relative;
+        }
+
+        .search-input-v3 {
+            background: rgba(24, 24, 27, 0.9);
+            border: 2px solid transparent;
+            background-clip: padding-box;
+            border-radius: 30px;
+            padding: 14px 22px 14px 50px;
+            color: #efeff1;
+            font-size: 14px;
+            width: 260px;
+            transition: all 0.4s ease;
+            position: relative;
+        }
+
+        .search-input-v3:focus {
+            outline: none;
+            border: 2px solid #9146ff;
+            width: 320px;
+            background: rgba(145, 70, 255, 0.1);
+            box-shadow: 0 0 30px rgba(145, 70, 255, 0.3);
+        }
+
+        .search-icon-v3 {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9146ff;
+            font-size: 16px;
+            animation: searchFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes searchFloat {
+            0%, 100% { transform: translateY(-50%); }
+            50% { transform: translateY(-60%); }
+        }
+
+        /* Social Icons - Removed */
+
+        /* Section Styles */
+        .section {
+            margin-bottom: 48px;
+        }
+
+        /* Section Title Variation 1: Tech Bracket */
+        .section-title-v1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 24px;
+            font-weight: 600;
+            color: #efeff1;
+            margin-bottom: 16px;
+            padding: 0;
+            position: relative;
+            display: inline-block;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .section-title-v1::before {
+            content: '[ ';
+            color: #00f5ff;
+            font-weight: 700;
+        }
+
+        .section-title-v1::after {
+            content: ' ]';
+            color: #00f5ff;
+            font-weight: 700;
+        }
+
+        /* Remove duplicate section titles - keeping only the active one */
+
+        /* Remove font variations - using Orbitron globally */
+
+        .table-wrapper {
+            background: linear-gradient(135deg, #18181b 0%, #1f1f23 100%);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+            border: 1px solid #464649;
+            margin-bottom: 24px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: linear-gradient(135deg, #1f1f23 0%, #2a2a2e 100%);
+            color: #efeff1;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 600;
+            padding: 12px 10px;
+            text-align: left;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 2px solid #9146ff;
+            border-right: 1px solid #464649;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            user-select: none;
+        }
+
+        th:hover {
+            background: linear-gradient(135deg, #2a2a2e 0%, #35353a 100%);
+            color: #00f5ff;
+        }
+
+        th::after {
+            content: '⇅';
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            font-size: 12px;
+            color: #9146ff;
+        }
+
+        th:hover::after {
+            opacity: 1;
+        }
+
+        th.sort-active::after {
+            opacity: 1;
+            color: #00f5ff;
+        }
+
+        th.sort-asc::after {
+            content: '↑';
+        }
+
+        th.sort-desc::after {
+            content: '↓';
+        }
+
+        th:last-child {
+            border-right: none;
+        }
+
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #2f2f35;
+            border-right: 1px solid #2f2f35;
+            font-size: 12px;
+            vertical-align: middle;
+            transition: all 0.3s ease;
+        }
+
+        td:last-child {
+            border-right: none;
+        }
+
+        tr {
+            transition: all 0.15s ease-out;
+        }
+
+        tr:hover td {
+            background: linear-gradient(135deg, #1f1f23 0%, #252529 100%);
+            transform: scale(1.001);
+            box-shadow: 
+                0 2px 12px rgba(145, 70, 255, 0.1),
+                inset 0 1px 0 rgba(145, 70, 255, 0.15);
+        }
+
+        tr:hover {
+            position: relative;
+            z-index: 10;
+        }
+
+        tr:hover .username {
+            color: #00f5ff;
+            text-shadow: 0 0 5px rgba(0, 245, 255, 0.2);
+        }
+
+        tr:hover .watch-btn {
+            border-color: #9146ff;
+            box-shadow: 0 0 8px rgba(145, 70, 255, 0.3);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Column Alignments */
+        .username-col { text-align: left; }
+        .followers-col, .views-col, .comments-col, .shares-col { 
+            text-align: right; 
+            font-family: 'Courier New', monospace;
+            font-weight: 500;
+        }
+        .title-col { text-align: left; }
+        .url-col { text-align: center; }
+
+        .username {
+            font-weight: 600;
+            color: #9146ff;
+            display: flex;
+            align-items: center;
+        }
+
+        .followers, .views, .comments, .shares {
+            font-weight: 600;
+            color: #00f5ff;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .title {
+            max-width: 250px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-weight: 500;
+        }
+
+        /* Watch Button: Neon Cyber Style */
+        .watch-btn {
+            color: #00f5ff;
+            text-decoration: none;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            padding: 8px 16px;
+            border-radius: 4px;
+            background: #000;
+            border: 2px solid #00f5ff;
+            transition: all 0.3s ease;
+            display: inline-block;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .watch-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 245, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .watch-btn:hover::before {
+            left: 100%;
+        }
+
+        /* Loading Skeleton Animation */
+        .skeleton {
+            background: linear-gradient(90deg, #2f2f35 25%, #464649 50%, #2f2f35 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            border-radius: 4px;
+            height: 16px;
+            margin: 2px 0;
+        }
+
+        .skeleton.username { width: 80px; }
+        .skeleton.followers { width: 60px; margin-left: auto; }
+        .skeleton.title { width: 200px; }
+        .skeleton.views { width: 50px; margin-left: auto; }
+        .skeleton.comments { width: 40px; margin-left: auto; }
+        .skeleton.shares { width: 35px; margin-left: auto; }
+        .skeleton.url { width: 70px; height: 24px; margin: 0 auto; }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* Animated Statistics */
+        .animated-stat {
+            display: inline-block;
+            animation: countUp 0.8s ease-out;
+        }
+
+        @keyframes countUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px) scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .stat-highlight {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-highlight::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 245, 255, 0.2), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        /* Stats highlighting */
+        .high-stats { color: #00ff88; }
+        .medium-stats { color: #ffb800; }
+        .low-stats { color: #ff6b6b; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container { padding: 10px; }
+            .header-v1, .header-v2, .header-v3 { 
+                padding: 12px 16px; 
+                flex-direction: column;
+                gap: 16px;
+            }
+            .nav-v1, .nav-v2, .nav-v3 { 
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .search-input-v1, .search-input-v2, .search-input-v3 { 
+                width: 200px; 
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- ACTIVE HEADER WITH SELECTED LOGO -->
+        <div class="header-v2">
+            <div class="logo-v8">KenTab</div>
+            <nav class="nav-v2">
+                <a href="#" class="nav-item-v2"><span>YouTube</span></a>
+                <a href="#" class="nav-item-v2"><span>Instagram</span></a>
+                <a href="#" class="nav-item-v2"><span>TikTok</span></a>
+                <a href="#" class="nav-item-v2"><span>Settings</span></a>
+                <div class="search-v2">
+                    <div class="search-icon-v2">⚡</div>
+                    <input type="text" class="search-input-v2" placeholder="SEARCH DATABASE">
+                </div>
+
+    <script>
+        let sortDirection = {};
+        let isLoading = false;
+
+        // Sample data for sorting
+        const tableData = [
+            { username: 'CookingStream', followers: 7832, title: 'Italian Pasta Making Tutorial', views: 2943, comments: 178, shares: 42 },
+            { username: 'FitnessGuru', followers: 12567, title: 'Morning Workout Session', views: 1234, comments: 67, shares: 15 },
+            { username: 'CodeMaster', followers: 19876, title: 'React Tutorial Series', views: 4321, comments: 298, shares: 156 },
+            { username: 'MusicProducer', followers: 25431, title: 'Beat Making Live Session', views: 6789, comments: 423, shares: 234 },
+            { username: 'GameStreamer', followers: 14250, title: 'Valorant Ranked Gameplay', views: 3562, comments: 187, shares: 78 }
+        ];
+
+        // Add click listeners to sortable headers
+        document.addEventListener('DOMContentLoaded', function() {
+            const headers = document.querySelectorAll('th[data-sort]');
+            headers.forEach(header => {
+                header.addEventListener('click', () => sortTable(header.dataset.sort, header));
+            });
+
+            // Animate statistics on load
+            animateStatistics();
+        });
+
+        function sortTable(column, headerElement) {
+            // Remove active class from all headers
+            document.querySelectorAll('th').forEach(h => {
+                h.classList.remove('sort-active', 'sort-asc', 'sort-desc');
+            });
+
+            // Toggle sort direction
+            if (!sortDirection[column] || sortDirection[column] === 'desc') {
+                sortDirection[column] = 'asc';
+                headerElement.classList.add('sort-active', 'sort-asc');
+            } else {
+                sortDirection[column] = 'desc';
+                headerElement.classList.add('sort-active', 'sort-desc');
+            }
+
+            // Sort the data
+            const sortedData = [...tableData].sort((a, b) => {
+                let valueA = a[column];
+                let valueB = b[column];
+
+                if (typeof valueA === 'string') {
+                    valueA = valueA.toLowerCase();
+                    valueB = valueB.toLowerCase();
+                }
+
+                if (sortDirection[column] === 'asc') {
+                    return valueA > valueB ? 1 : -1;
+                } else {
+                    return valueA < valueB ? 1 : -1;
+                }
+            });
+
+            // Update table
+            updateTable(sortedData);
+        }
+
+        function updateTable(data) {
+            const tbody = document.getElementById('tableBody');
+            
+            tbody.innerHTML = data.map(row => `
+                <tr>
+                    <td class="username-col"><span class="username">${row.username}</span></td>
+                    <td class="followers-col"><span class="followers ${getStatClass(row.followers, 'followers')} animated-stat stat-highlight" data-value="${row.followers}">${formatNumber(row.followers)}</span></td>
+                    <td class="title-col"><span class="title">${row.title}</span></td>
+                    <td class="views-col"><span class="views ${getStatClass(row.views, 'views')} animated-stat" data-value="${row.views}">${formatNumber(row.views)}</span></td>
+                    <td class="comments-col"><span class="comments ${getStatClass(row.comments, 'comments')} animated-stat" data-value="${row.comments}">${row.comments}</span></td>
+                    <td class="shares-col"><span class="shares ${getStatClass(row.shares, 'shares')} animated-stat" data-value="${row.shares}">${row.shares}</span></td>
+                    <td class="url-col"><a href="#" class="watch-btn">Watch</a></td>
+                </tr>
+            `).join('');
+
+            animateStatistics();
+        }
+
+        function getStatClass(value, type) {
+            const thresholds = {
+                followers: { high: 15000, medium: 10000 },
+                views: { high: 4000, medium: 2000 },
+                comments: { high: 200, medium: 100 },
+                shares: { high: 100, medium: 50 }
+            };
+
+            const threshold = thresholds[type];
+            if (value >= threshold.high) return 'high-stats';
+            if (value >= threshold.medium) return 'medium-stats';
+            return 'low-stats';
+        }
+
+        function formatNumber(num) {
+            return num.toLocaleString();
+        }
+
+        function animateStatistics() {
+            const stats = document.querySelectorAll('.animated-stat');
+            stats.forEach((stat, index) => {
+                stat.style.animationDelay = `${index * 0.05}s`;
+            });
+        }
+    </script>
+            </nav>
+        </div>
+
+        <!-- ACTIVE TABLE WITH SELECTED FONT -->
+        <div class="section">
+            <div class="section-title-v1">Content Analytics Dashboard</div>
+            <div class="section-title-v1">Content Analytics Dashboard</div>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="username-col" data-sort="username">👤 Username</th>
+                            <th class="followers-col" data-sort="followers">👥 Followers</th>
+                            <th class="title-col" data-sort="title">📝 Title</th>
+                            <th class="views-col" data-sort="views">👁️ Views</th>
+                            <th class="comments-col" data-sort="comments">💬 Comments</th>
+                            <th class="shares-col" data-sort="shares">🔄 Shares</th>
+                            <th class="url-col">🔗 URL</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <tr>
+                            <td class="username-col"><span class="username">CookingStream</span></td>
+                            <td class="followers-col"><span class="followers medium-stats animated-stat stat-highlight" data-value="7832">7,832</span></td>
+                            <td class="title-col"><span class="title">Italian Pasta Making Tutorial</span></td>
+                            <td class="views-col"><span class="views medium-stats animated-stat" data-value="2943">2,943</span></td>
+                            <td class="comments-col"><span class="comments medium-stats animated-stat" data-value="178">178</span></td>
+                            <td class="shares-col"><span class="shares medium-stats animated-stat" data-value="42">42</span></td>
+                            <td class="url-col"><a href="#" class="watch-btn">Watch</a></td>
+                        </tr>
+                        <tr>
+                            <td class="username-col"><span class="username">FitnessGuru</span></td>
+                            <td class="followers-col"><span class="followers medium-stats animated-stat stat-highlight" data-value="12567">12,567</span></td>
+                            <td class="title-col"><span class="title">Morning Workout Session</span></td>
+                            <td class="views-col"><span class="views low-stats animated-stat" data-value="1234">1,234</span></td>
+                            <td class="comments-col"><span class="comments low-stats animated-stat" data-value="67">67</span></td>
+                            <td class="shares-col"><span class="shares low-stats animated-stat" data-value="15">15</span></td>
+                            <td class="url-col"><a href="#" class="watch-btn">Watch</a></td>
+                        </tr>
+                        <tr>
+                            <td class="username-col"><span class="username">CodeMaster</span></td>
+                            <td class="followers-col"><span class="followers high-stats animated-stat stat-highlight" data-value="19876">19,876</span></td>
+                            <td class="title-col"><span class="title">React Tutorial Series</span></td>
+                            <td class="views-col"><span class="views high-stats animated-stat" data-value="4321">4,321</span></td>
+                            <td class="comments-col"><span class="comments high-stats animated-stat" data-value="298">298</span></td>
+                            <td class="shares-col"><span class="shares high-stats animated-stat" data-value="156">156</span></td>
+                            <td class="url-col"><a href="#" class="watch-btn">Watch</a></td>
+                        </tr>
+                        <tr>
+                            <td class="username-col"><span class="username">MusicProducer</span></td>
+                            <td class="followers-col"><span class="followers high-stats animated-stat stat-highlight" data-value="25431">25,431</span></td>
+                            <td class="title-col"><span class="title">Beat Making Live Session</span></td>
+                            <td class="views-col"><span class="views high-stats animated-stat" data-value="6789">6,789</span></td>
+                            <td class="comments-col"><span class="comments high-stats animated-stat" data-value="423">423</span></td>
+                            <td class="shares-col"><span class="shares high-stats animated-stat" data-value="234">234</span></td>
+                            <td class="url-col"><a href="#" class="watch-btn">Watch</a></td>
+                        </tr>
+                        <tr>
+                            <td class="username-col"><span class="username">GameStreamer</span></td>
+                            <td class="followers-col"><span class="followers medium-stats animated-stat stat-highlight" data-value="14250">14,250</span></td>
+                            <td class="title-col"><span class="title">Valorant Ranked Gameplay</span></td>
+                            <td class="views-col"><span class="views medium-stats animated-stat" data-value="3562">3,562</span></td>
+                            <td class="comments-col"><span class="comments medium-stats animated-stat" data-value="187">187</span></td>
+                            <td class="shares-col"><span class="shares medium-stats animated-stat" data-value="78">78</span></td>
+                            <td class="url-col"><a href="#" class="watch-btn">Watch</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
