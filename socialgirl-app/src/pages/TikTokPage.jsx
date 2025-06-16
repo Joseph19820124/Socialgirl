@@ -1,7 +1,7 @@
 import React from 'react';
 import TableContainer from '../components/TableContainer';
 
-const TikTokPage = ({ videosData, usersData, isLoading }) => {
+const TikTokPage = ({ videosData, usersData, isLoading, onSearch }) => {
     return (
         <div className="platform-page">
             <TableContainer 
@@ -9,6 +9,7 @@ const TikTokPage = ({ videosData, usersData, isLoading }) => {
                 usersData={usersData} 
                 isLoading={isLoading} 
                 platform="tiktok"
+                onSearch={onSearch}
             />
         </div>
     );

@@ -1,0 +1,50 @@
+/* Performance score color coding */
+.performance-score {
+    font-weight: 600;
+    padding: 4px 8px;
+    border-radius: 4px;
+    color: #000;
+    text-align: center;
+    min-width: 40px;
+    display: inline-block;
+}
+
+/* High performance: 80-100 (Bright Green) */
+.performance-high {
+    background: linear-gradient(135deg, #00ff00, #40ff40);
+    box-shadow: 0 0 8px rgba(0, 255, 0, 0.3);
+}
+
+/* Medium-high performance: 60-79 (Green to Yellow) */
+.performance-medium-high {
+    background: linear-gradient(135deg, #80ff00, #ffff00);
+    box-shadow: 0 0 6px rgba(128, 255, 0, 0.3);
+}
+
+/* Medium performance: 40-59 (Yellow to Orange) */
+.performance-medium {
+    background: linear-gradient(135deg, #ffff00, #ff8000);
+    box-shadow: 0 0 6px rgba(255, 204, 0, 0.3);
+}
+
+/* Low performance: 20-39 (Orange to Red) */
+.performance-low {
+    background: linear-gradient(135deg, #ff8000, #ff4000);
+    box-shadow: 0 0 6px rgba(255, 64, 0, 0.3);
+}
+
+/* Very low performance: 0-19 (Red) */
+.performance-very-low {
+    background: linear-gradient(135deg, #ff4000, #ff0000);
+    box-shadow: 0 0 6px rgba(255, 0, 0, 0.3);
+}
+
+/* Animation for performance scores */
+.performance-score {
+    transition: all 0.3s ease;
+}
+
+.performance-score:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 12px rgba(0, 255, 255, 0.4);
+}

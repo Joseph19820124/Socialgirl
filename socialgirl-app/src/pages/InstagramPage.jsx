@@ -1,7 +1,7 @@
 import React from 'react';
 import TableContainer from '../components/TableContainer';
 
-const InstagramPage = ({ videosData, usersData, isLoading }) => {
+const InstagramPage = ({ videosData, usersData, isLoading, onSearch }) => {
     return (
         <div className="platform-page">
             <TableContainer 
@@ -9,6 +9,7 @@ const InstagramPage = ({ videosData, usersData, isLoading }) => {
                 usersData={usersData} 
                 isLoading={isLoading} 
                 platform="instagram"
+                onSearch={onSearch}
             />
         </div>
     );

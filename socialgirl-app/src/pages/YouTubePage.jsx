@@ -1,7 +1,7 @@
 import React from 'react';
 import TableContainer from '../components/TableContainer';
 
-const YouTubePage = ({ videosData, usersData, isLoading }) => {
+const YouTubePage = ({ videosData, usersData, isLoading, onSearch }) => {
     return (
         <div className="platform-page">
             <TableContainer 
@@ -9,6 +9,7 @@ const YouTubePage = ({ videosData, usersData, isLoading }) => {
                 usersData={usersData} 
                 isLoading={isLoading} 
                 platform="youtube"
+                onSearch={onSearch}
             />
         </div>
     );

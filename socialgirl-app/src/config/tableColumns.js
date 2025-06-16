@@ -22,12 +22,11 @@ export const usersColumns = [
 // YouTube-specific table columns
 export const youtubeColumns = [
     { key: 'username', label: '👤 Channel', align: 'left' },
-    { key: 'followers', label: '🔔 Subscribers', align: 'right' },
     { key: 'title', label: '📹 Video Title', align: 'left' },
     { key: 'views', label: '👁️ Views', align: 'right' },
     { key: 'comments', label: '💬 Comments', align: 'right' },
     { key: 'likes', label: '👍 Likes', align: 'right' },
-    { key: 'shares', label: '🔄 Shares', align: 'right' },
+    { key: 'performance', label: '📊 Performance', align: 'center' },
     { key: 'url', label: '🔗 Watch', align: 'center', sortable: false }
 ];
 

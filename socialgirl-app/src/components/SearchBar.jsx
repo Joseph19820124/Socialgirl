@@ -16,7 +16,7 @@ const SearchBar = ({ onSearch }) => {
                 <input
                     type="text"
                     className="search-input-v2"
-                    placeholder="SEARCH DATABASE"
+                    placeholder="Search query"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                 />

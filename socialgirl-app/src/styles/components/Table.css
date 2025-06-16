@@ -10,6 +10,7 @@
 table {
     width: 100%;
     border-collapse: collapse;
+    table-layout: fixed;
 }
 
 th {
@@ -28,6 +29,7 @@ th {
     transition: all 0.3s ease;
     position: relative;
     user-select: none;
+    white-space: nowrap;
 }
 
 th:hover {
@@ -75,6 +77,9 @@ td {
     font-size: 12px;
     vertical-align: middle;
     transition: all 0.3s ease;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 td:last-child {
@@ -115,8 +120,8 @@ tr:last-child td {
 /* Column Alignments and Widths - Consistent with Users Table */
 .username-col { 
     text-align: left; 
-    width: 140px;
-    min-width: 120px;
+    width: 90px;
+    min-width: 90px;
 }
 
 .followers-col { 
@@ -127,15 +132,7 @@ tr:last-child td {
     font-weight: 500;
 }
 
-.views-col, .comments-col, .shares-col { 
-    text-align: right; 
-    width: 80px;
-    min-width: 70px;
-    font-family: 'Courier New', monospace;
-    font-weight: 500;
-}
-
-.likes-col {
+.views-col, .comments-col, .shares-col, .likes-col { 
     text-align: right; 
     width: 80px;
     min-width: 70px;
@@ -147,25 +144,59 @@ tr:last-child td {
     text-align: left; 
     width: 250px;
     min-width: 200px;
+    max-width: 250px;
 }
 
 .url-col { 
     text-align: center; 
+    width: 85px;
+    min-width: 85px;
+}
+
+.performance-col {
     width: 80px;
+    max-width: 80px;
     min-width: 80px;
+    text-align: center;
 }
 
 .username {
     font-weight: 600;
     color: #9146ff;
-    display: flex;
-    align-items: center;
+    max-width: 90px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
-.followers, .views, .comments, .shares {
+.followers {
     font-weight: 600;
     color: #00f5ff;
     font-family: 'Orbitron', sans-serif;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100px;
+}
+
+.views, .comments, .shares, .likes {
+    font-weight: 600;
+    color: #00f5ff;
+    font-family: 'Orbitron', sans-serif;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 80px;
+}
+
+.media {
+    font-weight: 600;
+    color: #00f5ff;
+    font-family: 'Orbitron', sans-serif;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 80px;
 }
 
 .title {
@@ -182,17 +213,20 @@ tr:last-child td {
     text-decoration: none;
     font-family: 'Orbitron', sans-serif;
     font-weight: 700;
-    padding: 8px 16px;
+    padding: 3px 10px;
     border-radius: 4px;
     background: #000;
     border: 2px solid #00f5ff;
     transition: all 0.3s ease;
     display: inline-block;
-    font-size: 11px;
+    font-size: 10px;
     text-transform: uppercase;
     letter-spacing: 1px;
     position: relative;
     overflow: hidden;
+    max-width: 76px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .watch-btn::before {
@@ -207,5 +241,56 @@ tr:last-child td {
 }
 
 .watch-btn:hover::before {
+    left: 100%;
+}
+
+/* Additional content truncation classes */
+.about {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 200px;
+}
+
+.performance-score {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 80px;
+}
+
+.visit-btn {
+    color: #00f5ff;
+    text-decoration: none;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    padding: 6px 12px;
+    border-radius: 4px;
+    background: #000;
+    border: 2px solid #00f5ff;
+    transition: all 0.3s ease;
+    display: inline-block;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    position: relative;
+    overflow: hidden;
+    max-width: 76px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.visit-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0, 245, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.visit-btn:hover::before {
     left: 100%;
 }

@@ -11,7 +11,7 @@ const Header = () => {
 
     return (
         <div className="header-v2">
-            <div className="logo-v8">KenTab</div>
+            <div className="logo-v8">SocialGirl</div>
             <nav className="nav-v2">
                 <Navigation />
                 <SearchBar onSearch={handleSearch} />
