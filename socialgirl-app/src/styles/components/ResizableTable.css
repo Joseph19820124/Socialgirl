@@ -112,3 +112,21 @@ body.col-resizing * {
 table.resizing {
     contain: layout style;
 }
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+    /* Disable resize handles on mobile */
+    .resize-handle {
+        display: none;
+    }
+    
+    /* Adjust likes column for mobile */
+    .likes-col {
+        width: 60px;
+        min-width: 60px;
+    }
+    
+    .likes {
+        font-size: 11px;
+    }
+}

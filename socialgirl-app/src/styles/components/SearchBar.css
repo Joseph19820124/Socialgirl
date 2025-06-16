@@ -40,7 +40,37 @@
 
 /* Responsive */
 @media (max-width: 768px) {
+    .search-v2 {
+        width: 100%;
+        padding: 20px;
+        border-bottom: 1px solid #464649;
+    }
+    
     .search-input-v2 { 
-        width: 200px; 
+        width: 100%;
+        padding: 12px 20px 12px 45px;
+        font-size: 13px;
+    }
+    
+    .search-icon-v2 {
+        left: 40px;
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .search-v2 {
+        padding: 0px;
+    }
+    
+    .search-input-v2 {
+        padding: 10px 18px 10px 42px;
+        font-size: 12px;
+        letter-spacing: 0.5px;
+    }
+    
+    .search-icon-v2 {
+        left: 34px;
+        font-size: 14px;
     }
 }

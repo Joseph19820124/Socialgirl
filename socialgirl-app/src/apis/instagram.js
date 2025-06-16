@@ -1,4 +1,5 @@
 import { getApiKey } from '../utils/apiKeyManager';
+import { trackOperation, canPerformOperation } from '../utils/quotaManager';
 
 // Get API key from storage or environment  
 async function getRapidApiKey() {
@@ -15,6 +16,10 @@ const BASE_URL = `https://${RAPIDAPI_HOST}`;
  * @returns {Promise<Object>} Media data response
  */
 async function getMediaData(mediaId) {
+    if (!canPerformOperation('instagram', 'request')) {
+        throw new Error('Instagram API quota exceeded. Please try again next month.');
+    }
+    
     const apiKey = await getRapidApiKey();
     if (!apiKey) {
         throw new Error('RapidAPI key not found. Please configure it in Settings.');
@@ -32,6 +37,8 @@ async function getMediaData(mediaId) {
         if (!response.ok) {
             throw new Error(`Instagram API error: ${response.status}`);
         }
+        
+        trackOperation('instagram', 'request');
         return await response.json();
     } catch (error) {
         console.error('Error fetching Instagram media data:', error);
@@ -45,6 +52,10 @@ async function getMediaData(mediaId) {
  * @returns {Promise<Object>} User data response
  */
 async function getUserData(userId) {
+    if (!canPerformOperation('instagram', 'request')) {
+        throw new Error('Instagram API quota exceeded. Please try again next month.');
+    }
+    
     const apiKey = await getRapidApiKey();
     if (!apiKey) {
         throw new Error('RapidAPI key not found. Please configure it in Settings.');
@@ -62,6 +73,8 @@ async function getUserData(userId) {
         if (!response.ok) {
             throw new Error(`Instagram API error: ${response.status}`);
         }
+        
+        trackOperation('instagram', 'request');
         return await response.json();
     } catch (error) {
         console.error('Error fetching Instagram user data:', error);
@@ -76,13 +89,24 @@ async function getUserData(userId) {
  * @returns {Promise<Object>} User media response
  */
 async function getUserMedia(userId, limit = 10) {
-    const url = `${BASE_URL}/${userId}/media?fields=id,caption,media_type,media_url,permalink,timestamp,like_count,comments_count&limit=${limit}&access_token=${ACCESS_TOKEN}`;
+    if (!canPerformOperation('instagram', 'request')) {
+        throw new Error('Instagram API quota exceeded. Please try again next month.');
+    }
+    
+    const apiKey = await getRapidApiKey();
+    if (!apiKey) {
+        throw new Error('RapidAPI key not found. Please configure it in Settings.');
+    }
+    
+    const url = `${BASE_URL}/${userId}/media?fields=id,caption,media_type,media_url,permalink,timestamp,like_count,comments_count&limit=${limit}&access_token=${apiKey}`;
     
     try {
         const response = await fetch(url);
         if (!response.ok) {
             throw new Error(`Instagram API error: ${response.status}`);
         }
+        
+        trackOperation('instagram', 'request');
         return await response.json();
     } catch (error) {
         console.error('Error fetching Instagram user media:', error);

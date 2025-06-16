@@ -1,4 +1,5 @@
 import { getApiKey } from '../utils/apiKeyManager';
+import { trackOperation, canPerformOperation } from '../utils/quotaManager';
 
 // Get API key from storage or environment
 async function getRapidApiKey() {
@@ -15,6 +16,10 @@ const BASE_URL = `https://${RAPIDAPI_HOST}/api`;
  * @returns {Promise<Object>} User data response
  */
 async function getUserData(uniqueId) {
+    if (!canPerformOperation('tiktok', 'request')) {
+        throw new Error('TikTok API quota exceeded. Please try again next month.');
+    }
+    
     const apiKey = await getRapidApiKey();
     
     if (!apiKey) {
@@ -35,6 +40,8 @@ async function getUserData(uniqueId) {
         if (!response.ok) {
             throw new Error(`TikTok API error: ${response.status}`);
         }
+        
+        trackOperation('tiktok', 'request');
         return await response.json();
     } catch (error) {
         console.error('Error fetching TikTok user data:', error);
@@ -50,6 +57,10 @@ async function getUserData(uniqueId) {
  * @returns {Promise<Object>} Video search response
  */
 async function searchVideos(keyword, cursor = 0, searchId = 0) {
+    if (!canPerformOperation('tiktok', 'request')) {
+        throw new Error('TikTok API quota exceeded. Please try again next month.');
+    }
+    
     const apiKey = await getRapidApiKey();
     
     if (!apiKey) {
@@ -70,6 +81,8 @@ async function searchVideos(keyword, cursor = 0, searchId = 0) {
         if (!response.ok) {
             throw new Error(`TikTok API error: ${response.status}`);
         }
+        
+        trackOperation('tiktok', 'request');
         return await response.json();
     } catch (error) {
         console.error('Error searching TikTok videos:', error);
@@ -84,13 +97,23 @@ async function searchVideos(keyword, cursor = 0, searchId = 0) {
  * @returns {Promise<Object>} User videos response
  */
 async function getUserVideos(uniqueId, count = 10) {
+    if (!canPerformOperation('tiktok', 'request')) {
+        throw new Error('TikTok API quota exceeded. Please try again next month.');
+    }
+    
+    const apiKey = await getRapidApiKey();
+    
+    if (!apiKey) {
+        throw new Error('RapidAPI key not found. Please configure it in Settings.');
+    }
+    
     const url = `${BASE_URL}/user/videos?uniqueId=${uniqueId}&count=${count}`;
     
     try {
         const response = await fetch(url, {
             method: 'GET',
             headers: {
-                'x-rapidapi-key': RAPIDAPI_KEY,
+                'x-rapidapi-key': apiKey,
                 'x-rapidapi-host': RAPIDAPI_HOST
             }
         });
@@ -98,6 +121,8 @@ async function getUserVideos(uniqueId, count = 10) {
         if (!response.ok) {
             throw new Error(`TikTok API error: ${response.status}`);
         }
+        
+        trackOperation('tiktok', 'request');
         return await response.json();
     } catch (error) {
         console.error('Error fetching TikTok user videos:', error);

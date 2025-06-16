@@ -1,4 +1,4 @@
-import { searchVideos as searchYouTube, getVideosStatistics } from '../apis/youtube';
+import { searchVideos as searchYouTube, getVideosStatistics, getChannelVideosByHandle } from '../apis/youtube';
 import { searchVideos as searchTikTok } from '../apis/tiktok';
 import { extractVideoData as extractYouTubeData } from '../mappers/youtube';
 import { extractVideoData as extractTikTokData } from '../mappers/tiktok';
@@ -12,7 +12,7 @@ class SearchService {
         };
     }
 
-    async search(platform, query) {
+    async search(platform, query, context = {}) {
         if (!query.trim()) return [];
         
         const strategy = this.strategies[platform];
@@ -20,23 +20,25 @@ class SearchService {
             throw new Error(`Unsupported platform: ${platform}`);
         }
 
-        return await strategy.search(query);
+        return await strategy.search(query, context);
     }
 
-    async searchUserVideos(platform, query) {
-        if (!query.trim()) return [];
-        
-        const strategy = this.strategies[platform];
-        if (!strategy) {
-            throw new Error(`Unsupported platform: ${platform}`);
-        }
-
-        return await strategy.searchUserVideos(query);
-    }
 }
 
 class YouTubeSearchStrategy {
-    async search(query) {
+    async search(query, context = {}) {
+        const { activeTab } = context;
+        
+        // For User Videos tab, treat query as a channel handle
+        if (activeTab === 'userVideos') {
+            return await this.searchChannelVideos(query);
+        }
+        
+        // Regular video search for Videos tab
+        return await this.searchVideos(query);
+    }
+    
+    async searchVideos(query) {
         const searchResponse = await searchYouTube(query, 50);
         
         const videoIds = searchResponse.items
@@ -47,45 +49,21 @@ class YouTubeSearchStrategy {
         
         return extractYouTubeData(videosWithStats);
     }
-
-    async searchUserVideos(query) {
-        // Get video data first
-        const videos = await this.search(query);
-        
-        // Aggregate videos by creator/channel
-        const userVideosMap = new Map();
-        
-        videos.forEach(video => {
-            const username = video.username;
-            if (!userVideosMap.has(username)) {
-                userVideosMap.set(username, {
-                    username: username,
-                    followers: video.followers || 0,
-                    videoCount: 0,
-                    totalViews: 0,
-                    totalLikes: 0,
-                    totalComments: 0,
-                    videos: [],
-                    url: video.channelUrl || '#'
-                });
+    
+    async searchChannelVideos(handle) {
+        try {
+            const channelVideos = await getChannelVideosByHandle(handle, 20);
+            return extractYouTubeData(channelVideos);
+        } catch (error) {
+            // If channel not found, return empty array with helpful error
+            if (error.message.includes('Channel not found')) {
+                console.warn(`YouTube channel not found for handle: ${handle}`);
+                return [];
             }
-            
-            const userEntry = userVideosMap.get(username);
-            userEntry.videoCount++;
-            userEntry.totalViews += parseInt(video.views) || 0;
-            userEntry.totalLikes += parseInt(video.likes) || 0;
-            userEntry.totalComments += parseInt(video.comments) || 0;
-            userEntry.videos.push(video);
-        });
-        
-        // Convert map to array and calculate averages
-        return Array.from(userVideosMap.values()).map(user => ({
-            ...user,
-            avgViews: user.videoCount > 0 ? Math.round(user.totalViews / user.videoCount) : 0,
-            avgLikes: user.videoCount > 0 ? Math.round(user.totalLikes / user.videoCount) : 0,
-            avgPerformance: user.videoCount > 0 ? Math.round((user.totalLikes / Math.max(user.totalViews, 1)) * 100) : 0
-        })).sort((a, b) => b.totalViews - a.totalViews);
+            throw error;
+        }
     }
+
 }
 
 class TikTokSearchStrategy {
@@ -94,44 +72,6 @@ class TikTokSearchStrategy {
         return extractTikTokData(response);
     }
 
-    async searchUserVideos(query) {
-        // Get video data first
-        const videos = await this.search(query);
-        
-        // Aggregate videos by creator
-        const userVideosMap = new Map();
-        
-        videos.forEach(video => {
-            const username = video.username;
-            if (!userVideosMap.has(username)) {
-                userVideosMap.set(username, {
-                    username: username,
-                    followers: video.followers || 0,
-                    videoCount: 0,
-                    totalViews: 0,
-                    totalLikes: 0,
-                    totalComments: 0,
-                    videos: [],
-                    url: video.profileUrl || '#'
-                });
-            }
-            
-            const userEntry = userVideosMap.get(username);
-            userEntry.videoCount++;
-            userEntry.totalViews += parseInt(video.views) || 0;
-            userEntry.totalLikes += parseInt(video.likes) || 0;
-            userEntry.totalComments += parseInt(video.comments) || 0;
-            userEntry.videos.push(video);
-        });
-        
-        // Convert map to array and calculate averages
-        return Array.from(userVideosMap.values()).map(user => ({
-            ...user,
-            avgViews: user.videoCount > 0 ? Math.round(user.totalViews / user.videoCount) : 0,
-            avgLikes: user.videoCount > 0 ? Math.round(user.totalLikes / user.videoCount) : 0,
-            avgPerformance: user.videoCount > 0 ? Math.round((user.totalLikes / Math.max(user.totalViews, 1)) * 100) : 0
-        })).sort((a, b) => b.totalViews - a.totalViews);
-    }
 }
 
 class InstagramSearchStrategy {
@@ -141,11 +81,6 @@ class InstagramSearchStrategy {
         return [];
     }
 
-    async searchUserVideos(query) {
-        console.log('Instagram user videos search for:', query);
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        return [];
-    }
 }
 
 export default SearchService;

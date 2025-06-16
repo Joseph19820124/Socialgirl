@@ -6,18 +6,20 @@ const searchService = new SearchService();
 const useSearch = (platformData) => {
     const { setLoading, setVideosData, setUserVideosData } = platformData;
 
-    const createSearchHandler = useCallback((platform) => {
+    const createSearchHandler = useCallback((platform, activeTab = 'videos') => {
         return async (query) => {
             if (!query.trim()) return;
             
             setLoading(platform, true);
             try {
-                const videos = await searchService.search(platform, query);
-                setVideosData(platform, videos);
+                const context = { activeTab };
+                const videos = await searchService.search(platform, query, context);
                 
-                // Also generate user videos data by aggregating video data by creator
-                const userVideos = await searchService.searchUserVideos(platform, query);
-                setUserVideosData(platform, userVideos);
+                if (activeTab === 'userVideos') {
+                    setUserVideosData(platform, videos);
+                } else {
+                    setVideosData(platform, videos);
+                }
             } catch (error) {
                 console.error(`${platform} search error:`, error);
             } finally {
@@ -26,10 +28,18 @@ const useSearch = (platformData) => {
         };
     }, [setLoading, setVideosData, setUserVideosData]);
 
+    // Create separate handlers for videos and user videos
+    const createPlatformHandlers = useCallback((platform) => {
+        return {
+            videos: createSearchHandler(platform, 'videos'),
+            userVideos: createSearchHandler(platform, 'userVideos')
+        };
+    }, [createSearchHandler]);
+
     return {
-        handleYouTubeSearch: createSearchHandler('youtube'),
-        handleTikTokSearch: createSearchHandler('tiktok'),
-        handleInstagramSearch: createSearchHandler('instagram')
+        handleYouTubeSearch: createPlatformHandlers('youtube'),
+        handleTikTokSearch: createPlatformHandlers('tiktok'),
+        handleInstagramSearch: createPlatformHandlers('instagram')
     };
 };
 

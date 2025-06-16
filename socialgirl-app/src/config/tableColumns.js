@@ -19,16 +19,16 @@ export const usersColumns = [
     { key: 'url', label: '🔗 URL', align: 'center', sortable: false }
 ];
 
-// User Videos columns - combines user info with video analytics
+// User Videos columns - identical to videos columns
 export const userVideosColumns = [
-    { key: 'username', label: '👤 Creator', align: 'left' },
+    { key: 'username', label: '👤 Username', align: 'left' },
     { key: 'followers', label: '👥 Followers', align: 'right' },
-    { key: 'videoCount', label: '🎬 Videos', align: 'right' },
-    { key: 'totalViews', label: '👁️ Total Views', align: 'right' },
-    { key: 'avgViews', label: '📊 Avg Views', align: 'right' },
-    { key: 'totalLikes', label: '❤️ Total Likes', align: 'right' },
-    { key: 'avgPerformance', label: '⭐ Avg Performance', align: 'center' },
-    { key: 'url', label: '🔗 Profile', align: 'center', sortable: false }
+    { key: 'title', label: '📝 Title', align: 'left' },
+    { key: 'views', label: '👁️ Views', align: 'right' },
+    { key: 'comments', label: '💬 Comments', align: 'right' },
+    { key: 'likes', label: '❤️ Likes', align: 'right' },
+    { key: 'shares', label: '🔄 Shares', align: 'right' },
+    { key: 'url', label: '🔗 URL', align: 'center', sortable: false }
 ];
 
 // YouTube-specific table columns

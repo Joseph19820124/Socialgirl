@@ -21,6 +21,17 @@ body {
     overflow-x: hidden;
 }
 
+/* Prevent horizontal scroll on mobile */
+html, body {
+    overflow-x: hidden;
+    width: 100%;
+}
+
+/* Ensure touch scrolling works smoothly */
+* {
+    -webkit-overflow-scrolling: touch;
+}
+
 .container {
     max-width: 1600px;
     margin: 0 auto;
@@ -97,7 +108,81 @@ body {
     margin-bottom: 48px;
 }
 
-/* Responsive */
+/* Responsive Typography */
 @media (max-width: 768px) {
-    .container { padding: 10px; }
+    body {
+        padding: 16px;
+    }
+    
+    .container { 
+        padding: 0;
+        max-width: 100%;
+    }
+    
+    .section {
+        margin-bottom: 32px;
+    }
+    
+    .section-title-v1 {
+        font-size: 20px;
+        margin-bottom: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 12px;
+        font-size: 14px;
+    }
+    
+    .section {
+        margin-bottom: 24px;
+    }
+    
+    .section-title-v1 {
+        font-size: 18px;
+        margin-bottom: 12px;
+    }
+}
+
+/* Touch-friendly tap targets */
+@media (max-width: 768px) {
+    button, a, .clickable {
+        min-height: 44px;
+        min-width: 44px;
+    }
+}
+
+/* Utilities for mobile */
+@media (max-width: 768px) {
+    .hide-mobile {
+        display: none !important;
+    }
+    
+    .show-mobile {
+        display: block !important;
+    }
+}
+
+/* Improved mobile scrolling */
+@media (max-width: 768px) {
+    .scrollable-x {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+    }
+    
+    .scrollable-x::-webkit-scrollbar {
+        height: 6px;
+    }
+    
+    .scrollable-x::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 3px;
+    }
+    
+    .scrollable-x::-webkit-scrollbar-thumb {
+        background: #9146ff;
+        border-radius: 3px;
+    }
 }

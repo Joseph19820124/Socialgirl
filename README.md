@@ -275,6 +275,185 @@ function importSettings(file, password) {
 
 ---
 
+### UI/UX: Mobile-Responsive Web Application Implementation
+
+**Symptoms:**
+- Website not optimized for mobile devices
+- Navigation menus too large for mobile screens
+- Search bars taking up too much space on mobile
+- Tables not scrollable on small screens
+- Font sizes and padding too large for mobile viewing
+- Logo sizes not scaling appropriately
+
+**Root Cause:**
+Modern web applications need responsive design to work across devices. Without proper mobile-first CSS media queries and mobile navigation patterns, desktop-designed interfaces become unusable on smaller screens.
+
+**Solution:**
+Implement comprehensive mobile-responsive design with hamburger navigation, horizontal table scrolling, and progressive font/spacing reduction.
+
+**Code Pattern:**
+```css
+/* Hamburger Menu Implementation */
+.mobile-menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    flex-direction: column;
+    width: 30px;
+    height: 24px;
+    z-index: 1001;
+}
+
+.hamburger-line {
+    display: block;
+    width: 100%;
+    height: 3px;
+    background-color: #00f5ff;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+    position: absolute;
+}
+
+/* Mobile Navigation Slide-out */
+@media (max-width: 768px) {
+    .mobile-menu-toggle {
+        display: flex;
+    }
+    
+    .nav-menu {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 280px;
+        height: 100vh;
+        background: linear-gradient(135deg, #1a1a1d 0%, #0e0e10 100%);
+        flex-direction: column;
+        transition: right 0.3s ease;
+        z-index: 1000;
+    }
+    
+    .nav-menu.mobile-menu-open {
+        right: 0;
+    }
+    
+    /* Hide header search bar on mobile */
+    .header .search-bar {
+        display: none;
+    }
+}
+
+/* Mobile Table Horizontal Scrolling */
+@media (max-width: 768px) {
+    .table-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .table-wrapper::after {
+        content: '→ Scroll horizontally →';
+        position: absolute;
+        bottom: 10px;
+        right: 20px;
+        font-size: 11px;
+        color: #9146ff;
+        opacity: 0.7;
+        animation: fadeInOut 3s ease-in-out infinite;
+    }
+    
+    table {
+        min-width: 800px; /* Force horizontal scroll */
+    }
+    
+    /* Progressive font size reduction */
+    th {
+        font-size: 9px;
+        padding: 10px 8px;
+    }
+    
+    td {
+        font-size: 11px;
+        padding: 8px;
+    }
+}
+
+/* Extra small screens */
+@media (max-width: 480px) {
+    .logo {
+        font-size: 20px; /* Reduced from 32px */
+    }
+    
+    th {
+        font-size: 8px;
+        padding: 8px 6px;
+    }
+    
+    td {
+        font-size: 10px;
+        padding: 6px;
+    }
+}
+```
+
+```javascript
+// React Component Pattern for Mobile Menu
+const Header = () => {
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+    const toggleMobileMenu = () => {
+        setIsMobileMenuOpen(!isMobileMenuOpen);
+    };
+
+    return (
+        <div className={`header ${isMobileMenuOpen ? 'menu-open' : ''}`}>
+            <div className="header-mobile-row">
+                <div className="logo">YourLogo</div>
+                <button 
+                    className={`mobile-menu-toggle ${isMobileMenuOpen ? 'active' : ''}`}
+                    onClick={toggleMobileMenu}
+                    aria-label="Toggle mobile menu"
+                >
+                    <span className="hamburger-line"></span>
+                    <span className="hamburger-line"></span>
+                    <span className="hamburger-line"></span>
+                </button>
+            </div>
+            
+            {isMobileMenuOpen && (
+                <div 
+                    className="mobile-menu-overlay" 
+                    onClick={() => setIsMobileMenuOpen(false)}
+                />
+            )}
+            
+            <nav className={`nav-menu ${isMobileMenuOpen ? 'mobile-menu-open' : ''}`}>
+                <Navigation closeMenu={() => setIsMobileMenuOpen(false)} />
+                {/* Hide search on mobile via CSS */}
+                <SearchBar />
+            </nav>
+        </div>
+    );
+};
+```
+
+**Key Points:**
+- Use hamburger menu pattern for mobile navigation (≤768px breakpoint)
+- Implement slide-out menu with overlay and smooth animations
+- Hide less essential elements (like header search) on mobile
+- Enable horizontal table scrolling with visual indicators
+- Use progressive font size reduction (24px → 20px → 18px for titles)
+- Disable touch interactions that don't work well (column resizing)
+- Ensure minimum 44px tap targets for accessibility
+- Test on actual mobile devices, not just browser dev tools
+
+**Applicable To:**
+- Language: CSS/JavaScript/TypeScript
+- Frameworks: React, Vue, Angular (any web framework)
+- Use Cases: Making desktop web applications mobile-responsive
+
+---
+
 ## Technology Stack
 
 - **Frontend**: React 18 + Vite

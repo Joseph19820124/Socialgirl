@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { encryptData, decryptData, saveEncryptedSettings, loadEncryptedSettings, clearStoredSettings } from '../utils/encryption';
+import { getAllQuotaStatus, resetQuota } from '../utils/quotaManager';
 import './SettingsPage.css';
 
 const SettingsPage = () => {
@@ -16,11 +17,25 @@ const SettingsPage = () => {
     
     const [message, setMessage] = useState({ text: '', type: '' });
     const [hasStoredSettings, setHasStoredSettings] = useState(false);
+    const [quotaStatus, setQuotaStatus] = useState({});
 
     useEffect(() => {
         const stored = loadEncryptedSettings();
         setHasStoredSettings(!!stored);
+        setQuotaStatus(getAllQuotaStatus());
     }, []);
+    
+    const refreshQuotaStatus = () => {
+        setQuotaStatus(getAllQuotaStatus());
+    };
+    
+    const handleResetQuota = (platform) => {
+        if (window.confirm(`Are you sure you want to reset the ${platform.toUpperCase()} API quota tracking? This is for testing purposes only.`)) {
+            resetQuota(platform);
+            refreshQuotaStatus();
+            showMessage(`${platform.toUpperCase()} quota tracking reset successfully`, 'success');
+        }
+    };
 
     const showMessage = (text, type = 'info') => {
         setMessage({ text, type });
@@ -151,15 +166,15 @@ const SettingsPage = () => {
 
     return (
         <div className="platform-page">
-            <div className="settings-container">
-                
-                {message.text && (
-                    <div className={`message ${message.type}`}>
-                        {message.text}
-                    </div>
-                )}
-
-                <div className="settings-section">
+            {message.text && (
+                <div className={`message ${message.type}`}>
+                    {message.text}
+                </div>
+            )}
+            
+            <div className="settings-grid">
+                    <div className="settings-left-column">
+                        <div className="settings-section">
                     <h3 className="section-subtitle">API Keys</h3>
                     <p className="section-description">
                         Enter your API keys to enable data fetching from each platform.
@@ -202,9 +217,9 @@ const SettingsPage = () => {
                             </button>
                         </div>
                     </div>
-                </div>
+                        </div>
 
-                <div className="settings-section">
+                        <div className="settings-section">
                     <h3 className="section-subtitle">Security</h3>
                     <p className="section-description">
                         Set a password to encrypt your API keys. This password is required to save, load, or export your settings.
@@ -261,15 +276,86 @@ const SettingsPage = () => {
                     )}
                 </div>
 
-                <div className="settings-info">
-                    <h3 className="section-subtitle">How It Works</h3>
-                    <ul>
-                        <li><strong>Save Settings:</strong> Encrypts and stores your API keys locally in your browser</li>
-                        <li><strong>Export Settings:</strong> Downloads an encrypted file you can use on other browsers/devices</li>
-                        <li><strong>Import Settings:</strong> Upload a previously exported settings file</li>
-                        <li><strong>Security:</strong> All data is encrypted with your password and never leaves your control</li>
-                    </ul>
-                </div>
+                        <div className="settings-info">
+                            <h3 className="section-subtitle">How It Works</h3>
+                            <ul>
+                                <li><strong>Save Settings:</strong> Encrypts and stores your API keys locally in your browser</li>
+                                <li><strong>Export Settings:</strong> Downloads an encrypted file you can use on other browsers/devices</li>
+                                <li><strong>Import Settings:</strong> Upload a previously exported settings file</li>
+                                <li><strong>Security:</strong> All data is encrypted with your password and never leaves your control</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div className="settings-right-column">
+                        <div className="settings-section">
+                            <h3 className="section-subtitle">API Usage & Quotas</h3>
+                            <p className="section-description">
+                                Monitor your API usage across all platforms. Quotas reset automatically.
+                            </p>
+                            
+                            <div className="quota-dashboard">
+                                {Object.entries(quotaStatus).map(([platform, status]) => (
+                                    <div key={platform} className="quota-card">
+                                        <div className="quota-card-header">
+                                            <h4 className="quota-platform-name">
+                                                {platform === 'youtube' ? 'YouTube' : 
+                                                 platform === 'tiktok' ? 'TikTok' : 
+                                                 platform === 'instagram' ? 'Instagram' : platform}
+                                            </h4>
+                                            <span className="quota-period">
+                                                {status.period === 'daily' ? 'Daily' : 'Monthly'}
+                                            </span>
+                                        </div>
+                                        
+                                        <div className="quota-stats">
+                                            <div className="quota-stat">
+                                                <span className="quota-stat-label">Used</span>
+                                                <span className="quota-stat-value">{status.used.toLocaleString()}</span>
+                                            </div>
+                                            <div className="quota-stat">
+                                                <span className="quota-stat-label">Remaining</span>
+                                                <span className="quota-stat-value">{status.remaining.toLocaleString()}</span>
+                                            </div>
+                                            <div className="quota-stat">
+                                                <span className="quota-stat-label">Total</span>
+                                                <span className="quota-stat-value">{status.total.toLocaleString()}</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <div className="quota-progress">
+                                            <div className="quota-progress-bar">
+                                                <div 
+                                                    className="quota-progress-fill" 
+                                                    style={{ 
+                                                        width: `${status.percentage}%`,
+                                                        backgroundColor: status.percentage > 90 ? '#e74c3c' : 
+                                                                       status.percentage > 70 ? '#f39c12' : '#2ecc71'
+                                                    }}
+                                                ></div>
+                                            </div>
+                                            <span className="quota-percentage">{status.percentage}%</span>
+                                        </div>
+                                        
+                                        <div className="quota-card-actions">
+                                            <button 
+                                                onClick={() => handleResetQuota(platform)} 
+                                                className="btn-danger small"
+                                            >
+                                                Reset
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                            
+                            <div className="quota-global-actions">
+                                <button onClick={refreshQuotaStatus} className="btn-secondary">
+                                    Refresh All Status
+                                </button>
+                            </div>
+                        </div>
+                    </div>
             </div>
         </div>
     );
