@@ -1,5 +1,12 @@
-const RAPIDAPI_KEY = import.meta.env.VITE_TIKTOK_RAPIDAPI_KEY;
-const RAPIDAPI_HOST = import.meta.env.VITE_TIKTOK_RAPIDAPI_HOST;
+import { getApiKey } from '../utils/apiKeyManager';
+
+// Get API key from storage or environment
+async function getRapidApiKey() {
+    return await getApiKey('rapidApiKey', 'VITE_TIKTOK_RAPIDAPI_KEY');
+}
+
+// Hardcoded RapidAPI host for TikTok
+const RAPIDAPI_HOST = 'tiktok-api23.p.rapidapi.com';
 const BASE_URL = `https://${RAPIDAPI_HOST}/api`;
 
 /**
@@ -8,13 +15,19 @@ const BASE_URL = `https://${RAPIDAPI_HOST}/api`;
  * @returns {Promise<Object>} User data response
  */
 async function getUserData(uniqueId) {
+    const apiKey = await getRapidApiKey();
+    
+    if (!apiKey) {
+        throw new Error('RapidAPI key not found. Please configure it in Settings.');
+    }
+    
     const url = `${BASE_URL}/user/info?uniqueId=${uniqueId}`;
     
     try {
         const response = await fetch(url, {
             method: 'GET',
             headers: {
-                'x-rapidapi-key': RAPIDAPI_KEY,
+                'x-rapidapi-key': apiKey,
                 'x-rapidapi-host': RAPIDAPI_HOST
             }
         });
@@ -37,13 +50,19 @@ async function getUserData(uniqueId) {
  * @returns {Promise<Object>} Video search response
  */
 async function searchVideos(keyword, cursor = 0, searchId = 0) {
+    const apiKey = await getRapidApiKey();
+    
+    if (!apiKey) {
+        throw new Error('RapidAPI key not found. Please configure it in Settings.');
+    }
+    
     const url = `${BASE_URL}/search/video?keyword=${encodeURIComponent(keyword)}&cursor=${cursor}&search_id=${searchId}`;
     
     try {
         const response = await fetch(url, {
             method: 'GET',
             headers: {
-                'x-rapidapi-key': RAPIDAPI_KEY,
+                'x-rapidapi-key': apiKey,
                 'x-rapidapi-host': RAPIDAPI_HOST
             }
         });

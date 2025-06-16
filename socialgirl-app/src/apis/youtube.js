@@ -1,5 +1,11 @@
-const API_KEY = import.meta.env.VITE_YOUTUBE_API_KEY;
+import { getApiKey } from '../utils/apiKeyManager';
+
 const BASE_URL = 'https://www.googleapis.com/youtube/v3';
+
+// Get API key from storage or environment
+async function getYouTubeApiKey() {
+    return await getApiKey('youtubeApiKey', 'VITE_YOUTUBE_API_KEY');
+}
 
 /**
  * Fetch video data from YouTube API
@@ -7,7 +13,11 @@ const BASE_URL = 'https://www.googleapis.com/youtube/v3';
  * @returns {Promise<Object>} Video data response
  */
 async function getVideoData(videoId) {
-    const url = `${BASE_URL}/videos?part=snippet,statistics&id=${videoId}&key=${API_KEY}`;
+    const apiKey = await getYouTubeApiKey();
+    if (!apiKey) {
+        throw new Error('YouTube API key not found. Please configure it in Settings.');
+    }
+    const url = `${BASE_URL}/videos?part=snippet,statistics&id=${videoId}&key=${apiKey}`;
     
     try {
         const response = await fetch(url);
@@ -27,7 +37,11 @@ async function getVideoData(videoId) {
  * @returns {Promise<Object>} Channel data response
  */
 async function getChannelData(channelId) {
-    const url = `${BASE_URL}/channels?part=snippet,statistics&id=${channelId}&key=${API_KEY}`;
+    const apiKey = await getYouTubeApiKey();
+    if (!apiKey) {
+        throw new Error('YouTube API key not found. Please configure it in Settings.');
+    }
+    const url = `${BASE_URL}/channels?part=snippet,statistics&id=${channelId}&key=${apiKey}`;
     
     try {
         const response = await fetch(url);
@@ -48,12 +62,17 @@ async function getChannelData(channelId) {
  * @returns {Promise<Object>} Search results
  */
 async function searchVideos(query, maxResults = 10) {
+    const apiKey = await getYouTubeApiKey();
+    if (!apiKey) {
+        throw new Error('YouTube API key not found. Please configure it in Settings.');
+    }
+    
     // Calculate date 7 days ago
     const publishedAfter = new Date();
     publishedAfter.setDate(publishedAfter.getDate() - 7);
     const publishedAfterISO = publishedAfter.toISOString();
     
-    const url = `${BASE_URL}/search?part=snippet&q=${encodeURIComponent(query)}&type=video&order=viewCount&publishedAfter=${publishedAfterISO}&maxResults=${maxResults}&key=${API_KEY}`;
+    const url = `${BASE_URL}/search?part=snippet&q=${encodeURIComponent(query)}&type=video&order=viewCount&publishedAfter=${publishedAfterISO}&maxResults=${maxResults}&key=${apiKey}`;
     
     try {
         const response = await fetch(url);
@@ -77,7 +96,12 @@ async function getVideosStatistics(videoIds) {
         return { items: [] };
     }
     
-    const url = `${BASE_URL}/videos?part=snippet,statistics&id=${videoIds.join(',')}&key=${API_KEY}`;
+    const apiKey = await getYouTubeApiKey();
+    if (!apiKey) {
+        throw new Error('YouTube API key not found. Please configure it in Settings.');
+    }
+    
+    const url = `${BASE_URL}/videos?part=snippet,statistics&id=${videoIds.join(',')}&key=${apiKey}`;
     
     try {
         const response = await fetch(url);

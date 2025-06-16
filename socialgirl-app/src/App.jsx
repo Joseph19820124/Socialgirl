@@ -4,6 +4,7 @@ import Header from './components/Header';
 import YouTubePage from './pages/YouTubePage';
 import InstagramPage from './pages/InstagramPage';
 import TikTokPage from './pages/TikTokPage';
+import SettingsPage from './pages/SettingsPage';
 import './App.css';
 
 // Import API functions and mappers
@@ -36,6 +37,8 @@ function AppContent() {
                 return 'Instagram Analytics';
             case '/tiktok':
                 return 'TikTok Analytics';
+            case '/settings':
+                return 'Settings';
             default:
                 return 'Content Analytics Dashboard';
         }
@@ -145,7 +148,7 @@ function AppContent() {
                             />
                         } 
                     />
-                    <Route path="/settings" element={<div>Settings page coming soon...</div>} />
+                    <Route path="/settings" element={<SettingsPage />} />
                 </Routes>
             </div>
         </div>

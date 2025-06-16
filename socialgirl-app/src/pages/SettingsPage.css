@@ -1,0 +1,217 @@
+.settings-container {
+    max-width: 800px;
+    margin: 0;
+    padding: 0;
+}
+
+.settings-section {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 24px;
+    margin-bottom: 24px;
+}
+
+.section-subtitle {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: #00f5ff;
+    margin: 0 0 8px 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.section-description {
+    color: #b3b3b3;
+    font-size: 14px;
+    margin: 0 0 20px 0;
+    line-height: 1.5;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    color: #efeff1;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.input-group {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px 16px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    color: #efeff1;
+    font-size: 14px;
+    font-family: 'Courier New', monospace;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #00f5ff;
+    box-shadow: 0 0 0 2px rgba(0, 245, 255, 0.2);
+}
+
+.form-group input::placeholder {
+    color: #666;
+}
+
+.input-group input {
+    padding-right: 50px;
+}
+
+.toggle-btn {
+    position: absolute;
+    right: 12px;
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    transition: background 0.2s ease;
+}
+
+.toggle-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.button-group {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+
+.btn-primary, .btn-secondary, .btn-danger, .file-input-label {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #00f5ff, #0099cc);
+    color: #000;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #00ccdd, #007799);
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: #efeff1;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+.btn-danger {
+    background: rgba(255, 69, 69, 0.8);
+    color: #fff;
+}
+
+.btn-danger:hover {
+    background: rgba(255, 69, 69, 1);
+    transform: translateY(-2px);
+}
+
+.file-input-label {
+    position: relative;
+    overflow: hidden;
+}
+
+.message {
+    padding: 12px 16px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.message.success {
+    background: rgba(76, 175, 80, 0.2);
+    border: 1px solid rgba(76, 175, 80, 0.5);
+    color: #4caf50;
+}
+
+.message.error {
+    background: rgba(244, 67, 54, 0.2);
+    border: 1px solid rgba(244, 67, 54, 0.5);
+    color: #f44336;
+}
+
+.message.info {
+    background: rgba(0, 245, 255, 0.2);
+    border: 1px solid rgba(0, 245, 255, 0.5);
+    color: #00f5ff;
+}
+
+.settings-info {
+    background: rgba(0, 245, 255, 0.05);
+    border: 1px solid rgba(0, 245, 255, 0.2);
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.settings-info ul {
+    margin: 12px 0 0 0;
+    padding-left: 20px;
+    color: #b3b3b3;
+}
+
+.settings-info li {
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+
+.settings-info li strong {
+    color: #00f5ff;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .settings-container {
+        padding: 0 16px;
+    }
+    
+    .settings-section {
+        padding: 20px;
+    }
+    
+    .button-group {
+        flex-direction: column;
+    }
+    
+    .btn-primary, .btn-secondary, .btn-danger, .file-input-label {
+        width: 100%;
+    }
+}

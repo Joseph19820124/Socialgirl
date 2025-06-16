@@ -1,5 +1,13 @@
-const ACCESS_TOKEN = import.meta.env.VITE_INSTAGRAM_ACCESS_TOKEN;
-const BASE_URL = 'https://graph.instagram.com';
+import { getApiKey } from '../utils/apiKeyManager';
+
+// Get API key from storage or environment  
+async function getRapidApiKey() {
+    return await getApiKey('rapidApiKey', 'VITE_INSTAGRAM_ACCESS_TOKEN');
+}
+
+// Instagram RapidAPI configuration
+const RAPIDAPI_HOST = 'instagram-api23.p.rapidapi.com'; // Update this to actual Instagram RapidAPI host
+const BASE_URL = `https://${RAPIDAPI_HOST}`;
 
 /**
  * Fetch Instagram media data
@@ -7,10 +15,20 @@ const BASE_URL = 'https://graph.instagram.com';
  * @returns {Promise<Object>} Media data response
  */
 async function getMediaData(mediaId) {
-    const url = `${BASE_URL}/${mediaId}?fields=id,caption,media_type,media_url,permalink,timestamp,like_count,comments_count&access_token=${ACCESS_TOKEN}`;
+    const apiKey = await getRapidApiKey();
+    if (!apiKey) {
+        throw new Error('RapidAPI key not found. Please configure it in Settings.');
+    }
+    const url = `${BASE_URL}/media/${mediaId}`;
     
     try {
-        const response = await fetch(url);
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'x-rapidapi-key': apiKey,
+                'x-rapidapi-host': RAPIDAPI_HOST
+            }
+        });
         if (!response.ok) {
             throw new Error(`Instagram API error: ${response.status}`);
         }
@@ -27,10 +45,20 @@ async function getMediaData(mediaId) {
  * @returns {Promise<Object>} User data response
  */
 async function getUserData(userId) {
-    const url = `${BASE_URL}/${userId}?fields=id,username,account_type,media_count,followers_count&access_token=${ACCESS_TOKEN}`;
+    const apiKey = await getRapidApiKey();
+    if (!apiKey) {
+        throw new Error('RapidAPI key not found. Please configure it in Settings.');
+    }
+    const url = `${BASE_URL}/user/${userId}`;
     
     try {
-        const response = await fetch(url);
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'x-rapidapi-key': apiKey,
+                'x-rapidapi-host': RAPIDAPI_HOST
+            }
+        });
         if (!response.ok) {
             throw new Error(`Instagram API error: ${response.status}`);
         }

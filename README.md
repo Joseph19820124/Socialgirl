@@ -177,6 +177,104 @@ td {
 
 ---
 
+### Security: Client-Side API Key Management Without External Services
+
+**Symptoms:**
+- Need to store API keys securely in browser-based application
+- Want to avoid external services (Supabase, AWS, etc.) for simplicity
+- Keys deleted when clearing browser storage/history
+- Keys not shared across browsers or devices
+- Environment variables exposed in client bundle with Vite
+
+**Root Cause:**
+Client-side applications expose environment variables in the bundle. Browser storage (localStorage/sessionStorage) is device-specific and cleared with browser data. Need a solution that provides security without external dependencies.
+
+**Solution:**
+Implement hybrid approach with encrypted localStorage and export/import functionality for portability.
+
+**Code Pattern:**
+```javascript
+// encryption.js - Web Crypto API for client-side encryption
+async function generateKey(password, salt) {
+    const encoder = new TextEncoder();
+    const keyMaterial = await window.crypto.subtle.importKey(
+        'raw',
+        encoder.encode(password),
+        { name: 'PBKDF2' },
+        false,
+        ['deriveBits', 'deriveKey']
+    );
+    
+    return window.crypto.subtle.deriveKey(
+        {
+            name: 'PBKDF2',
+            salt: salt,
+            iterations: 100000,
+            hash: 'SHA-256',
+        },
+        keyMaterial,
+        { name: 'AES-GCM', length: 256 },
+        true,
+        ['encrypt', 'decrypt']
+    );
+}
+
+// API key manager with fallback
+async function getApiKey(keyName, envVarName) {
+    try {
+        // Try localStorage first
+        const stored = loadEncryptedSettings();
+        if (stored && password) {
+            const decrypted = await decryptData(stored, password);
+            if (decrypted[keyName]) return decrypted[keyName];
+        }
+    } catch (error) {
+        console.warn('Failed to decrypt stored settings');
+    }
+    
+    // Fallback to environment variable
+    return import.meta.env[envVarName] || null;
+}
+
+// Export settings to file
+async function exportSettings(apiKeys, password) {
+    const encrypted = await encryptData(apiKeys, password);
+    const blob = new Blob([JSON.stringify(encrypted)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'app-settings.json';
+    a.click();
+}
+
+// Import settings from file
+function importSettings(file, password) {
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+        const encrypted = JSON.parse(e.target.result);
+        const decrypted = await decryptData(encrypted, password);
+        saveEncryptedSettings(encrypted);
+    };
+    reader.readAsText(file);
+}
+```
+
+**Key Points:**
+- Use Web Crypto API for strong encryption (AES-256-GCM)
+- PBKDF2 with 100,000 iterations for key derivation
+- Store encrypted data in localStorage for convenience
+- Export/import encrypted JSON files for portability
+- Always fallback to environment variables
+- User controls their own data - no external dependencies
+- Password never stored, only used for encryption/decryption
+
+**Applicable To:**
+- Language: JavaScript/TypeScript
+- Frameworks: React, Vue, Angular (any client-side framework)
+- Use Cases: Storing sensitive configuration in browser apps without backend
+
+---
+
 ## Technology Stack
 
 - **Frontend**: React 18 + Vite
@@ -210,5 +308,6 @@ socialgirl-app/
 ## API Keys Required
 
 - `VITE_YOUTUBE_API_KEY`: YouTube Data API v3 key
-- `VITE_TIKTOK_RAPIDAPI_KEY`: RapidAPI key for TikTok endpoints
-- `VITE_INSTAGRAM_ACCESS_TOKEN`: Instagram Graph API token (when implemented)
+- `VITE_TIKTOK_RAPIDAPI_KEY`: RapidAPI key (shared for TikTok and Instagram)
+
+Note: API keys can be configured through the Settings page in the application for secure, encrypted storage.
