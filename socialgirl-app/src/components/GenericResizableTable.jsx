@@ -123,9 +123,62 @@ const GenericResizableTable = ({ data, isLoading, columns, cellRenderers, skelet
                     </span>
                 );
             }
+            case 'videoCount':
+                return (
+                    <span className={`video-count ${getStatClass(value, 'videos')} animated-stat`}>
+                        {formatNumber(value)}
+                    </span>
+                );
+            case 'totalViews':
+                return (
+                    <span className={`total-views ${getStatClass(value, 'views')} animated-stat stat-highlight`}>
+                        {formatNumber(value)}
+                    </span>
+                );
+            case 'avgViews':
+                return (
+                    <span className={`avg-views ${getStatClass(value, 'views')} animated-stat`}>
+                        {formatNumber(value)}
+                    </span>
+                );
+            case 'totalLikes':
+                return (
+                    <span className={`total-likes ${getStatClass(value, 'likes')} animated-stat`}>
+                        {formatNumber(value)}
+                    </span>
+                );
+            case 'avgPerformance': {
+                const getPerformanceClass = (score) => {
+                    if (score >= 5) return 'performance-high';
+                    if (score >= 3) return 'performance-medium-high';
+                    if (score >= 2) return 'performance-medium';
+                    if (score >= 1) return 'performance-low';
+                    return 'performance-very-low';
+                };
+                
+                return (
+                    <span className={`performance-score ${getPerformanceClass(value)}`}>
+                        {value}%
+                    </span>
+                );
+            }
             case 'url': {
-                const buttonText = columns.find(col => col.key === 'about') ? 'Visit' : 'Watch';
-                const buttonClass = columns.find(col => col.key === 'about') ? 'visit-btn' : 'watch-btn';
+                // Determine button text and class based on table type
+                const hasAboutColumn = columns.find(col => col.key === 'about');
+                const hasVideoCountColumn = columns.find(col => col.key === 'videoCount');
+                
+                let buttonText, buttonClass;
+                if (hasAboutColumn) {
+                    buttonText = 'Visit';
+                    buttonClass = 'visit-btn';
+                } else if (hasVideoCountColumn) {
+                    buttonText = 'Profile';
+                    buttonClass = 'visit-btn';
+                } else {
+                    buttonText = 'Watch';
+                    buttonClass = 'watch-btn';
+                }
+                
                 return <a href={value || '#'} className={buttonClass} target="_blank" rel="noopener noreferrer">{buttonText}</a>;
             }
             default:

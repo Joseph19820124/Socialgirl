@@ -4,6 +4,7 @@ import '../styles/components/Tabs.css';
 const Tabs = ({ activeTab, onTabChange }) => {
     const tabs = [
         { id: 'videos', label: 'Videos', icon: '🎬' },
+        { id: 'userVideos', label: 'User Videos', icon: '🎭' },
         { id: 'users', label: 'Users', icon: '👥' }
     ];
 

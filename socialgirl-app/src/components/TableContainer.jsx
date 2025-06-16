@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import Tabs from './Tabs';
 import SearchBar from './SearchBar';
 import GenericResizableTable from './GenericResizableTable';
-import { videosColumns, usersColumns, youtubeColumns, instagramColumns, tiktokColumns } from '../config/tableColumns';
+import { videosColumns, usersColumns, userVideosColumns, youtubeColumns, instagramColumns, tiktokColumns } from '../config/tableColumns';
 import './TableContainer.css';
 
-const TableContainer = ({ videosData, usersData, isLoading, platform = 'default', onSearch }) => {
+const TableContainer = ({ videosData, usersData, userVideosData = [], isLoading, platform = 'default', onSearch }) => {
     const [activeTab, setActiveTab] = useState('videos');
 
     const handleTabChange = (tabId) => {
@@ -33,6 +33,14 @@ const TableContainer = ({ videosData, usersData, isLoading, platform = 'default'
                         data={videosData} 
                         isLoading={isLoading} 
                         columns={getVideoColumns()}
+                    />
+                );
+            case 'userVideos':
+                return (
+                    <GenericResizableTable 
+                        data={userVideosData} 
+                        isLoading={isLoading} 
+                        columns={userVideosColumns}
                     />
                 );
             case 'users':

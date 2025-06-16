@@ -1,32 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Header from './components/Header';
 import YouTubePage from './pages/YouTubePage';
 import InstagramPage from './pages/InstagramPage';
 import TikTokPage from './pages/TikTokPage';
 import SettingsPage from './pages/SettingsPage';
+import usePlatformData from './hooks/usePlatformData';
+import useSearch from './hooks/useSearch';
 import './App.css';
 
-// Import API functions and mappers
-import { searchVideos as searchYouTube, getVideosStatistics } from './apis/youtube';
-import { searchVideos as searchTikTok } from './apis/tiktok';
-import { extractVideoData as extractYouTubeData } from './mappers/youtube';
-import { extractVideoData as extractTikTokData } from './mappers/tiktok';
-
 function AppContent() {
-    // Separate data states for each platform
-    const [youtubeVideosData, setYoutubeVideosData] = useState([]);
-    const [youtubeUsersData, setYoutubeUsersData] = useState([]);
-    const [instagramVideosData, setInstagramVideosData] = useState([]);
-    const [instagramUsersData, setInstagramUsersData] = useState([]);
-    const [tiktokVideosData, setTiktokVideosData] = useState([]);
-    const [tiktokUsersData, setTiktokUsersData] = useState([]);
-    
-    // Loading states for each platform
-    const [youtubeLoading, setYoutubeLoading] = useState(false);
-    const [instagramLoading, setInstagramLoading] = useState(false);
-    const [tiktokLoading, setTiktokLoading] = useState(false);
-    
+    const platformData = usePlatformData();
+    const { handleYouTubeSearch, handleTikTokSearch, handleInstagramSearch } = useSearch(platformData);
     const location = useLocation();
 
     const getPageTitle = () => {
@@ -44,69 +29,6 @@ function AppContent() {
         }
     };
 
-    // Tables start empty - data populates only from API searches
-
-    // YouTube search handler
-    const handleYouTubeSearch = async (query) => {
-        if (!query.trim()) return;
-        
-        setYoutubeLoading(true);
-        try {
-            // First, search for videos
-            const searchResponse = await searchYouTube(query, 50);
-            
-            // Extract video IDs from search results
-            const videoIds = searchResponse.items
-                .map(item => item.id?.videoId)
-                .filter(id => id);
-            
-            // Fetch full statistics for these videos
-            const videosWithStats = await getVideosStatistics(videoIds);
-            
-            // Extract and set the video data
-            const videos = extractYouTubeData(videosWithStats);
-            setYoutubeVideosData(videos);
-        } catch (error) {
-            console.error('YouTube search error:', error);
-            // Keep existing data on error
-        } finally {
-            setYoutubeLoading(false);
-        }
-    };
-
-    // TikTok search handler
-    const handleTikTokSearch = async (query) => {
-        if (!query.trim()) return;
-        
-        setTiktokLoading(true);
-        try {
-            const response = await searchTikTok(query);
-            const videos = extractTikTokData(response);
-            setTiktokVideosData(videos);
-        } catch (error) {
-            console.error('TikTok search error:', error);
-            // Keep existing data on error
-        } finally {
-            setTiktokLoading(false);
-        }
-    };
-
-    // Instagram search handler (placeholder for now)
-    const handleInstagramSearch = async (query) => {
-        if (!query.trim()) return;
-        
-        setInstagramLoading(true);
-        try {
-            // Instagram API search implementation would go here
-            console.log('Instagram search for:', query);
-            // For now, just simulate a delay
-            await new Promise(resolve => setTimeout(resolve, 1000));
-        } catch (error) {
-            console.error('Instagram search error:', error);
-        } finally {
-            setInstagramLoading(false);
-        }
-    };
 
     return (
         <div className="container">
@@ -119,9 +41,10 @@ function AppContent() {
                         path="/youtube" 
                         element={
                             <YouTubePage 
-                                videosData={youtubeVideosData} 
-                                usersData={youtubeUsersData} 
-                                isLoading={youtubeLoading}
+                                videosData={platformData.getPlatformData('youtube').videosData} 
+                                usersData={platformData.getPlatformData('youtube').usersData} 
+                                userVideosData={platformData.getPlatformData('youtube').userVideosData}
+                                isLoading={platformData.getPlatformData('youtube').isLoading}
                                 onSearch={handleYouTubeSearch}
                             />
                         } 
@@ -130,9 +53,10 @@ function AppContent() {
                         path="/instagram" 
                         element={
                             <InstagramPage 
-                                videosData={instagramVideosData} 
-                                usersData={instagramUsersData} 
-                                isLoading={instagramLoading}
+                                videosData={platformData.getPlatformData('instagram').videosData} 
+                                usersData={platformData.getPlatformData('instagram').usersData} 
+                                userVideosData={platformData.getPlatformData('instagram').userVideosData}
+                                isLoading={platformData.getPlatformData('instagram').isLoading}
                                 onSearch={handleInstagramSearch}
                             />
                         } 
@@ -141,9 +65,10 @@ function AppContent() {
                         path="/tiktok" 
                         element={
                             <TikTokPage 
-                                videosData={tiktokVideosData} 
-                                usersData={tiktokUsersData} 
-                                isLoading={tiktokLoading}
+                                videosData={platformData.getPlatformData('tiktok').videosData} 
+                                usersData={platformData.getPlatformData('tiktok').usersData} 
+                                userVideosData={platformData.getPlatformData('tiktok').userVideosData}
+                                isLoading={platformData.getPlatformData('tiktok').isLoading}
                                 onSearch={handleTikTokSearch}
                             />
                         } 
