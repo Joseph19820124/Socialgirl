@@ -636,6 +636,99 @@ context.font = `${fontSize}px Roboto, sans-serif`;
 - Frameworks: Any web application using Google Fonts
 - Use Cases: Rebranding, improving readability, changing design aesthetics
 
+### Code Architecture: React Component Refactoring to Eliminate Duplication
+
+**Symptoms:**
+- Multiple platform page components (YouTubePage, TikTokPage, InstagramPage) with nearly identical code
+- Only difference between components is a single platform prop
+- Repetitive routing logic in App.jsx with duplicate route handlers
+- Platform-specific logic scattered across multiple files
+- Duplicate column configurations for identical table structures
+
+**Root Cause:**
+Platform-specific components were created separately without recognizing the shared patterns. Each platform page was essentially a wrapper around the same TableContainer component with different props, leading to significant code duplication and maintenance overhead.
+
+**Solution:**
+Create a generic PlatformPage component and centralize platform configuration while maintaining individual platform files for future extensibility.
+
+**Code Pattern:**
+```javascript
+// ✅ Generic reusable platform page component
+const PlatformPage = ({ 
+    videosData, 
+    usersData, 
+    userVideosData, 
+    isLoading, 
+    platform,
+    onSearch, 
+    onClearData 
+}) => {
+    return (
+        <div className="platform-page">
+            <TableContainer 
+                videosData={videosData} 
+                usersData={usersData} 
+                userVideosData={userVideosData}
+                isLoading={isLoading} 
+                platform={platform}
+                onSearch={onSearch}
+                onClearData={onClearData}
+            />
+        </div>
+    );
+};
+
+// ✅ Platform-specific pages become simple wrappers
+const YouTubePage = (props) => {
+    return <PlatformPage {...props} platform="youtube" />;
+};
+
+// ✅ Centralized platform configuration
+export const PLATFORMS = {
+    youtube: {
+        id: 'youtube',
+        name: 'YouTube',
+        title: 'YouTube Analytics',
+        path: '/youtube',
+        columns: youtubeColumns
+    },
+    // ... other platforms
+};
+
+// ✅ Dynamic platform data initialization
+const createInitialState = () => {
+    const initialState = {};
+    PLATFORM_LIST.forEach(platform => {
+        initialState[platform.id] = {
+            videosData: [],
+            usersData: [],
+            userVideosData: [],
+            isLoading: false
+        };
+    });
+    return initialState;
+};
+
+// ✅ Platform-aware table configuration
+const getVideoColumns = () => {
+    const platformConfig = PLATFORMS[platform];
+    return platformConfig?.columns || videosColumns;
+};
+```
+
+**Key Points:**
+- Keep individual platform files as clean interfaces for future platform-specific features
+- Centralize shared logic in reusable components and configuration files
+- Use spread operator to pass props through wrapper components
+- Create dynamic initial state based on platform configuration
+- Extract platform-specific logic to configuration objects rather than switch statements
+- Consolidate duplicate configurations (userVideosColumns can reference videosColumns)
+
+**Applicable To:**
+- Language: JavaScript/TypeScript
+- Frameworks: React (pattern applies to Vue/Angular with modifications)
+- Use Cases: Multi-platform applications, repeated component patterns, reducing maintenance overhead
+
 ---
 
 ## Technology Stack
