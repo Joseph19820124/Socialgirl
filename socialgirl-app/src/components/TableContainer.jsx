@@ -75,6 +75,8 @@ const TableContainer = ({ videosData, usersData, userVideosData = [], isLoading,
                     // Use the appropriate search handler based on active tab
                     if (activeTab === 'userVideos' && onSearch.userVideos) {
                         onSearch.userVideos(query);
+                    } else if (activeTab === 'users' && onSearch.users) {
+                        onSearch.users(query);
                     } else if (onSearch.videos) {
                         onSearch.videos(query);
                     } else if (typeof onSearch === 'function') {

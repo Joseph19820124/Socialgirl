@@ -4,7 +4,7 @@ import SearchService from '../services/searchService';
 const searchService = new SearchService();
 
 const useSearch = (platformData) => {
-    const { setLoading, setVideosData, setUserVideosData } = platformData;
+    const { setLoading, setVideosData, setUserVideosData, setUsersData } = platformData;
 
     const createSearchHandler = useCallback((platform, activeTab = 'videos') => {
         return async (query) => {
@@ -13,12 +13,14 @@ const useSearch = (platformData) => {
             setLoading(platform, true);
             try {
                 const context = { activeTab };
-                const videos = await searchService.search(platform, query, context);
+                const data = await searchService.search(platform, query, context);
                 
                 if (activeTab === 'userVideos') {
-                    setUserVideosData(platform, videos);
+                    setUserVideosData(platform, data);
+                } else if (activeTab === 'users') {
+                    setUsersData(platform, data);
                 } else {
-                    setVideosData(platform, videos);
+                    setVideosData(platform, data);
                 }
             } catch (error) {
                 console.error(`${platform} search error:`, error);
@@ -26,12 +28,13 @@ const useSearch = (platformData) => {
                 setLoading(platform, false);
             }
         };
-    }, [setLoading, setVideosData, setUserVideosData]);
+    }, [setLoading, setVideosData, setUserVideosData, setUsersData]);
 
-    // Create separate handlers for videos and user videos
+    // Create separate handlers for videos, users, and user videos
     const createPlatformHandlers = useCallback((platform) => {
         return {
             videos: createSearchHandler(platform, 'videos'),
+            users: createSearchHandler(platform, 'users'),
             userVideos: createSearchHandler(platform, 'userVideos')
         };
     }, [createSearchHandler]);

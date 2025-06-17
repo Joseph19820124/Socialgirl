@@ -1,7 +1,7 @@
 import { searchVideos as searchYouTube, getVideosStatistics, getChannelVideosByHandle } from '../apis/youtube';
 import { searchVideos as searchTikTok } from '../apis/tiktok';
 import { extractVideoData as extractYouTubeData } from '../mappers/youtube';
-import { extractVideoData as extractTikTokData } from '../mappers/tiktok';
+import { extractVideoData as extractTikTokData, extractUsersDataFromSearch as extractTikTokUsersData } from '../mappers/tiktok';
 
 class SearchService {
     constructor() {
@@ -69,8 +69,15 @@ class YouTubeSearchStrategy {
 }
 
 class TikTokSearchStrategy {
-    async search(query) {
+    async search(query, context = {}) {
         const response = await searchTikTok(query);
+        const { activeTab } = context;
+        
+        // For Users tab, extract user data; otherwise extract video data
+        if (activeTab === 'users') {
+            return extractTikTokUsersData(response);
+        }
+        
         return extractTikTokData(response);
     }
 

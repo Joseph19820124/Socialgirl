@@ -50,11 +50,11 @@ async function getUserData(uniqueId) {
 }
 
 /**
- * Search TikTok videos by keyword
+ * Search TikTok content by keyword using general search
  * @param {string} keyword - Search keyword
  * @param {number} cursor - Pagination cursor (default: 0)
  * @param {number} searchId - Search ID (default: 0)
- * @returns {Promise<Object>} Video search response
+ * @returns {Promise<Object>} General search response with follower counts
  */
 async function searchVideos(keyword, cursor = 0, searchId = 0) {
     if (!canPerformOperation('tiktok', 'request')) {
@@ -67,7 +67,7 @@ async function searchVideos(keyword, cursor = 0, searchId = 0) {
         throw new Error('RapidAPI key not found. Please configure it in Settings.');
     }
     
-    const url = `${BASE_URL}/search/video?keyword=${encodeURIComponent(keyword)}&cursor=${cursor}&search_id=${searchId}`;
+    const url = `${BASE_URL}/search/general?keyword=${encodeURIComponent(keyword)}&cursor=${cursor}&search_id=${searchId}`;
     
     try {
         const response = await fetch(url, {
@@ -85,7 +85,7 @@ async function searchVideos(keyword, cursor = 0, searchId = 0) {
         trackOperation('tiktok', 'request');
         return await response.json();
     } catch (error) {
-        console.error('Error searching TikTok videos:', error);
+        console.error('Error searching TikTok content:', error);
         throw error;
     }
 }
