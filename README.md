@@ -454,6 +454,190 @@ const Header = () => {
 
 ---
 
+### API Integration: Quota Manager Platform Parameter Error
+
+**Symptoms:**
+- Console error: `Error: Unsupported platform: videos`
+- Error occurs when fetching YouTube video statistics
+- Error trace shows: quotaManager.js:144 → youtube.js:130 → searchService.js → useSearch.js:24
+- YouTube search functionality fails
+
+**Root Cause:**
+The quota manager's `canPerformOperation` function expects platform name as the first parameter (e.g., 'youtube', 'tiktok', 'instagram'), but code was passing the operation type ('videos') as the platform parameter, causing it to be interpreted as an unsupported platform.
+
+**Solution:**
+Update API calls to properly specify platform and operation parameters separately.
+
+**Code Pattern:**
+```javascript
+// ❌ Wrong - Passing operation as platform
+if (!canPerformOperation('videos')) {
+    throw new Error('API quota exceeded');
+}
+
+// ✅ Correct - Platform, operation, and count parameters
+if (!canPerformOperation('youtube', 'videos', videoIds.length)) {
+    throw new Error('YouTube API quota exceeded. Please try again tomorrow.');
+}
+
+// ✅ Track operation with proper parameters
+trackOperation('youtube', 'videos', videoIds.length);
+```
+
+**Key Points:**
+- Always pass platform name ('youtube', 'tiktok', 'instagram') as first parameter
+- Operation type ('search', 'videos', 'channels') is the second parameter
+- Include count parameter when fetching multiple items for accurate quota tracking
+- Quota manager validates platform parameter against supported platforms
+- This pattern applies to both `canPerformOperation` and `trackOperation` functions
+
+**Applicable To:**
+- Language: JavaScript/TypeScript
+- Frameworks: Any JavaScript application with API quota management
+- Use Cases: Managing API rate limits and quotas across multiple platforms
+
+---
+
+### UI/UX: Preventing Layout Shifts with Error Messages
+
+**Symptoms:**
+- Error message appears at top of page causing entire content to shift down
+- Buttons or other UI elements move position when error messages show/hide
+- Poor user experience with jumpy interface
+- Error message saying "Please enter a password to encrypt the export file" causes layout shifts
+
+**Root Cause:**
+Dynamically adding/removing error messages to the DOM changes the document flow, pushing other elements up or down. This creates layout shifts that are jarring for users and violate Core Web Vitals best practices.
+
+**Solution:**
+Display error messages inline near the triggering element without affecting layout, using either absolute positioning or reserved space.
+
+**Code Pattern:**
+```javascript
+// ❌ Wrong - Global error message causes layout shift
+const [message, setMessage] = useState('');
+const handleAction = () => {
+    if (!password) {
+        setMessage('Please enter a password');
+    }
+};
+// In JSX:
+{message && <div className="error-message">{message}</div>}
+<button onClick={handleAction}>Export</button>
+
+// ✅ Correct - Local inline error with no layout shift
+const [exportError, setExportError] = useState('');
+const handleExport = () => {
+    if (!password.trim()) {
+        setExportError('Error. Enter password');
+        return;
+    }
+    setExportError('');
+};
+// In JSX:
+<div className="button-group">
+    <button onClick={handleExport} className="btn-secondary">
+        Export Settings
+    </button>
+</div>
+<div className="export-error">{exportError}</div>
+```
+
+```css
+/* ✅ Option 1: Reserved space (prevents all shifts) */
+.export-error {
+    color: #f44336;
+    font-size: 11px;
+    height: 14px;  /* Always takes up space */
+    margin-top: 2px;
+}
+
+/* ✅ Option 2: Absolute positioning (overlay approach) */
+.button-wrapper {
+    position: relative;
+}
+.export-error {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #f44336;
+    font-size: 11px;
+    white-space: nowrap;
+}
+```
+
+**Key Points:**
+- Use local error states for inline messages instead of global message states
+- Keep error messages concise ("Error. [Fix]" format)
+- Either reserve space for errors (height property) or use absolute positioning
+- Place errors close to their trigger element for better UX
+- Small font size (11px) for inline errors to minimize visual impact
+- Test that UI doesn't shift when errors appear/disappear
+
+**Applicable To:**
+- Language: JavaScript/TypeScript, CSS
+- Frameworks: React, Vue, Angular (any component-based framework)
+- Use Cases: Form validation, action feedback, inline error displays
+
+---
+
+### CSS: Changing Google Fonts Across Application
+
+**Symptoms:**
+- Need to change Google Font from one font to another (e.g., Orbitron to Roboto)
+- Font declarations scattered across multiple CSS files
+- Font used in JavaScript for text measurements
+- Need comprehensive update across entire codebase
+
+**Root Cause:**
+Google Fonts are typically imported in a global CSS file and then referenced throughout the application in various CSS files and sometimes JavaScript. Changing fonts requires updating the import URL and all font-family declarations.
+
+**Solution:**
+Update the Google Fonts import URL and replace all font-family references throughout the codebase.
+
+**Code Pattern:**
+```css
+/* ❌ Old font import */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;900&display=swap');
+
+/* ✅ New font import */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap');
+
+/* Update global font declaration */
+* {
+    font-family: 'Roboto', sans-serif !important;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+}
+```
+
+```javascript
+// Update JavaScript text measurement functions
+// ❌ Old
+context.font = `${fontSize}px Orbitron, sans-serif`;
+
+// ✅ New
+context.font = `${fontSize}px Roboto, sans-serif`;
+```
+
+**Key Points:**
+- Update Google Fonts import URL with correct font weights
+- Search for all occurrences of old font name in CSS files
+- Check JavaScript files for canvas text measurements using the font
+- Use global CSS rule with !important to ensure consistency
+- Include appropriate font weights in import (300, 400, 500, 700, 900)
+- Test that new font loads correctly and displays as expected
+
+**Applicable To:**
+- Language: CSS, JavaScript
+- Frameworks: Any web application using Google Fonts
+- Use Cases: Rebranding, improving readability, changing design aesthetics
+
+---
+
 ## Technology Stack
 
 - **Frontend**: React 18 + Vite

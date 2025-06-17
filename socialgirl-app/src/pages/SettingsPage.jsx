@@ -16,6 +16,7 @@ const SettingsPage = () => {
     });
     
     const [message, setMessage] = useState({ text: '', type: '' });
+    const [exportError, setExportError] = useState('');
     const [hasStoredSettings, setHasStoredSettings] = useState(false);
     const [quotaStatus, setQuotaStatus] = useState({});
 
@@ -97,13 +98,14 @@ const SettingsPage = () => {
 
     const handleExport = async () => {
         if (!password.trim()) {
-            showMessage('Please enter a password to encrypt the export file', 'error');
+            setExportError('Error. Enter password');
             return;
         }
+        setExportError('');
 
         const hasKeys = Object.values(apiKeys).some(key => key.trim());
         if (!hasKeys) {
-            showMessage('No API keys to export', 'error');
+            setExportError('Error. No API keys to export');
             return;
         }
 
@@ -252,19 +254,23 @@ const SettingsPage = () => {
                     </div>
 
                     <div className="button-group">
-                        <button onClick={handleExport} className="btn-secondary">
-                            Export Settings
-                        </button>
+                        <div className="export-button-wrapper">
+                            <button onClick={handleExport} className="btn-secondary">
+                                Export Settings
+                            </button>
+                            <div className="export-error">{exportError}</div>
+                        </div>
                         
-                        <label className="btn-secondary file-input-label">
+                        <button onClick={() => document.getElementById('import-file-input').click()} className="btn-secondary">
                             Import Settings
-                            <input
-                                type="file"
-                                accept=".json"
-                                onChange={handleImport}
-                                style={{ display: 'none' }}
-                            />
-                        </label>
+                        </button>
+                        <input
+                            id="import-file-input"
+                            type="file"
+                            accept=".json"
+                            onChange={handleImport}
+                            style={{ display: 'none' }}
+                        />
                     </div>
 
                     {hasStoredSettings && (

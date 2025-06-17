@@ -46,6 +46,7 @@ function AppContent() {
                                 userVideosData={platformData.getPlatformData('youtube').userVideosData}
                                 isLoading={platformData.getPlatformData('youtube').isLoading}
                                 onSearch={handleYouTubeSearch}
+                                onClearData={() => platformData.clearPlatformData('youtube')}
                             />
                         } 
                     />
@@ -58,6 +59,7 @@ function AppContent() {
                                 userVideosData={platformData.getPlatformData('instagram').userVideosData}
                                 isLoading={platformData.getPlatformData('instagram').isLoading}
                                 onSearch={handleInstagramSearch}
+                                onClearData={() => platformData.clearPlatformData('instagram')}
                             />
                         } 
                     />
@@ -70,6 +72,7 @@ function AppContent() {
                                 userVideosData={platformData.getPlatformData('tiktok').userVideosData}
                                 isLoading={platformData.getPlatformData('tiktok').isLoading}
                                 onSearch={handleTikTokSearch}
+                                onClearData={() => platformData.clearPlatformData('tiktok')}
                             />
                         } 
                     />

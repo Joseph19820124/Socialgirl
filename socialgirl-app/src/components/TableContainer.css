@@ -6,9 +6,34 @@
     gap: 20px;
 }
 
-/* Ensure tabs stay on the right */
-.search-tabs-row .tabs {
+/* Table actions container */
+.table-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
     margin-left: auto;
+}
+
+/* Clear button styling */
+.clear-btn {
+    background: #ff4757;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.clear-btn:hover {
+    background: #ff3742;
+    transform: translateY(-1px);
+}
+
+.clear-btn:active {
+    transform: translateY(0);
 }
 
 /* Responsive */
@@ -19,7 +44,12 @@
         gap: 15px;
     }
     
-    .search-tabs-row .tabs {
+    .table-actions {
         margin-left: 0;
+        justify-content: space-between;
+    }
+    
+    .clear-btn {
+        padding: 10px 20px;
     }
 }

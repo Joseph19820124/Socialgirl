@@ -39,6 +39,7 @@ class YouTubeSearchStrategy {
     }
     
     async searchVideos(query) {
+        // Increased from 50 to maximize API efficiency for better sorting
         const searchResponse = await searchYouTube(query, 50);
         
         const videoIds = searchResponse.items
@@ -52,7 +53,8 @@ class YouTubeSearchStrategy {
     
     async searchChannelVideos(handle) {
         try {
-            const channelVideos = await getChannelVideosByHandle(handle, 20);
+            // Increased from 20 to 50 for better sorting across all channel videos
+            const channelVideos = await getChannelVideosByHandle(handle, 50);
             return extractYouTubeData(channelVideos);
         } catch (error) {
             // If channel not found, return empty array with helpful error

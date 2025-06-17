@@ -29,7 +29,7 @@
 }
 
 .section-subtitle {
-    font-family: 'Orbitron', sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-size: 18px;
     font-weight: 600;
     color: #00f5ff;
@@ -116,6 +116,22 @@
     flex-wrap: wrap;
     width: 100%;
     box-sizing: border-box;
+    align-items: center;
+}
+
+.export-button-wrapper {
+    position: relative;
+}
+
+.export-error {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #f44336;
+    font-size: 11px;
+    margin-top: 2px;
+    white-space: nowrap;
 }
 
 .btn-primary, .btn-secondary, .btn-danger, .file-input-label {
@@ -251,7 +267,7 @@
 }
 
 .quota-platform-name {
-    font-family: 'Orbitron', sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-size: 14px;
     font-weight: 600;
     color: #00f5ff;

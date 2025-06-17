@@ -9,7 +9,7 @@ export const calculateMinWidth = (text, fontSize = 10) => {
     // Create a temporary canvas element to measure text width
     const canvas = document.createElement('canvas');
     const context = canvas.getContext('2d');
-    context.font = `${fontSize}px Orbitron, sans-serif`;
+    context.font = `${fontSize}px Roboto, sans-serif`;
     const textWidth = context.measureText(text).width;
     // Add 10px padding (5px each side) plus some buffer for icons
     return Math.max(textWidth + 30, 80); // Minimum 80px for any column

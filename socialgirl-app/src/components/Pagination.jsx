@@ -5,11 +5,13 @@ const Pagination = ({
     currentPage, 
     totalItems, 
     itemsPerPage, 
-    onPageChange 
+    onPageChange,
+    onItemsPerPageChange,
+    pageSizeOptions = [10, 25, 50, 100]
 }) => {
     const totalPages = Math.ceil(totalItems / itemsPerPage);
     
-    if (totalPages <= 1) return null;
+    if (totalPages <= 1 && !onItemsPerPageChange) return null;
     
     const getPageNumbers = () => {
         const pages = [];
@@ -32,11 +34,33 @@ const Pagination = ({
     
     return (
         <div className="pagination">
-            <div className="pagination-info">
-                Showing {((currentPage - 1) * itemsPerPage) + 1}-{Math.min(currentPage * itemsPerPage, totalItems)} of {totalItems}
+            <div className="pagination-left">
+                {onItemsPerPageChange && (
+                    <div className="pagination-page-size">
+                        <label htmlFor="page-size-select">Show:</label>
+                        <select 
+                            id="page-size-select"
+                            value={itemsPerPage} 
+                            onChange={(e) => onItemsPerPageChange(Number(e.target.value))}
+                            className="page-size-select"
+                        >
+                            {pageSizeOptions.map(size => (
+                                <option key={size} value={size}>{size}</option>
+                            ))}
+                        </select>
+                        <span>per page</span>
+                    </div>
+                )}
             </div>
             
-            <div className="pagination-controls">
+            <div className="pagination-center">
+                <div className="pagination-info">
+                    Showing {((currentPage - 1) * itemsPerPage) + 1}-{Math.min(currentPage * itemsPerPage, totalItems)} of {totalItems}
+                </div>
+            </div>
+            
+            {totalPages > 1 && (
+                <div className="pagination-controls">
                 <button
                     className="pagination-btn"
                     onClick={() => onPageChange(currentPage - 1)}
@@ -62,7 +86,8 @@ const Pagination = ({
                 >
                     Next ›
                 </button>
-            </div>
+                </div>
+            )}
         </div>
     );
 };

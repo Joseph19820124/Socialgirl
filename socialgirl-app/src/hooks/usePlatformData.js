@@ -52,6 +52,14 @@ const usePlatformData = () => {
         return platformData[platform] || { videosData: [], usersData: [], userVideosData: [], isLoading: false };
     };
 
+    const clearPlatformData = (platform) => {
+        updatePlatformData(platform, {
+            videosData: [],
+            usersData: [],
+            userVideosData: []
+        });
+    };
+
     return {
         platformData,
         updatePlatformData,
@@ -59,7 +67,8 @@ const usePlatformData = () => {
         setVideosData,
         setUsersData,
         setUserVideosData,
-        getPlatformData
+        getPlatformData,
+        clearPlatformData
     };
 };
 

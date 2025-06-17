@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&family=Exo+2:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&family=Exo+2:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700;900&display=swap');
 
 * {
     margin: 0;
@@ -6,13 +6,13 @@
     box-sizing: border-box;
 }
 
-/* Ensure Orbitron is used everywhere */
+/* Ensure Roboto is used everywhere */
 * {
-    font-family: 'Orbitron', sans-serif !important;
+    font-family: 'Roboto', sans-serif !important;
 }
 
 body {
-    font-family: 'Orbitron', sans-serif;
+    font-family: 'Roboto', sans-serif;
     background: linear-gradient(135deg, #0e0e10 0%, #1a1a1d 100%);
     color: #efeff1;
     min-height: 100vh;

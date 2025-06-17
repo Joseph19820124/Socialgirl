@@ -5,7 +5,7 @@ import GenericResizableTable from './GenericResizableTable';
 import { videosColumns, usersColumns, youtubeColumns, instagramColumns, tiktokColumns } from '../config/tableColumns';
 import './TableContainer.css';
 
-const TableContainer = ({ videosData, usersData, userVideosData = [], isLoading, platform = 'default', onSearch }) => {
+const TableContainer = ({ videosData, usersData, userVideosData = [], isLoading, platform = 'default', onSearch, onClearData }) => {
     const [activeTab, setActiveTab] = useState('videos');
 
     const handleTabChange = (tabId) => {
@@ -45,6 +45,7 @@ const TableContainer = ({ videosData, usersData, userVideosData = [], isLoading,
                         data={videosData} 
                         isLoading={isLoading} 
                         columns={getVideoColumns()}
+                        tableId={`${platform}-videos`}
                     />
                 );
             case 'userVideos':
@@ -53,6 +54,7 @@ const TableContainer = ({ videosData, usersData, userVideosData = [], isLoading,
                         data={userVideosData} 
                         isLoading={isLoading} 
                         columns={getVideoColumns()}
+                        tableId={`${platform}-userVideos`}
                     />
                 );
             case 'users':
@@ -61,6 +63,7 @@ const TableContainer = ({ videosData, usersData, userVideosData = [], isLoading,
                         data={usersData} 
                         isLoading={isLoading} 
                         columns={usersColumns}
+                        tableId={`${platform}-users`}
                     />
                 );
             default:
@@ -69,10 +72,35 @@ const TableContainer = ({ videosData, usersData, userVideosData = [], isLoading,
                         data={videosData} 
                         isLoading={isLoading} 
                         columns={getVideoColumns()}
+                        tableId={`${platform}-videos`}
                     />
                 );
         }
     };
+
+    const handleClear = () => {
+        if (window.confirm('Are you sure you want to clear all data? This cannot be undone.')) {
+            if (onClearData) {
+                onClearData();
+            }
+        }
+    };
+
+    const getCurrentData = () => {
+        switch (activeTab) {
+            case 'videos':
+                return videosData;
+            case 'userVideos':
+                return userVideosData;
+            case 'users':
+                return usersData;
+            default:
+                return videosData;
+        }
+    };
+
+    const currentData = getCurrentData();
+    const hasData = currentData && currentData.length > 0;
 
     return (
         <div className="table-container">
@@ -88,7 +116,18 @@ const TableContainer = ({ videosData, usersData, userVideosData = [], isLoading,
                         onSearch(query);
                     }
                 }} placeholder={getSearchPlaceholder()} />}
-                <Tabs activeTab={activeTab} onTabChange={handleTabChange} />
+                <div className="table-actions">
+                    {hasData && onClearData && (
+                        <button 
+                            className="clear-btn"
+                            onClick={handleClear}
+                            title="Clear all data"
+                        >
+                            Clear
+                        </button>
+                    )}
+                    <Tabs activeTab={activeTab} onTabChange={handleTabChange} />
+                </div>
             </div>
             {renderTable()}
         </div>

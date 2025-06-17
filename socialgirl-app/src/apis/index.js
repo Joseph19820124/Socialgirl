@@ -1,9 +1,9 @@
 // API exports for easy importing
-const youtube = require('./youtube');
-const instagram = require('./instagram');
-const tiktok = require('./tiktok');
+import * as youtube from './youtube';
+import * as instagram from './instagram';
+import * as tiktok from './tiktok';
 
-module.exports = {
+export {
     youtube,
     instagram,
     tiktok

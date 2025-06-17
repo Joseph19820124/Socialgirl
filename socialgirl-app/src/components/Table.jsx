@@ -17,12 +17,38 @@ const Table = ({ data, isLoading }) => {
         }
 
         const sorted = [...sortedData].sort((a, b) => {
-            if (typeof a[key] === 'string') {
+            const aValue = a[key];
+            const bValue = b[key];
+            
+            // Handle null/undefined values - put them at the end
+            if (aValue == null && bValue == null) return 0;
+            if (aValue == null) return 1;
+            if (bValue == null) return -1;
+            
+            // Handle string values
+            if (typeof aValue === 'string' || typeof bValue === 'string') {
+                const aStr = String(aValue).toLowerCase();
+                const bStr = String(bValue).toLowerCase();
                 return direction === 'asc' 
-                    ? a[key].toLowerCase().localeCompare(b[key].toLowerCase())
-                    : b[key].toLowerCase().localeCompare(a[key].toLowerCase());
+                    ? aStr.localeCompare(bStr)
+                    : bStr.localeCompare(aStr);
             }
-            return direction === 'asc' ? a[key] - b[key] : b[key] - a[key];
+            
+            // Handle numeric values
+            const aNum = Number(aValue);
+            const bNum = Number(bValue);
+            
+            // If both are valid numbers
+            if (!isNaN(aNum) && !isNaN(bNum)) {
+                return direction === 'asc' ? aNum - bNum : bNum - aNum;
+            }
+            
+            // Fallback to string comparison
+            const aStr = String(aValue).toLowerCase();
+            const bStr = String(bValue).toLowerCase();
+            return direction === 'asc' 
+                ? aStr.localeCompare(bStr)
+                : bStr.localeCompare(aStr);
         });
 
         setSortedData(sorted);

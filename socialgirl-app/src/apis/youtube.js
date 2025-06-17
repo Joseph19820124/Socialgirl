@@ -72,9 +72,12 @@ async function getChannelData(channelId) {
  * Search for videos by query
  * @param {string} query - Search query
  * @param {number} maxResults - Maximum results to return (default: 10)
+ * @param {Object} options - Additional search options
+ * @param {string} options.order - Sort order: relevance, date, rating, viewCount, title (default: viewCount)
+ * @param {string} options.publishedAfter - ISO date string for filtering recent videos
  * @returns {Promise<Object>} Search results
  */
-async function searchVideos(query, maxResults = 10) {
+async function searchVideos(query, maxResults = 10, options = {}) {
     if (!canPerformOperation('youtube', 'search')) {
         throw new Error('YouTube API quota exceeded. Please try again tomorrow.');
     }
@@ -84,12 +87,21 @@ async function searchVideos(query, maxResults = 10) {
         throw new Error('YouTube API key not found. Please configure it in Settings.');
     }
     
-    // Calculate date 7 days ago
-    const publishedAfter = new Date();
-    publishedAfter.setDate(publishedAfter.getDate() - 7);
-    const publishedAfterISO = publishedAfter.toISOString();
+    // Default options
+    const {
+        order = 'viewCount',
+        publishedAfter = null
+    } = options;
     
-    const url = `${BASE_URL}/search?part=snippet&q=${encodeURIComponent(query)}&type=video&order=viewCount&publishedAfter=${publishedAfterISO}&maxResults=${maxResults}&key=${apiKey}`;
+    // Calculate date 7 days ago if no publishedAfter is provided
+    let publishedAfterISO = publishedAfter;
+    if (!publishedAfterISO) {
+        const pastDate = new Date();
+        pastDate.setDate(pastDate.getDate() - 7);
+        publishedAfterISO = pastDate.toISOString();
+    }
+    
+    const url = `${BASE_URL}/search?part=snippet&q=${encodeURIComponent(query)}&type=video&order=${order}&publishedAfter=${publishedAfterISO}&maxResults=${maxResults}&key=${apiKey}`;
     
     try {
         const response = await fetch(url);
@@ -115,7 +127,7 @@ async function getVideosStatistics(videoIds) {
         return { items: [] };
     }
     
-    if (!canPerformOperation('videos')) {
+    if (!canPerformOperation('youtube', 'videos', videoIds.length)) {
         throw new Error('YouTube API quota exceeded. Please try again tomorrow.');
     }
     
@@ -132,7 +144,7 @@ async function getVideosStatistics(videoIds) {
             throw new Error(`YouTube API error: ${response.status}`);
         }
         
-        trackOperation('youtube', 'videos');
+        trackOperation('youtube', 'videos', videoIds.length);
         return await response.json();
     } catch (error) {
         console.error('Error fetching YouTube videos statistics:', error);
@@ -188,9 +200,11 @@ async function getChannelByHandle(handle) {
  * Fetch recent videos from a channel
  * @param {string} channelId - YouTube channel ID
  * @param {number} maxResults - Maximum results to return (default: 20)
+ * @param {Object} options - Additional options
+ * @param {string} options.order - Sort order: date, rating, relevance, title, viewCount (default: date)
  * @returns {Promise<Object>} Channel videos response
  */
-async function getChannelVideos(channelId, maxResults = 20) {
+async function getChannelVideos(channelId, maxResults = 20, options = {}) {
     if (!canPerformOperation('youtube', 'search')) {
         throw new Error('YouTube API quota exceeded. Please try again tomorrow.');
     }
@@ -200,8 +214,10 @@ async function getChannelVideos(channelId, maxResults = 20) {
         throw new Error('YouTube API key not found. Please configure it in Settings.');
     }
     
-    // Search for videos from the specific channel, ordered by date (most recent first)
-    const url = `${BASE_URL}/search?part=snippet&channelId=${channelId}&type=video&order=date&maxResults=${maxResults}&key=${apiKey}`;
+    const { order = 'date' } = options;
+    
+    // Search for videos from the specific channel with specified ordering
+    const url = `${BASE_URL}/search?part=snippet&channelId=${channelId}&type=video&order=${order}&maxResults=${maxResults}&key=${apiKey}`;
     
     try {
         const response = await fetch(url);
@@ -235,16 +251,17 @@ async function getChannelVideos(channelId, maxResults = 20) {
  * Fetch videos from a channel using handle (@username)
  * @param {string} handle - Channel handle (with or without @)
  * @param {number} maxResults - Maximum results to return (default: 20)
+ * @param {Object} options - Additional options passed to getChannelVideos
  * @returns {Promise<Object>} Channel videos response
  */
-async function getChannelVideosByHandle(handle, maxResults = 20) {
+async function getChannelVideosByHandle(handle, maxResults = 20, options = {}) {
     try {
         const channelId = await getChannelByHandle(handle);
         if (!channelId) {
             throw new Error(`Channel not found for handle: ${handle}`);
         }
         
-        return await getChannelVideos(channelId, maxResults);
+        return await getChannelVideos(channelId, maxResults, options);
     } catch (error) {
         console.error('Error fetching channel videos by handle:', error);
         throw error;

@@ -33,7 +33,7 @@
 .likes {
     font-weight: 600;
     color: #ff69b4; /* Pink color for likes */
-    font-family: 'Orbitron', sans-serif;
+    font-family: 'Roboto', sans-serif;
 }
 
 .likes.high-stats { 
