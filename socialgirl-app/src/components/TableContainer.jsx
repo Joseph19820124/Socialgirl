@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import Tabs from './Tabs';
 import SearchBar from './SearchBar';
 import GenericResizableTable from './GenericResizableTable';
-import { videosColumns, usersColumns, youtubeColumns, instagramColumns, tiktokColumns } from '../config/tableColumns';
+import { videosColumns, usersColumns } from '../config/tableColumns';
+import { PLATFORMS } from '../config/platforms';
 import './TableContainer.css';
 
 const TableContainer = ({ videosData, usersData, userVideosData = [], isLoading, platform = 'default', onSearch, onClearData }) => {
@@ -13,16 +14,8 @@ const TableContainer = ({ videosData, usersData, userVideosData = [], isLoading,
     };
 
     const getVideoColumns = () => {
-        switch (platform) {
-            case 'youtube':
-                return youtubeColumns;
-            case 'instagram':
-                return instagramColumns;
-            case 'tiktok':
-                return tiktokColumns;
-            default:
-                return videosColumns;
-        }
+        const platformConfig = PLATFORMS[platform];
+        return platformConfig?.columns || videosColumns;
     };
 
     const getSearchPlaceholder = () => {
@@ -37,45 +30,31 @@ const TableContainer = ({ videosData, usersData, userVideosData = [], isLoading,
         }
     };
 
-    const renderTable = () => {
+    const getTableData = () => {
         switch (activeTab) {
-            case 'videos':
-                return (
-                    <GenericResizableTable 
-                        data={videosData} 
-                        isLoading={isLoading} 
-                        columns={getVideoColumns()}
-                        tableId={`${platform}-videos`}
-                    />
-                );
             case 'userVideos':
-                return (
-                    <GenericResizableTable 
-                        data={userVideosData} 
-                        isLoading={isLoading} 
-                        columns={getVideoColumns()}
-                        tableId={`${platform}-userVideos`}
-                    />
-                );
+                return userVideosData;
             case 'users':
-                return (
-                    <GenericResizableTable 
-                        data={usersData} 
-                        isLoading={isLoading} 
-                        columns={usersColumns}
-                        tableId={`${platform}-users`}
-                    />
-                );
+                return usersData;
+            case 'videos':
             default:
-                return (
-                    <GenericResizableTable 
-                        data={videosData} 
-                        isLoading={isLoading} 
-                        columns={getVideoColumns()}
-                        tableId={`${platform}-videos`}
-                    />
-                );
+                return videosData;
         }
+    };
+
+    const getTableColumns = () => {
+        return activeTab === 'users' ? usersColumns : getVideoColumns();
+    };
+
+    const renderTable = () => {
+        return (
+            <GenericResizableTable 
+                data={getTableData()} 
+                isLoading={isLoading} 
+                columns={getTableColumns()}
+                tableId={`${platform}-${activeTab}`}
+            />
+        );
     };
 
     const handleClear = () => {
@@ -86,20 +65,7 @@ const TableContainer = ({ videosData, usersData, userVideosData = [], isLoading,
         }
     };
 
-    const getCurrentData = () => {
-        switch (activeTab) {
-            case 'videos':
-                return videosData;
-            case 'userVideos':
-                return userVideosData;
-            case 'users':
-                return usersData;
-            default:
-                return videosData;
-        }
-    };
-
-    const currentData = getCurrentData();
+    const currentData = getTableData();
     const hasData = currentData && currentData.length > 0;
 
     return (

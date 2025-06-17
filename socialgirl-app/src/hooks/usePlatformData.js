@@ -1,26 +1,22 @@
 import { useState } from 'react';
 
-const usePlatformData = () => {
-    const [platformData, setPlatformData] = useState({
-        youtube: {
+import { PLATFORM_LIST } from '../config/platforms';
+
+const createInitialState = () => {
+    const initialState = {};
+    PLATFORM_LIST.forEach(platform => {
+        initialState[platform.id] = {
             videosData: [],
             usersData: [],
             userVideosData: [],
             isLoading: false
-        },
-        instagram: {
-            videosData: [],
-            usersData: [],
-            userVideosData: [],
-            isLoading: false
-        },
-        tiktok: {
-            videosData: [],
-            usersData: [],
-            userVideosData: [],
-            isLoading: false
-        }
+        };
     });
+    return initialState;
+};
+
+const usePlatformData = () => {
+    const [platformData, setPlatformData] = useState(createInitialState());
 
     const updatePlatformData = (platform, updates) => {
         setPlatformData(prev => ({
@@ -32,24 +28,33 @@ const usePlatformData = () => {
         }));
     };
 
+    const setData = (platform, dataType, data) => {
+        updatePlatformData(platform, { [dataType]: data });
+    };
+
     const setLoading = (platform, isLoading) => {
         updatePlatformData(platform, { isLoading });
     };
 
     const setVideosData = (platform, videosData) => {
-        updatePlatformData(platform, { videosData });
+        setData(platform, 'videosData', videosData);
     };
 
     const setUsersData = (platform, usersData) => {
-        updatePlatformData(platform, { usersData });
+        setData(platform, 'usersData', usersData);
     };
 
     const setUserVideosData = (platform, userVideosData) => {
-        updatePlatformData(platform, { userVideosData });
+        setData(platform, 'userVideosData', userVideosData);
     };
 
     const getPlatformData = (platform) => {
-        return platformData[platform] || { videosData: [], usersData: [], userVideosData: [], isLoading: false };
+        return platformData[platform] || {
+            videosData: [],
+            usersData: [],
+            userVideosData: [],
+            isLoading: false
+        };
     };
 
     const clearPlatformData = (platform) => {

@@ -19,17 +19,8 @@ export const usersColumns = [
     { key: 'url', label: '🔗 URL', align: 'center', sortable: false }
 ];
 
-// User Videos columns - identical to videos columns
-export const userVideosColumns = [
-    { key: 'username', label: '👤 Username', align: 'left' },
-    { key: 'followers', label: '👥 Followers', align: 'right' },
-    { key: 'title', label: '📝 Title', align: 'left' },
-    { key: 'views', label: '👁️ Views', align: 'right' },
-    { key: 'comments', label: '💬 Comments', align: 'right' },
-    { key: 'likes', label: '❤️ Likes', align: 'right' },
-    { key: 'shares', label: '🔄 Shares', align: 'right' },
-    { key: 'url', label: '🔗 URL', align: 'center', sortable: false }
-];
+// User Videos columns - reuse videos columns
+export const userVideosColumns = videosColumns;
 
 // YouTube-specific table columns
 export const youtubeColumns = [

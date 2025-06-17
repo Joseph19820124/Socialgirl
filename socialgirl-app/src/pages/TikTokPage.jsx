@@ -1,20 +1,8 @@
 import React from 'react';
-import TableContainer from '../components/TableContainer';
+import PlatformPage from './PlatformPage';
 
-const TikTokPage = ({ videosData, usersData, userVideosData, isLoading, onSearch, onClearData }) => {
-    return (
-        <div className="platform-page">
-            <TableContainer 
-                videosData={videosData} 
-                usersData={usersData} 
-                userVideosData={userVideosData}
-                isLoading={isLoading} 
-                platform="tiktok"
-                onSearch={onSearch}
-                onClearData={onClearData}
-            />
-        </div>
-    );
+const TikTokPage = (props) => {
+    return <PlatformPage {...props} platform="tiktok" />;
 };
 
 export default TikTokPage;

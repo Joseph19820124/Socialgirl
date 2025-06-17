@@ -7,6 +7,7 @@ import TikTokPage from './pages/TikTokPage';
 import SettingsPage from './pages/SettingsPage';
 import usePlatformData from './hooks/usePlatformData';
 import useSearch from './hooks/useSearch';
+import { PLATFORMS, DEFAULT_PLATFORM } from './config/platforms';
 import './App.css';
 
 function AppContent() {
@@ -15,17 +16,15 @@ function AppContent() {
     const location = useLocation();
 
     const getPageTitle = () => {
-        switch (location.pathname) {
-            case '/youtube':
-                return 'YouTube Analytics';
-            case '/instagram':
-                return 'Instagram Analytics';
-            case '/tiktok':
-                return 'TikTok Analytics';
-            case '/settings':
-                return 'Settings';
-            default:
-                return 'Content Analytics Dashboard';
+        const platformId = location.pathname.slice(1);
+        const platform = PLATFORMS[platformId];
+        
+        if (platform) {
+            return platform.title;
+        } else if (location.pathname === '/settings') {
+            return 'Settings';
+        } else {
+            return 'Content Analytics Dashboard';
         }
     };
 

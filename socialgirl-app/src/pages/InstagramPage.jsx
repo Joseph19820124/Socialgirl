@@ -1,20 +1,8 @@
 import React from 'react';
-import TableContainer from '../components/TableContainer';
+import PlatformPage from './PlatformPage';
 
-const InstagramPage = ({ videosData, usersData, userVideosData, isLoading, onSearch, onClearData }) => {
-    return (
-        <div className="platform-page">
-            <TableContainer 
-                videosData={videosData} 
-                usersData={usersData} 
-                userVideosData={userVideosData}
-                isLoading={isLoading} 
-                platform="instagram"
-                onSearch={onSearch}
-                onClearData={onClearData}
-            />
-        </div>
-    );
+const InstagramPage = (props) => {
+    return <PlatformPage {...props} platform="instagram" />;
 };
 
 export default InstagramPage;
