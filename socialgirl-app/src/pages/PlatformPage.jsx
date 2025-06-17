@@ -5,6 +5,7 @@ const PlatformPage = ({
     videosData, 
     usersData, 
     userVideosData, 
+    userPostsData,
     isLoading, 
     platform,
     onSearch, 
@@ -16,6 +17,7 @@ const PlatformPage = ({
                 videosData={videosData} 
                 usersData={usersData} 
                 userVideosData={userVideosData}
+                userPostsData={userPostsData}
                 isLoading={isLoading} 
                 platform={platform}
                 onSearch={onSearch}

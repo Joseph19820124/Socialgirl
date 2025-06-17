@@ -4,7 +4,7 @@ import SearchService from '../services/searchService';
 const searchService = new SearchService();
 
 const useSearch = (platformData) => {
-    const { setLoading, setVideosData, setUserVideosData, setUsersData } = platformData;
+    const { setLoading, setVideosData, setUserVideosData, setUsersData, setUserPostsData } = platformData;
 
     const createSearchHandler = useCallback((platform, activeTab = 'videos') => {
         return async (query) => {
@@ -19,23 +19,35 @@ const useSearch = (platformData) => {
                     setUserVideosData(platform, data);
                 } else if (activeTab === 'users') {
                     setUsersData(platform, data);
+                } else if (activeTab === 'userPosts') {
+                    setUserPostsData(platform, data);
                 } else {
                     setVideosData(platform, data);
                 }
             } catch (error) {
                 console.error(`${platform} search error:`, error);
+                
+                // Show user-friendly error message
+                if (activeTab === 'userPosts') {
+                    if (error.message.includes('json')) {
+                        alert(`User Posts: This user may have a private account or no popular posts available.`);
+                    } else {
+                        alert(`User Posts Error: ${error.message}`);
+                    }
+                }
             } finally {
                 setLoading(platform, false);
             }
         };
-    }, [setLoading, setVideosData, setUserVideosData, setUsersData]);
+    }, [setLoading, setVideosData, setUserVideosData, setUsersData, setUserPostsData]);
 
-    // Create separate handlers for videos, users, and user videos
+    // Create separate handlers for videos, users, user videos, and user posts
     const createPlatformHandlers = useCallback((platform) => {
         return {
             videos: createSearchHandler(platform, 'videos'),
             users: createSearchHandler(platform, 'users'),
-            userVideos: createSearchHandler(platform, 'userVideos')
+            userVideos: createSearchHandler(platform, 'userVideos'),
+            userPosts: createSearchHandler(platform, 'userPosts')
         };
     }, [createSearchHandler]);
 

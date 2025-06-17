@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Header from './components/Header';
 import YouTubePage from './pages/YouTubePage';
@@ -8,12 +8,21 @@ import SettingsPage from './pages/SettingsPage';
 import usePlatformData from './hooks/usePlatformData';
 import useSearch from './hooks/useSearch';
 import { PLATFORMS, DEFAULT_PLATFORM } from './config/platforms';
+import { ApiKeyProvider, useApiKeys } from './contexts/ApiKeyContext';
+import { setApiKeyContextGetter } from './utils/apiKeyManager';
 import './App.css';
 
 function AppContent() {
     const platformData = usePlatformData();
     const { handleYouTubeSearch, handleTikTokSearch, handleInstagramSearch } = useSearch(platformData);
     const location = useLocation();
+    const { getApiKey } = useApiKeys();
+
+    // Set up the API key context getter for the apiKeyManager
+    useEffect(() => {
+        console.log('[App] Setting up API key context getter for apiKeyManager');
+        setApiKeyContextGetter(getApiKey);
+    }, [getApiKey]);
 
     const getPageTitle = () => {
         const platformId = location.pathname.slice(1);
@@ -56,6 +65,7 @@ function AppContent() {
                                 videosData={platformData.getPlatformData('instagram').videosData} 
                                 usersData={platformData.getPlatformData('instagram').usersData} 
                                 userVideosData={platformData.getPlatformData('instagram').userVideosData}
+                                userPostsData={platformData.getPlatformData('instagram').userPostsData}
                                 isLoading={platformData.getPlatformData('instagram').isLoading}
                                 onSearch={handleInstagramSearch}
                                 onClearData={() => platformData.clearPlatformData('instagram')}
@@ -69,6 +79,7 @@ function AppContent() {
                                 videosData={platformData.getPlatformData('tiktok').videosData} 
                                 usersData={platformData.getPlatformData('tiktok').usersData} 
                                 userVideosData={platformData.getPlatformData('tiktok').userVideosData}
+                                userPostsData={platformData.getPlatformData('tiktok').userPostsData}
                                 isLoading={platformData.getPlatformData('tiktok').isLoading}
                                 onSearch={handleTikTokSearch}
                                 onClearData={() => platformData.clearPlatformData('tiktok')}
@@ -84,9 +95,11 @@ function AppContent() {
 
 function App() {
     return (
-        <Router>
-            <AppContent />
-        </Router>
+        <ApiKeyProvider>
+            <Router>
+                <AppContent />
+            </Router>
+        </ApiKeyProvider>
     );
 }
 

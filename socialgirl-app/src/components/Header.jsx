@@ -7,8 +7,7 @@ const Header = () => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     const handleSearch = (query) => {
-        // TODO: Implement search functionality
-        console.log('Searching for:', query);
+        // Search functionality is handled by individual platform pages
     };
 
     const toggleMobileMenu = () => {

@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { encryptData, decryptData, saveEncryptedSettings, loadEncryptedSettings, clearStoredSettings } from '../utils/encryption';
 import { getAllQuotaStatus, resetQuota } from '../utils/quotaManager';
+import { useApiKeys } from '../contexts/ApiKeyContext';
 import './SettingsPage.css';
 
 const SettingsPage = () => {
+    const { setApiKeys: setContextApiKeys, clearApiKeys } = useApiKeys();
     const [apiKeys, setApiKeys] = useState({
         youtubeApiKey: '',
         rapidApiKey: ''
@@ -64,12 +66,19 @@ const SettingsPage = () => {
         }
 
         try {
+            console.log('[Settings] Saving API keys...');
             const encrypted = await encryptData(apiKeys, password);
             saveEncryptedSettings(encrypted);
+            
+            // Store decrypted keys in context for immediate use
+            console.log('[Settings] Storing keys in context for session use');
+            setContextApiKeys(apiKeys);
+            
             setHasStoredSettings(true);
             showMessage('Settings saved successfully!', 'success');
             setPassword('');
         } catch (error) {
+            console.error('[Settings] Failed to save settings:', error);
             showMessage('Failed to save settings: ' + error.message, 'error');
         }
     };
@@ -87,11 +96,20 @@ const SettingsPage = () => {
         }
 
         try {
+            console.log('[Settings] Loading and decrypting API keys...');
             const decrypted = await decryptData(stored, password);
+            
+            // Update local state
             setApiKeys(decrypted);
+            
+            // Store decrypted keys in context for API use
+            console.log('[Settings] Storing loaded keys in context for session use');
+            setContextApiKeys(decrypted);
+            
             showMessage('Settings loaded successfully!', 'success');
             setPassword('');
         } catch (error) {
+            console.error('[Settings] Failed to load settings:', error);
             showMessage('Failed to load settings: ' + error.message, 'error');
         }
     };
@@ -156,11 +174,18 @@ const SettingsPage = () => {
 
     const handleClear = () => {
         if (window.confirm('Are you sure you want to clear all stored settings? This cannot be undone.')) {
+            console.log('[Settings] Clearing all stored settings and context');
             clearStoredSettings();
+            
+            // Clear local state
             setApiKeys({
                 youtubeApiKey: '',
                 rapidApiKey: ''
             });
+            
+            // Clear context
+            clearApiKeys();
+            
             setHasStoredSettings(false);
             showMessage('All settings cleared', 'success');
         }

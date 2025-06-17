@@ -1,12 +1,28 @@
 import React from 'react';
 import '../styles/components/Tabs.css';
 
-const Tabs = ({ activeTab, onTabChange }) => {
-    const tabs = [
-        { id: 'videos', label: 'Videos', icon: '🎬' },
-        { id: 'userVideos', label: 'User Videos', icon: '🎭' },
-        { id: 'users', label: 'Users', icon: '👥' }
-    ];
+const Tabs = ({ activeTab, onTabChange, platform = 'default' }) => {
+    const getTabsForPlatform = (platform) => {
+        const baseTabs = [
+            { id: 'videos', label: 'Videos', icon: '🎬' },
+            { id: 'userVideos', label: 'User Videos', icon: '🎭' }
+        ];
+
+        if (platform === 'tiktok' || platform === 'instagram') {
+            return [
+                ...baseTabs,
+                { id: 'userPosts', label: 'User Posts', icon: '📱' },
+                { id: 'users', label: 'Users', icon: '👥' }
+            ];
+        }
+
+        return [
+            ...baseTabs,
+            { id: 'users', label: 'Users', icon: '👥' }
+        ];
+    };
+
+    const tabs = getTabsForPlatform(platform);
 
     return (
         <div className="tabs-container">

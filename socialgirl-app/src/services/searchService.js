@@ -1,7 +1,9 @@
 import { searchVideos as searchYouTube, getVideosStatistics, getChannelVideosByHandle } from '../apis/youtube';
-import { searchVideos as searchTikTok } from '../apis/tiktok';
+import { searchVideos as searchTikTok, getUserInfo, getUserPopularPosts } from '../apis/tiktok';
+import { getUserReels } from '../apis/instagram';
 import { extractVideoData as extractYouTubeData } from '../mappers/youtube';
-import { extractVideoData as extractTikTokData, extractUsersDataFromSearch as extractTikTokUsersData } from '../mappers/tiktok';
+import { extractVideoData as extractTikTokData, extractUsersDataFromSearch as extractTikTokUsersData, extractUserPostsData as extractTikTokUserPostsData } from '../mappers/tiktok';
+import { extractUserPostsData as extractInstagramUserPostsData } from '../mappers/instagram';
 
 class SearchService {
     constructor() {
@@ -70,8 +72,15 @@ class YouTubeSearchStrategy {
 
 class TikTokSearchStrategy {
     async search(query, context = {}) {
-        const response = await searchTikTok(query);
         const { activeTab } = context;
+        
+        // For User Posts tab, do 2-step flow: username -> secUid -> popular posts
+        if (activeTab === 'userPosts') {
+            return await this.searchUserPosts(query);
+        }
+        
+        // For other tabs, use general search
+        const response = await searchTikTok(query);
         
         // For Users tab, extract user data; otherwise extract video data
         if (activeTab === 'users') {
@@ -81,13 +90,106 @@ class TikTokSearchStrategy {
         return extractTikTokData(response);
     }
 
+    async searchUserPosts(username) {
+        try {
+            // Step 1: Get user info to extract secUid
+            const userInfoResponse = await getUserInfo(username);
+            
+            if (!userInfoResponse.userInfo || !userInfoResponse.userInfo.user) {
+                throw new Error(`User '${username}' not found`);
+            }
+            
+            const secUid = userInfoResponse.userInfo.user.secUid;
+            
+            if (!secUid) {
+                throw new Error(`Could not get secUid for user '${username}'`);
+            }
+            
+            // Step 2: Get popular posts using secUid
+            const postsResponse = await getUserPopularPosts(secUid);
+            
+            // Step 3: Extract and return user posts data
+            return extractTikTokUserPostsData(postsResponse);
+            
+        } catch (error) {
+            console.error('Error in TikTok user posts search:', error);
+            throw error;
+        }
+    }
+
 }
 
 class InstagramSearchStrategy {
-    async search(query) {
-        console.log('Instagram search for:', query);
-        await new Promise(resolve => setTimeout(resolve, 1000));
+    async search(query, context = {}) {
+        console.log(`[Instagram Search] Starting search with query: "${query}"`);
+        console.log(`[Instagram Search] Search context:`, context);
+        
+        const { activeTab } = context;
+        
+        // For User Posts tab, fetch user reels/posts
+        if (activeTab === 'userPosts') {
+            return await this.searchUserPosts(query);
+        }
+        
+        // For other tabs, Instagram search is not yet implemented
+        console.warn(`[Instagram Search] Tab "${activeTab}" not yet implemented`);
         return [];
+    }
+
+    async searchUserPosts(username) {
+        console.log(`[Instagram Search] Starting user posts search for username: "${username}"`);
+        
+        // Validate username
+        if (!username || typeof username !== 'string' || !username.trim()) {
+            const errorMsg = 'Please provide a valid Instagram username';
+            console.error(`[Instagram Search] Validation failed: ${errorMsg}`);
+            throw new Error(errorMsg);
+        }
+
+        const cleanUsername = username.trim().replace('@', ''); // Remove @ if present
+        console.log(`[Instagram Search] Cleaned username: "${cleanUsername}"`);
+
+        try {
+            console.log(`[Instagram Search] Calling getUserReels API...`);
+            const apiResponse = await getUserReels(cleanUsername);
+            
+            console.log(`[Instagram Search] API call successful, processing response...`);
+            const extractedData = extractInstagramUserPostsData(apiResponse);
+            
+            console.log(`[Instagram Search] Data extraction complete. Found ${extractedData.length} posts`);
+            
+            if (extractedData.length === 0) {
+                console.warn(`[Instagram Search] No posts found for username: "${cleanUsername}"`);
+            } else {
+                console.log(`[Instagram Search] Sample extracted post:`, {
+                    username: extractedData[0]?.username,
+                    title: extractedData[0]?.title?.substring(0, 50) + '...',
+                    likes: extractedData[0]?.likes,
+                    views: extractedData[0]?.views
+                });
+            }
+            
+            return extractedData;
+            
+        } catch (error) {
+            console.error(`[Instagram Search] Error in searchUserPosts:`, {
+                username: cleanUsername,
+                errorMessage: error.message,
+                errorType: error.constructor.name,
+                stack: error.stack
+            });
+            
+            // Re-throw with more user-friendly message if needed
+            if (error.message.includes('API key')) {
+                throw new Error('Instagram API key not configured. Please check your settings.');
+            } else if (error.message.includes('quota exceeded')) {
+                throw new Error('Instagram API quota exceeded. Please try again later.');
+            } else if (error.message.includes('404') || error.message.includes('not found')) {
+                throw new Error(`Instagram user "${cleanUsername}" not found. Please check the username.`);
+            } else {
+                throw new Error(`Failed to fetch Instagram posts: ${error.message}`);
+            }
+        }
     }
 
 }

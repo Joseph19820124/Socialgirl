@@ -731,6 +731,585 @@ const getVideoColumns = () => {
 
 ---
 
+### API Integration: Multi-Step API Flow Implementation
+
+**Symptoms:**
+- Need to make multiple API calls in sequence where second call depends on first
+- HTTP 204 (No Content) responses failing JSON parsing
+- Complex data flow requiring intermediate data extraction
+- User sees no results despite API calls succeeding
+
+**Root Cause:**
+Some API operations require multiple steps where data from one endpoint is needed for subsequent calls. Additionally, APIs may return 204 status codes for valid "no data" responses, which cannot be parsed as JSON and will throw errors if attempted.
+
+**Solution:**
+Implement sequential API calls with proper error handling and 204 response management.
+
+**Code Pattern:**
+```javascript
+// Multi-step API flow pattern
+async function searchUserContent(username) {
+    try {
+        // Step 1: Get initial data
+        console.log(`Step 1: Getting user info for ${username}...`);
+        const userResponse = await getUserInfo(username);
+        
+        if (!userResponse.data || !userResponse.data.user) {
+            throw new Error(`User '${username}' not found`);
+        }
+        
+        // Extract intermediate data
+        const userId = userResponse.data.user.id;
+        if (!userId) {
+            throw new Error(`Could not get ID for user '${username}'`);
+        }
+        
+        // Step 2: Use extracted data for second call
+        console.log(`Step 2: Getting content for user ID ${userId}...`);
+        const contentResponse = await getUserContent(userId);
+        
+        // Step 3: Process and return final data
+        return extractContentData(contentResponse);
+        
+    } catch (error) {
+        console.error('Error in multi-step flow:', error);
+        throw error;
+    }
+}
+
+// Handle 204 No Content responses
+async function apiCall(url, options) {
+    const response = await fetch(url, options);
+    
+    if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`API error: ${response.status} - ${errorText}`);
+    }
+    
+    // Handle 204 No Content - return empty structure
+    if (response.status === 204) {
+        console.log('No content available (204 response)');
+        return { data: { items: [] } }; // Return expected empty structure
+    }
+    
+    return await response.json();
+}
+
+// Platform-specific implementation example
+class PlatformSearchStrategy {
+    async search(query, context = {}) {
+        const { activeTab } = context;
+        
+        // Route to appropriate multi-step flow
+        if (activeTab === 'userContent') {
+            return await this.searchUserContent(query);
+        }
+        
+        // Single-step flow for other tabs
+        return await this.searchGeneral(query);
+    }
+}
+```
+
+**Key Points:**
+- Always check intermediate response structure before accessing nested properties
+- Handle 204 responses by returning empty data structures matching expected format
+- Use descriptive console logs to track multi-step flow progress
+- Extract only necessary data between steps to minimize coupling
+- Throw descriptive errors at each step for better debugging
+- Consider rate limiting between sequential API calls if needed
+
+**Applicable To:**
+- Language: JavaScript/TypeScript
+- Frameworks: Any JavaScript application making API calls
+- Use Cases: OAuth flows, user profile lookups, content aggregation requiring user IDs
+
+---
+
+### React: Platform-Specific UI Components
+
+**Symptoms:**
+- Need different UI elements for different platforms/sections
+- Components should only appear on specific pages
+- Passing platform context through multiple component layers
+- UI inconsistency between platform pages
+
+**Root Cause:**
+Multi-platform applications need platform-aware components that show different UI elements based on context. Without proper platform detection and conditional rendering, all platforms show the same UI elements.
+
+**Solution:**
+Implement platform-aware components with conditional rendering based on platform prop.
+
+**Code Pattern:**
+```javascript
+// Platform-aware component pattern
+const NavigationTabs = ({ activeTab, onTabChange, platform = 'default' }) => {
+    const getTabsForPlatform = (platform) => {
+        const baseTabs = [
+            { id: 'videos', label: 'Videos', icon: '🎬' },
+            { id: 'channels', label: 'Channels', icon: '📺' }
+        ];
+
+        // Platform-specific tabs
+        if (platform === 'social') {
+            return [
+                ...baseTabs,
+                { id: 'stories', label: 'Stories', icon: '📱' },
+                { id: 'users', label: 'Users', icon: '👥' }
+            ];
+        }
+
+        return [
+            ...baseTabs,
+            { id: 'analytics', label: 'Analytics', icon: '📊' }
+        ];
+    };
+
+    const tabs = getTabsForPlatform(platform);
+
+    return (
+        <div className="tabs-container">
+            {tabs.map((tab) => (
+                <button
+                    key={tab.id}
+                    className={`tab ${activeTab === tab.id ? 'active' : ''}`}
+                    onClick={() => onTabChange(tab.id)}
+                >
+                    <span>{tab.icon}</span>
+                    <span>{tab.label}</span>
+                </button>
+            ))}
+        </div>
+    );
+};
+
+// Pass platform prop through component hierarchy
+const ParentComponent = ({ platform, data }) => {
+    return (
+        <Container>
+            <NavigationTabs platform={platform} />
+            <DataTable platform={platform} data={data} />
+        </Container>
+    );
+};
+```
+
+**Key Points:**
+- Define platform-specific configurations in functions or objects
+- Use platform prop consistently throughout component tree
+- Keep base/shared elements separate from platform-specific ones
+- Consider using context API for deeply nested platform props
+- Test each platform configuration thoroughly
+- Document which features are platform-specific
+
+**Applicable To:**
+- Language: JavaScript/TypeScript
+- Frameworks: React (adaptable to Vue/Angular)
+- Use Cases: Multi-platform dashboards, white-label applications, feature flags
+
+---
+
+### API Integration: Client-Side CORS Bypass with Vite Development Proxy
+
+**Symptoms:**
+- API works externally but fails in browser with CORS error
+- Error: `Access-Control-Allow-Origin header contains multiple values '*, *'`
+- Server returns malformed CORS headers but API endpoint is functional
+- Same request works in Postman/curl but fails in frontend application
+
+**Root Cause:**
+External API servers sometimes have misconfigured CORS headers that browsers reject. The API itself is functional, but the browser's same-origin policy blocks direct requests due to malformed headers like multiple `*` values in `Access-Control-Allow-Origin`.
+
+**Solution:**
+Configure Vite development proxy to route API requests through the dev server, completely bypassing CORS restrictions during development.
+
+**Code Pattern:**
+```javascript
+// vite.config.js - Development proxy configuration
+export default defineConfig({
+  plugins: [react()],
+  server: {
+    proxy: {
+      '/api/[service]': {
+        target: 'https://external-api.example.com',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/[service]/, ''),
+        configure: (proxy) => {
+          proxy.on('proxyReq', (proxyReq) => {
+            // Add required headers to proxied request
+            proxyReq.setHeader('x-api-host', 'external-api.example.com');
+            console.log('[Vite Proxy] Proxying request:', proxyReq.path);
+          });
+          proxy.on('proxyRes', (proxyRes) => {
+            console.log('[Vite Proxy] Response status:', proxyRes.statusCode);
+          });
+        }
+      }
+    }
+  }
+})
+
+// API client - Update to use local proxy path
+const BASE_URL = `/api/[service]`; // Vite proxy routes to external API
+
+// Remove problematic headers (proxy will add them)
+const options = {
+    method: 'GET',
+    headers: {
+        'x-api-key': apiKey
+        // x-api-host header added by Vite proxy
+    }
+};
+```
+
+**Key Points:**
+- Proxy only works in development - plan production CORS solution separately
+- Use `changeOrigin: true` to avoid host header issues
+- Remove headers from client requests that proxy will add automatically
+- Add debug logging to proxy events for troubleshooting
+- Test that proxy correctly forwards requests and responses
+- Consider rate limiting if API has strict limits
+
+**Applicable To:**
+- Language: JavaScript/TypeScript
+- Frameworks: Vite + React (similar patterns for Webpack/other bundlers)
+- Use Cases: Third-party APIs with broken CORS, development environment API testing
+
+---
+
+### State Management: Session-Based API Key Storage with React Context
+
+**Symptoms:**
+- API keys stored in settings but not accessible to API functions
+- "API key not found" errors despite user configuring keys in settings
+- API functions can't decrypt stored settings without password
+- Need secure key storage without external authentication services
+
+**Root Cause:**
+Encrypted localStorage requires a password for decryption, but API functions don't have access to the user's password. The settings page encrypts/decrypts keys locally, but this doesn't make them available to other components during the session.
+
+**Solution:**
+Implement React Context to store decrypted API keys in memory during the user session, combined with an API key manager that checks context first before falling back to environment variables.
+
+**Code Pattern:**
+```javascript
+// contexts/ApiKeyContext.jsx - Session storage for decrypted keys
+const ApiKeyContext = createContext({
+    setApiKeys: () => {},
+    getApiKey: () => null,
+    clearApiKeys: () => {}
+});
+
+export const ApiKeyProvider = ({ children }) => {
+    const [apiKeys, setApiKeysState] = useState({});
+
+    const setApiKeys = (keys) => {
+        console.log('[API Key Context] Setting API keys');
+        setApiKeysState(keys);
+    };
+
+    const getApiKey = (keyName) => {
+        const key = apiKeys[keyName];
+        console.log('[API Key Context] Getting key:', { keyName, hasKey: !!key });
+        return key || null;
+    };
+
+    const clearApiKeys = () => {
+        setApiKeysState({});
+    };
+
+    return (
+        <ApiKeyContext.Provider value={{ setApiKeys, getApiKey, clearApiKeys }}>
+            {children}
+        </ApiKeyContext.Provider>
+    );
+};
+
+// utils/apiKeyManager.js - Context-aware key retrieval
+let getApiKeyFromContext = null;
+
+export function setApiKeyContextGetter(contextGetter) {
+    getApiKeyFromContext = contextGetter;
+}
+
+export async function getApiKey(keyName, envVar) {
+    // Priority 1: Check memory context (current session)
+    if (getApiKeyFromContext) {
+        const contextKey = getApiKeyFromContext(keyName);
+        if (contextKey) {
+            console.log(`[API Key Manager] Found key in context: ${keyName}`);
+            return contextKey;
+        }
+    }
+    
+    // Priority 2: Fall back to environment variable
+    const envValue = import.meta.env[envVar];
+    if (envValue) {
+        console.log(`[API Key Manager] Using environment variable: ${envVar}`);
+        return envValue;
+    }
+    
+    return null;
+}
+
+// App.jsx - Connect context to API manager
+function AppContent() {
+    const { getApiKey } = useApiKeys();
+
+    useEffect(() => {
+        setApiKeyContextGetter(getApiKey);
+    }, [getApiKey]);
+
+    return <YourAppContent />;
+}
+
+function App() {
+    return (
+        <ApiKeyProvider>
+            <Router>
+                <AppContent />
+            </Router>
+        </ApiKeyProvider>
+    );
+}
+
+// Settings page - Store keys in context after load/save
+const handleLoad = async () => {
+    try {
+        const decrypted = await decryptData(stored, password);
+        setApiKeys(decrypted); // Local state
+        setContextApiKeys(decrypted); // Context for session use
+        showMessage('Settings loaded successfully!', 'success');
+    } catch (error) {
+        showMessage('Failed to load settings: ' + error.message, 'error');
+    }
+};
+```
+
+**Key Points:**
+- Context stores keys only in memory - they don't persist between sessions
+- User must load settings each session to populate context
+- API functions get keys immediately without needing passwords
+- Maintains security by not persisting decrypted keys
+- Falls back to environment variables for development/testing
+- Clear context when user logs out or clears settings
+
+**Applicable To:**
+- Language: JavaScript/TypeScript
+- Frameworks: React (adaptable to Vue/Angular state management)
+- Use Cases: Session-based secure configuration, API key management without backend
+
+---
+
+### Data Transformation: Robust API Response Mapping with Fallback Patterns
+
+**Symptoms:**
+- API returns different data structures than expected
+- Fields missing or in different nested locations
+- "Cannot read property of undefined" errors when accessing response data
+- Need to map external API data to internal table format
+
+**Root Cause:**
+External APIs often have inconsistent response structures, optional fields, or nested data in unexpected locations. Direct property access fails when the expected structure doesn't match the actual response.
+
+**Solution:**
+Implement robust data mapping with multiple fallback paths and comprehensive field extraction utilities.
+
+**Code Pattern:**
+```javascript
+// Robust field extraction with multiple fallback paths
+function extractField(obj, paths, defaultValue = null) {
+    for (const path of paths) {
+        try {
+            const value = path.split('.').reduce((current, key) => current?.[key], obj);
+            if (value !== undefined && value !== null && value !== '') {
+                console.log(`Found field at path '${path}':`, value);
+                return value;
+            }
+        } catch (error) {
+            console.log(`Failed to extract path '${path}':`, error.message);
+        }
+    }
+    
+    console.log(`Field not found in any path ${JSON.stringify(paths)}, using default:`, defaultValue);
+    return defaultValue;
+}
+
+// Numeric field extraction with parsing
+function extractNumericField(obj, paths, defaultValue = 0) {
+    const value = extractField(obj, paths, defaultValue);
+    
+    if (typeof value === 'number') {
+        return Math.max(0, Math.floor(value));
+    }
+    
+    if (typeof value === 'string') {
+        const parsed = parseInt(value.replace(/[^0-9]/g, ''), 10);
+        return isNaN(parsed) ? defaultValue : Math.max(0, parsed);
+    }
+    
+    return defaultValue;
+}
+
+// Main data extraction function with structure detection
+export function extractUserPostsData(apiResponse) {
+    console.log('[Data Mapper] Starting extraction');
+    
+    if (!apiResponse) {
+        console.error('[Data Mapper] No API response provided');
+        return [];
+    }
+
+    // Handle multiple possible response structures
+    let itemsArray = null;
+    
+    if (Array.isArray(apiResponse)) {
+        itemsArray = apiResponse;
+    } else if (apiResponse.data) {
+        if (Array.isArray(apiResponse.data)) {
+            itemsArray = apiResponse.data;
+        } else if (apiResponse.data.items && Array.isArray(apiResponse.data.items)) {
+            itemsArray = apiResponse.data.items;
+        } else {
+            // Log structure for debugging
+            console.log('[Data Mapper] Data object structure:', {
+                dataType: typeof apiResponse.data,
+                dataKeys: Object.keys(apiResponse.data),
+                sampleData: apiResponse.data
+            });
+            itemsArray = [apiResponse.data]; // Treat as single item
+        }
+    } else {
+        console.error('[Data Mapper] Unknown response structure:', Object.keys(apiResponse));
+        return [];
+    }
+
+    return itemsArray.map((item, index) => {
+        try {
+            // Extract with multiple fallback paths
+            const username = extractField(item, ['user.username', 'owner.username', 'username'], 'Unknown');
+            const followers = extractNumericField(item, ['user.follower_count', 'follower_count'], 0);
+            const title = extractField(item, ['caption.text', 'caption', 'description'], 'No caption');
+            const likes = extractNumericField(item, ['like_count', 'likes'], 0);
+            const shares = extractNumericField(item, ['reshare_count', 'share_count'], 0);
+            
+            // Generate URL from code field
+            let url = extractField(item, ['permalink', 'url']);
+            if (!url) {
+                const code = extractField(item, ['code', 'shortcode']);
+                if (code) {
+                    url = `https://platform.com/p/${code}/`;
+                }
+            }
+
+            return {
+                username,
+                followers,
+                title: truncateText(title, 100),
+                likes,
+                shares,
+                url: url || 'https://platform.com/'
+            };
+
+        } catch (error) {
+            console.error(`[Data Mapper] Error processing item ${index + 1}:`, error);
+            return {
+                username: 'Error',
+                followers: 0,
+                title: 'Error processing item',
+                likes: 0,
+                shares: 0,
+                url: 'https://platform.com/'
+            };
+        }
+    });
+}
+```
+
+**Key Points:**
+- Always provide multiple fallback paths for each field
+- Use optional chaining (`?.`) and array fallbacks for robust extraction
+- Log structure information when unexpected formats are encountered
+- Return sensible defaults rather than throwing errors
+- Handle both array and object response structures
+- Parse numeric strings by removing non-digit characters
+- Include comprehensive error handling for each item
+
+**Applicable To:**
+- Language: JavaScript/TypeScript
+- Frameworks: Any application consuming external APIs
+- Use Cases: API integration, data normalization, third-party service integration
+
+---
+
+### API Integration: Environment Variable Standardization Pattern
+
+**Symptoms:**
+- Different API endpoints using different environment variable names for the same key
+- "API key not found" despite key being configured
+- Inconsistent naming patterns across platform integrations
+- Same RapidAPI key referenced by multiple variable names
+
+**Root Cause:**
+When multiple API endpoints share the same API key (like RapidAPI), using different environment variable names creates configuration confusion and failures when the expected variable name doesn't exist.
+
+**Solution:**
+Standardize environment variable names across platforms that share the same API service, ensuring consistency and reducing configuration complexity.
+
+**Code Pattern:**
+```javascript
+// ❌ Inconsistent naming - each platform uses different env var
+// TikTok API
+return await getApiKey('rapidApiKey', 'VITE_TIKTOK_RAPIDAPI_KEY');
+
+// Instagram API  
+return await getApiKey('rapidApiKey', 'VITE_INSTAGRAM_RAPIDAPI_KEY');
+
+// ✅ Standardized naming - both use same env var
+// TikTok API
+return await getApiKey('rapidApiKey', 'VITE_RAPIDAPI_KEY');
+
+// Instagram API
+return await getApiKey('rapidApiKey', 'VITE_RAPIDAPI_KEY');
+
+// .env file - Single variable for shared service
+VITE_YOUTUBE_API_KEY=your_youtube_key_here
+VITE_RAPIDAPI_KEY=your_rapidapi_key_here  // Used by both TikTok and Instagram
+
+// API service factory pattern for shared keys
+class APIKeyManager {
+    static getSharedKey(service) {
+        const keyMap = {
+            'rapidapi': 'VITE_RAPIDAPI_KEY',
+            'youtube': 'VITE_YOUTUBE_API_KEY',
+            'twitter': 'VITE_TWITTER_API_KEY'
+        };
+        
+        return import.meta.env[keyMap[service]];
+    }
+}
+
+// Usage in platform APIs
+async function getRapidApiKey() {
+    return APIKeyManager.getSharedKey('rapidapi');
+}
+```
+
+**Key Points:**
+- Use descriptive but generic names for shared API services
+- Group related platforms under the same service key when they share credentials
+- Update all platform APIs simultaneously when changing variable names  
+- Document which platforms share which API keys
+- Test that all affected platforms work after standardization
+- Consider backwards compatibility during transition periods
+
+**Applicable To:**
+- Language: JavaScript/TypeScript
+- Frameworks: Any application using environment variables for API keys
+- Use Cases: Multi-platform API integration, shared service credentials, configuration management
+
+---
+
 ## Technology Stack
 
 - **Frontend**: React 18 + Vite
@@ -764,6 +1343,6 @@ socialgirl-app/
 ## API Keys Required
 
 - `VITE_YOUTUBE_API_KEY`: YouTube Data API v3 key
-- `VITE_TIKTOK_RAPIDAPI_KEY`: RapidAPI key (shared for TikTok and Instagram)
+- `VITE_RAPIDAPI_KEY`: RapidAPI key (shared for TikTok and Instagram)
 
 Note: API keys can be configured through the Settings page in the application for secure, encrypted storage.

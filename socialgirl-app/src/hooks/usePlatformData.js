@@ -9,6 +9,7 @@ const createInitialState = () => {
             videosData: [],
             usersData: [],
             userVideosData: [],
+            userPostsData: [],
             isLoading: false
         };
     });
@@ -48,11 +49,16 @@ const usePlatformData = () => {
         setData(platform, 'userVideosData', userVideosData);
     };
 
+    const setUserPostsData = (platform, userPostsData) => {
+        setData(platform, 'userPostsData', userPostsData);
+    };
+
     const getPlatformData = (platform) => {
         return platformData[platform] || {
             videosData: [],
             usersData: [],
             userVideosData: [],
+            userPostsData: [],
             isLoading: false
         };
     };
@@ -61,7 +67,8 @@ const usePlatformData = () => {
         updatePlatformData(platform, {
             videosData: [],
             usersData: [],
-            userVideosData: []
+            userVideosData: [],
+            userPostsData: []
         });
     };
 
@@ -72,6 +79,7 @@ const usePlatformData = () => {
         setVideosData,
         setUsersData,
         setUserVideosData,
+        setUserPostsData,
         getPlatformData,
         clearPlatformData
     };
