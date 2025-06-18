@@ -6,8 +6,8 @@ async function getRapidApiKey() {
     return await getApiKey('rapidApiKey', 'VITE_RAPIDAPI_KEY');
 }
 
-// Hardcoded RapidAPI host for TikTok
-const RAPIDAPI_HOST = 'tiktok-api23.p.rapidapi.com';
+// TikTok RapidAPI configuration
+const RAPIDAPI_HOST = import.meta.env.VITE_TIKTOK_RAPIDAPI_HOST || 'tiktok-api23.p.rapidapi.com';
 const BASE_URL = `https://${RAPIDAPI_HOST}/api`;
 
 /**
