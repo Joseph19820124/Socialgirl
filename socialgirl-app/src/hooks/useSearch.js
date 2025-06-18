@@ -1,10 +1,14 @@
 import { useCallback } from 'react';
+import { useToast } from '../contexts/ToastContext';
+import { useDialog } from '../contexts/DialogContext';
 import SearchService from '../services/searchService';
 
 const searchService = new SearchService();
 
 const useSearch = (platformData) => {
     const { setLoading, setVideosData, setUserVideosData, setUsersData, setUserPostsData } = platformData;
+    const { showSuccessToast } = useToast();
+    const { showAlert } = useDialog();
 
     const createSearchHandler = useCallback((platform, activeTab = 'videos') => {
         return async (query) => {
@@ -24,6 +28,10 @@ const useSearch = (platformData) => {
                 } else {
                     setVideosData(platform, data);
                 }
+                
+                // Show success toast with result count
+                const resultCount = Array.isArray(data) ? data.length : 0;
+                showSuccessToast(resultCount);
             } catch (error) {
                 console.error(`${platform} search error:`, error);
                 
@@ -31,16 +39,16 @@ const useSearch = (platformData) => {
                 if (activeTab === 'userPosts' || activeTab === 'userVideos') {
                     const tabName = activeTab === 'userVideos' ? 'User Videos' : 'User Posts';
                     if (error.message.includes('json')) {
-                        alert(`${tabName}: This user may have a private account or no popular posts available.`);
+                        showAlert(`${tabName}: This user may have a private account or no popular posts available.`, 'OK');
                     } else {
-                        alert(`${tabName} Error: ${error.message}`);
+                        showAlert(`${tabName} Error: ${error.message}`, 'OK');
                     }
                 }
             } finally {
                 setLoading(platform, false);
             }
         };
-    }, [setLoading, setVideosData, setUserVideosData, setUsersData, setUserPostsData]);
+    }, [setLoading, setVideosData, setUserVideosData, setUsersData, setUserPostsData, showSuccessToast, showAlert]);
 
     // Create separate handlers for videos, users, user videos, and user posts
     const createPlatformHandlers = useCallback((platform) => {

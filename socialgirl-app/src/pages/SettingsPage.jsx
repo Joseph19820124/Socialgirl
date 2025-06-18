@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useDialog } from '../contexts/DialogContext';
 import { encryptData, decryptData, saveEncryptedSettings, loadEncryptedSettings, clearStoredSettings } from '../utils/encryption';
 import { getAllQuotaStatus, resetQuota } from '../utils/quotaManager';
 import { useApiKeys } from '../contexts/ApiKeyContext';
@@ -6,6 +7,7 @@ import './SettingsPage.css';
 
 const SettingsPage = () => {
     const { setApiKeys: setContextApiKeys, clearApiKeys } = useApiKeys();
+    const { showConfirm } = useDialog();
     const [apiKeys, setApiKeys] = useState({
         youtubeApiKey: '',
         rapidApiKey: ''
@@ -32,8 +34,14 @@ const SettingsPage = () => {
         setQuotaStatus(getAllQuotaStatus());
     };
     
-    const handleResetQuota = (platform) => {
-        if (window.confirm(`Are you sure you want to reset the ${platform.toUpperCase()} API quota tracking? This is for testing purposes only.`)) {
+    const handleResetQuota = async (platform) => {
+        const confirmed = await showConfirm(
+            `Are you sure you want to reset the ${platform.toUpperCase()} API quota tracking? This is for testing purposes only.`,
+            'RESET QUOTA',
+            'CANCEL'
+        );
+        
+        if (confirmed) {
             resetQuota(platform);
             refreshQuotaStatus();
             showMessage(`${platform.toUpperCase()} quota tracking reset successfully`, 'success');
@@ -172,8 +180,14 @@ const SettingsPage = () => {
         event.target.value = '';
     };
 
-    const handleClear = () => {
-        if (window.confirm('Are you sure you want to clear all stored settings? This cannot be undone.')) {
+    const handleClear = async () => {
+        const confirmed = await showConfirm(
+            'Are you sure you want to clear all stored settings? This cannot be undone.',
+            'CLEAR SETTINGS',
+            'CANCEL'
+        );
+        
+        if (confirmed) {
             console.log('[Settings] Clearing all stored settings and context');
             clearStoredSettings();
             

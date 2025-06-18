@@ -4,11 +4,9 @@ import { formatNumber, getStatClass } from '../utils/formatters';
 import { getStoredSortConfig, storeSortConfig, getStoredPageSize, storePageSize } from '../utils/sortPersistence';
 import Pagination from './Pagination';
 import '../styles/components/Table.css';
-import '../styles/components/ResizableTable.css';
-import '../styles/components/UsersTable.css';
 import '../styles/performance.css';
 
-const GenericResizableTable = ({ data, isLoading, columns, cellRenderers, skeletonComponents, tableId = 'default', showExport = true }) => {
+const GenericResizableTable = ({ data, isLoading, columns, cellRenderers, skeletonComponents, tableId = 'default' }) => {
     // Initialize sort config from localStorage or default
     const [sortConfig, setSortConfig] = useState(() => {
         const stored = getStoredSortConfig(tableId);
@@ -40,9 +38,6 @@ const GenericResizableTable = ({ data, isLoading, columns, cellRenderers, skelet
         const dataArray = Array.isArray(dataToSort) ? dataToSort : [];
         
         // For very large datasets (>1000 items), consider chunked sorting
-        if (dataArray.length > 1000) {
-            console.log(`Sorting large dataset of ${dataArray.length} items by ${sortKey}`);
-        }
         
         return [...dataArray].sort((a, b) => {
             const aValue = a[sortKey];
@@ -290,53 +285,6 @@ const GenericResizableTable = ({ data, isLoading, columns, cellRenderers, skelet
         return <div className={`skeleton ${column.key}`}></div>;
     };
 
-    // Export functionality
-    const exportToCSV = () => {
-        if (!sortedData || sortedData.length === 0) {
-            alert('No data to export');
-            return;
-        }
-
-        const csvContent = convertToCSV(sortedData, columns);
-        downloadFile(csvContent, `${tableId}-export.csv`, 'text/csv');
-    };
-
-    const exportToJSON = () => {
-        if (!sortedData || sortedData.length === 0) {
-            alert('No data to export');
-            return;
-        }
-
-        const jsonContent = JSON.stringify(sortedData, null, 2);
-        downloadFile(jsonContent, `${tableId}-export.json`, 'application/json');
-    };
-
-    const convertToCSV = (data, columns) => {
-        const headers = columns.map(col => col.label).join(',');
-        const rows = data.map(row => 
-            columns.map(col => {
-                const value = row[col.key];
-                // Handle values that might contain commas or quotes
-                if (typeof value === 'string' && (value.includes(',') || value.includes('"'))) {
-                    return `"${value.replace(/"/g, '""')}"`;
-                }
-                return value || '';
-            }).join(',')
-        );
-        return [headers, ...rows].join('\n');
-    };
-
-    const downloadFile = (content, filename, mimeType) => {
-        const blob = new Blob([content], { type: mimeType });
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = filename;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(url);
-    };
 
     if (isLoading) {
         return (
@@ -379,25 +327,6 @@ const GenericResizableTable = ({ data, isLoading, columns, cellRenderers, skelet
 
     return (
         <>
-            {showExport && sortedData && sortedData.length > 0 && (
-                <div className="export-controls">
-                    <span className="export-info">Export all {sortedData.length} items:</span>
-                    <button 
-                        className="export-btn export-csv"
-                        onClick={exportToCSV}
-                        title="Export all data as CSV"
-                    >
-                        CSV
-                    </button>
-                    <button 
-                        className="export-btn export-json"
-                        onClick={exportToJSON}
-                        title="Export all data as JSON"
-                    >
-                        JSON
-                    </button>
-                </div>
-            )}
             <div className="table-wrapper">
                 <table ref={tableRef}>
                     <thead>

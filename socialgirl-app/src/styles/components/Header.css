@@ -1,50 +1,78 @@
 /* HEADER VARIATION 2: NEON CYBER */
 .header-v2 {
-    background: linear-gradient(135deg, #1a1a1d 0%, #0e0e10 100%);
-    border: 2px solid #9146ff;
-    padding: 20px 32px;
+    padding: 20px 0;
     margin-bottom: 32px;
-    border-radius: 0;
-    box-shadow: 
-        0 0 20px rgba(145, 70, 255, 0.5),
-        inset 0 0 20px rgba(145, 70, 255, 0.1);
     position: relative;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    animation: neonGlow 2s ease-in-out infinite alternate;
 }
 
-@keyframes neonGlow {
-    from {
-        box-shadow: 
-            0 0 20px rgba(145, 70, 255, 0.5),
-            inset 0 0 20px rgba(145, 70, 255, 0.1);
+
+/* Morphing Logo */
+.logo-morph {
+    width: 48px;
+    height: 48px;
+    position: relative;
+    flex-shrink: 0;
+    margin: 0;
+    padding: 0;
+}
+
+.morph-shape {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(45deg, #00c9ff, #92fe9d, #fc00ff);
+    animation: morphShape 8s ease-in-out infinite;
+    box-shadow: 0 0 20px rgba(0, 201, 255, 0.5);
+}
+
+@keyframes morphShape {
+    0%, 100% {
+        border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+        transform: rotate(0deg);
     }
-    to {
-        box-shadow: 
-            0 0 30px rgba(145, 70, 255, 0.8),
-            inset 0 0 30px rgba(145, 70, 255, 0.2);
+    25% {
+        border-radius: 58% 42% 75% 25% / 76% 46% 54% 24%;
+        transform: rotate(90deg);
+    }
+    50% {
+        border-radius: 50% 50% 33% 67% / 55% 27% 73% 45%;
+        transform: rotate(180deg);
+    }
+    75% {
+        border-radius: 33% 67% 58% 42% / 63% 68% 32% 37%;
+        transform: rotate(270deg);
     }
 }
 
-/* Logo Style: Futuristic Outline */
-.logo-v8 {
-    font-family: 'Roboto', sans-serif;
+/* Logo Style: Gradient Wave */
+.gradient-wave {
     font-size: 32px;
-    font-weight: 700;
-    color: transparent;
-    -webkit-text-stroke: 2px #00f5ff;
-    cursor: pointer;
-    transition: all 0.3s ease;
+    font-weight: 900;
+    background: linear-gradient(45deg, #00c9ff, #92fe9d, #fc00ff, #00c9ff);
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradientShift 3s ease infinite;
     text-transform: uppercase;
     letter-spacing: 2px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    margin: 0;
+    padding: 0;
+    line-height: 1;
 }
 
-.logo-v8:hover {
-    -webkit-text-stroke: 2px #9146ff;
-    color: rgba(145, 70, 255, 0.1);
+.gradient-wave:hover {
     transform: scale(1.05);
+}
+
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
 /* Mobile menu toggle button */
@@ -105,8 +133,8 @@
 .header-mobile-row {
     display: flex;
     align-items: center;
-    justify-content: space-between;
     width: 100%;
+    gap: 16px;
 }
 
 .nav-v2 {
@@ -118,7 +146,7 @@
 /* Responsive */
 @media (max-width: 768px) {
     .header-v2 { 
-        padding: 12px 16px; 
+        padding: 12px 0; 
         flex-direction: column;
         gap: 0;
         position: relative;
@@ -128,7 +156,7 @@
         display: flex;
     }
     
-    .logo-v8 {
+    .gradient-wave {
         font-size: 24px;
         letter-spacing: 1px;
     }
@@ -175,10 +203,10 @@
 
 @media (max-width: 480px) {
     .header-v2 {
-        padding: 10px 12px;
+        padding: 10px 0;
     }
     
-    .logo-v8 {
+    .gradient-wave {
         font-size: 20px;
     }
     

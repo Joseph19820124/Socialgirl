@@ -1,6 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Header from './components/Header';
+import Preloader from './components/Preloader';
 import YouTubePage from './pages/YouTubePage';
 import InstagramPage from './pages/InstagramPage';
 import TikTokPage from './pages/TikTokPage';
@@ -9,6 +10,8 @@ import usePlatformData from './hooks/usePlatformData';
 import useSearch from './hooks/useSearch';
 import { PLATFORMS, DEFAULT_PLATFORM } from './config/platforms';
 import { ApiKeyProvider, useApiKeys } from './contexts/ApiKeyContext';
+import { ToastProvider } from './contexts/ToastContext';
+import { DialogProvider } from './contexts/DialogContext';
 import { setApiKeyContextGetter } from './utils/apiKeyManager';
 import './App.css';
 
@@ -39,11 +42,17 @@ function AppContent() {
 
 
     return (
-        <div className="container">
-            <Header />
-            <div className="section">
-                <div className="section-title-v1">{getPageTitle()}</div>
-                <Routes>
+        <div className="aurora-waves">
+            <div className="aurora-layer"></div>
+            <div className="aurora-layer"></div>
+            <div className="aurora-layer"></div>
+            <div className="noise-overlay"></div>
+            
+            <div className="container">
+                <Header />
+                <div className="section">
+                    <div className="section-title-v1">{getPageTitle()}</div>
+                    <Routes>
                     <Route path="/" element={<Navigate to="/youtube" replace />} />
                     <Route 
                         path="/youtube" 
@@ -87,16 +96,28 @@ function AppContent() {
                     <Route path="/settings" element={<SettingsPage />} />
                 </Routes>
             </div>
+            </div>
         </div>
     );
 }
 
 function App() {
+    const [isLoading, setIsLoading] = useState(true);
+
+    const handleLoadComplete = () => {
+        setIsLoading(false);
+    };
+
     return (
         <ApiKeyProvider>
-            <Router>
-                <AppContent />
-            </Router>
+            <DialogProvider>
+                <ToastProvider>
+                    {isLoading && <Preloader onLoadComplete={handleLoadComplete} />}
+                    <Router>
+                        <AppContent />
+                    </Router>
+                </ToastProvider>
+            </DialogProvider>
         </ApiKeyProvider>
     );
 }

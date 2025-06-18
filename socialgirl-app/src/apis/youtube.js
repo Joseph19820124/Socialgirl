@@ -33,7 +33,7 @@ async function getVideoData(videoId) {
         trackOperation('youtube', 'videos');
         return await response.json();
     } catch (error) {
-        console.error('Error fetching YouTube video data:', error);
+        // console.error('Error fetching YouTube video data:', error);
         throw error;
     }
 }
@@ -63,7 +63,7 @@ async function getChannelData(channelId) {
         trackOperation('youtube', 'channels');
         return await response.json();
     } catch (error) {
-        console.error('Error fetching YouTube channel data:', error);
+        // console.error('Error fetching YouTube channel data:', error);
         throw error;
     }
 }
@@ -112,7 +112,7 @@ async function searchVideos(query, maxResults = 10, options = {}) {
         trackOperation('youtube', 'search');
         return await response.json();
     } catch (error) {
-        console.error('Error searching YouTube videos:', error);
+        // console.error('Error searching YouTube videos:', error);
         throw error;
     }
 }
@@ -147,7 +147,7 @@ async function getVideosStatistics(videoIds) {
         trackOperation('youtube', 'videos', videoIds.length);
         return await response.json();
     } catch (error) {
-        console.error('Error fetching YouTube videos statistics:', error);
+        // console.error('Error fetching YouTube videos statistics:', error);
         throw error;
     }
 }
@@ -191,7 +191,7 @@ async function getChannelByHandle(handle) {
         
         return null;
     } catch (error) {
-        console.error('Error finding YouTube channel:', error);
+        // console.error('Error finding YouTube channel:', error);
         throw error;
     }
 }
@@ -242,7 +242,7 @@ async function getChannelVideos(channelId, maxResults = 20, options = {}) {
         return videosWithStats;
         
     } catch (error) {
-        console.error('Error fetching channel videos:', error);
+        // console.error('Error fetching channel videos:', error);
         throw error;
     }
 }
@@ -263,7 +263,7 @@ async function getChannelVideosByHandle(handle, maxResults = 20, options = {}) {
         
         return await getChannelVideos(channelId, maxResults, options);
     } catch (error) {
-        console.error('Error fetching channel videos by handle:', error);
+        // console.error('Error fetching channel videos by handle:', error);
         throw error;
     }
 }

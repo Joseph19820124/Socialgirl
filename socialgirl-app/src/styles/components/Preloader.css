@@ -1,0 +1,171 @@
+/* Preloader Container */
+.preloader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #0a0a0a;
+    transition: opacity 1s ease, visibility 1s ease;
+}
+
+.preloader.fade-out {
+    opacity: 0;
+    visibility: hidden;
+}
+
+/* Aurora background for preloader */
+.preloader-aurora {
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    top: -50%;
+    left: -50%;
+    opacity: 0.3;
+    filter: blur(50px);
+}
+
+.preloader-aurora:nth-child(1) {
+    background: radial-gradient(circle at 30% 50%, rgba(0, 201, 255, 0.3) 0%, transparent 50%);
+    animation: preloaderAurora1 4s ease-in-out infinite;
+}
+
+.preloader-aurora:nth-child(2) {
+    background: radial-gradient(circle at 70% 50%, rgba(146, 254, 157, 0.3) 0%, transparent 50%);
+    animation: preloaderAurora2 4s ease-in-out infinite 0.5s;
+}
+
+.preloader-aurora:nth-child(3) {
+    background: radial-gradient(circle at 50% 50%, rgba(252, 0, 255, 0.3) 0%, transparent 50%);
+    animation: preloaderAurora3 4s ease-in-out infinite 1s;
+}
+
+@keyframes preloaderAurora1 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(50px, -50px) scale(1.2); }
+}
+
+@keyframes preloaderAurora2 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(-50px, 50px) scale(1.2); }
+}
+
+@keyframes preloaderAurora3 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(0, -30px) scale(1.1); }
+}
+
+/* Main preloader content */
+.preloader-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+}
+
+/* Liquid Morph Animation */
+.liquid-morph {
+    width: 100px;
+    height: 100px;
+    position: relative;
+    margin: 0 auto 30px;
+}
+
+.liquid-shape {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(45deg, #00c9ff, #92fe9d, #fc00ff);
+    animation: liquidMorph 3s ease-in-out infinite;
+    box-shadow: 0 0 40px rgba(0, 201, 255, 0.5);
+}
+
+@keyframes liquidMorph {
+    0%, 100% {
+        border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+        transform: rotate(0deg) scale(1);
+    }
+    25% {
+        border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+        transform: rotate(90deg) scale(0.9);
+    }
+    50% {
+        border-radius: 40% 60% 60% 40% / 70% 30% 70% 30%;
+        transform: rotate(180deg) scale(1.1);
+    }
+    75% {
+        border-radius: 70% 30% 30% 70% / 30% 70% 70% 30%;
+        transform: rotate(270deg) scale(0.95);
+    }
+}
+
+/* Loading text */
+.loading-text {
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    background: linear-gradient(45deg, #00c9ff, #92fe9d, #fc00ff, #00c9ff);
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradientShift 3s ease infinite;
+    margin-bottom: 10px;
+}
+
+/* Loading percentage */
+.loading-percentage {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.6);
+    font-weight: 500;
+    margin-top: 10px;
+}
+
+/* Progress bar */
+.progress-bar {
+    width: 200px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+    overflow: hidden;
+    margin: 20px auto 0;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #00c9ff, #92fe9d, #fc00ff);
+    transition: width 0.3s ease;
+    box-shadow: 0 0 10px rgba(0, 201, 255, 0.5);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .liquid-morph {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .loading-text {
+        font-size: 16px;
+    }
+    
+    .progress-bar {
+        width: 150px;
+    }
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+    .liquid-shape,
+    .preloader-aurora,
+    .loading-text {
+        animation: none;
+    }
+    
+    .progress-fill {
+        transition: none;
+    }
+}

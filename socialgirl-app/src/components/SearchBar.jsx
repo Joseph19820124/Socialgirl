@@ -10,18 +10,17 @@ const SearchBar = ({ onSearch, placeholder = "Search Database" }) => {
     };
 
     return (
-        <div className="search-v2">
-            <div className="search-icon-v2">⚡</div>
-            <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit}>
+            <div className="morph-search">
+                <div className="morph-border"></div>
                 <input
                     type="text"
-                    className="search-input-v2"
                     placeholder={placeholder}
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                 />
-            </form>
-        </div>
+            </div>
+        </form>
     );
 };
 

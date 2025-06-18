@@ -43,6 +43,16 @@ export function extractVideoData(apiResponse) {
             const comments = item.comment_count || 0;
             const shares = item.share_count || 0;
             
+            // Calculate performance score (likes-to-views ratio)
+            const calculatePerformance = (likes, views) => {
+                if (views === 0) return 0;
+                // Scale the ratio to 0-100, where 10% like ratio = 100 score
+                const ratio = (likes / views) * 1000;
+                return Math.min(100, Math.max(0, Math.round(ratio)));
+            };
+            
+            const performance = calculatePerformance(likes, views);
+            
             // Generate URL from code
             const code = item.code;
             const url = code ? `https://www.instagram.com/reel/${code}/` : 'https://www.instagram.com/';
@@ -55,6 +65,7 @@ export function extractVideoData(apiResponse) {
                 likes,
                 comments,
                 shares,
+                performance,
                 url
             };
 
@@ -86,6 +97,7 @@ export function extractVideoData(apiResponse) {
                 likes: 0,
                 comments: 0,
                 shares: 0,
+                performance: 0,
                 url: 'https://www.instagram.com/'
             };
         }
@@ -178,6 +190,16 @@ export function extractUserPostsData(apiResponse) {
             const comments = extractNumericField(item, ['comment_count', 'comments'], 0);
             const shares = extractNumericField(item, ['reshare_count', 'share_count', 'shares'], 0); // API uses reshare_count
             
+            // Calculate performance score (likes-to-views ratio)
+            const calculatePerformance = (likes, views) => {
+                if (views === 0) return 0;
+                // Scale the ratio to 0-100, where 10% like ratio = 100 score
+                const ratio = (likes / views) * 1000;
+                return Math.min(100, Math.max(0, Math.round(ratio)));
+            };
+            
+            const performance = calculatePerformance(likes, views);
+            
             // Extract URL using code field for proper Instagram URLs
             let url = extractField(item, ['permalink', 'url', 'link']);
             if (!url) {
@@ -212,6 +234,7 @@ export function extractUserPostsData(apiResponse) {
                 likes,
                 comments,
                 shares,
+                performance,
                 url
             };
 
@@ -243,6 +266,7 @@ export function extractUserPostsData(apiResponse) {
                 likes: 0,
                 comments: 0,
                 shares: 0,
+                performance: 0,
                 url: 'https://www.instagram.com/'
             };
         }

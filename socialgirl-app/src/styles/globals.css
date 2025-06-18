@@ -13,10 +13,11 @@
 
 body {
     font-family: 'Roboto', sans-serif;
-    background: linear-gradient(135deg, #0e0e10 0%, #1a1a1d 100%);
+    background: #0a0a0a;
     color: #efeff1;
     min-height: 100vh;
-    padding: 20px;
+    padding: 0;
+    margin: 0;
     line-height: 1.5;
     overflow-x: hidden;
 }
@@ -35,6 +36,8 @@ html, body {
 .container {
     max-width: 1600px;
     margin: 0 auto;
+    padding: 20px;
+    position: relative;
 }
 
 /* Loading Skeleton Animation */
@@ -106,16 +109,15 @@ html, body {
 /* Section Styles */
 .section {
     margin-bottom: 48px;
+    position: relative;
+    z-index: 10;
 }
 
 /* Responsive Typography */
 @media (max-width: 768px) {
-    body {
-        padding: 16px;
-    }
     
     .container { 
-        padding: 0;
+        padding: 16px;
         max-width: 100%;
     }
     
@@ -124,15 +126,18 @@ html, body {
     }
     
     .section-title-v1 {
-        font-size: 20px;
+        font-size: 18px;
         margin-bottom: 16px;
     }
 }
 
 @media (max-width: 480px) {
     body {
-        padding: 12px;
         font-size: 14px;
+    }
+    
+    .container {
+        padding: 12px;
     }
     
     .section {

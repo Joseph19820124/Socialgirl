@@ -16,25 +16,25 @@ const BASE_URL = `/api/instagram`; // Vite proxy will route to https://instagram
  * @returns {Promise<Object>} Search results response
  */
 async function searchReels(keyword) {
-    console.log(`[Instagram API] Starting searchReels for keyword: ${keyword}`);
+    // console.log(`[Instagram API] Starting searchReels for keyword: ${keyword}`);
     
     if (!canPerformOperation('instagram', 'request')) {
         const errorMsg = 'Instagram API quota exceeded. Please try again next month.';
-        console.error(`[Instagram API] Quota check failed: ${errorMsg}`);
+        console.error(`Instagram API: Quota check failed: ${errorMsg}`);
         throw new Error(errorMsg);
     }
     
     const apiKey = await getRapidApiKey();
     if (!apiKey) {
         const errorMsg = 'RapidAPI key not found. Please configure it in Settings.';
-        console.error(`[Instagram API] API key missing: ${errorMsg}`);
+        console.error(`Instagram API: API key missing: ${errorMsg}`);
         throw new Error(errorMsg);
     }
     
-    console.log(`[Instagram API] API key retrieved successfully (length: ${apiKey.length})`);
+    // console.log(`[Instagram API] API key retrieved successfully (length: ${apiKey.length})`);
     
     const url = `${BASE_URL}/searchreels/?keyword=${encodeURIComponent(keyword)}`;
-    console.log(`[Instagram API] Making request to: ${url}`);
+    // console.log(`[Instagram API] Making request to: ${url}`);
     
     const options = {
         method: 'GET',
@@ -44,41 +44,37 @@ async function searchReels(keyword) {
         }
     };
     
-    console.log(`[Instagram API] Request headers:`, {
-        'x-rapidapi-key': `${apiKey.substring(0, 8)}...`, // Log only first 8 chars for security
-        'x-rapidapi-host': `${RAPIDAPI_HOST} (added by Vite proxy)`
-    });
+    // console.log(`[Instagram API] Request headers:`, {
+    //     'x-rapidapi-key': `${apiKey.substring(0, 8)}...`, // Log only first 8 chars for security
+    //     'x-rapidapi-host': `${RAPIDAPI_HOST} (added by Vite proxy)`
+    // });
     
     try {
         const response = await fetch(url, options);
         
-        console.log(`[Instagram API] Response status: ${response.status} ${response.statusText}`);
-        console.log(`[Instagram API] Response headers:`, Object.fromEntries(response.headers.entries()));
+        // console.log(`[Instagram API] Response status: ${response.status} ${response.statusText}`);
+        // console.log(`[Instagram API] Response headers:`, Object.fromEntries(response.headers.entries()));
         
         if (!response.ok) {
             const errorText = await response.text();
-            console.error(`[Instagram API] Error response body:`, errorText);
+            console.error(`Instagram API: Error response body:`, errorText);
             throw new Error(`Instagram API error: ${response.status} - ${errorText}`);
         }
         
         const result = await response.json();
-        console.log(`[Instagram API] Success! Response data structure:`, {
-            hasData: !!result,
-            dataType: typeof result,
-            hasDataObject: !!result.data,
-            itemCount: result.data?.items?.length || 0
-        });
+        // console.log(`[Instagram API] Success! Response data structure:`, {
+        //     hasData: !!result,
+        //     dataType: typeof result,
+        //     hasDataObject: !!result.data,
+        //     itemCount: result.data?.items?.length || 0
+        // });
         
         trackOperation('instagram', 'request');
-        console.log(`[Instagram API] Operation tracked successfully`);
+        // console.log(`[Instagram API] Operation tracked successfully`);
         
         return result;
     } catch (error) {
-        console.error(`[Instagram API] Error in searchReels:`, {
-            errorMessage: error.message,
-            errorType: error.constructor.name,
-            stack: error.stack
-        });
+        console.error(`Instagram API: Error in searchReels:`, error.message);
         throw error;
     }
 }
@@ -89,25 +85,25 @@ async function searchReels(keyword) {
  * @returns {Promise<Object>} User reels data response
  */
 async function getUserReels(usernameOrId) {
-    console.log(`[Instagram API] Starting getUserReels for username: ${usernameOrId}`);
+    // console.log(`[Instagram API] Starting getUserReels for username: ${usernameOrId}`);
     
     if (!canPerformOperation('instagram', 'request')) {
         const errorMsg = 'Instagram API quota exceeded. Please try again next month.';
-        console.error(`[Instagram API] Quota check failed: ${errorMsg}`);
+        console.error(`Instagram API: Quota check failed: ${errorMsg}`);
         throw new Error(errorMsg);
     }
     
     const apiKey = await getRapidApiKey();
     if (!apiKey) {
         const errorMsg = 'RapidAPI key not found. Please configure it in Settings.';
-        console.error(`[Instagram API] API key missing: ${errorMsg}`);
+        console.error(`Instagram API: API key missing: ${errorMsg}`);
         throw new Error(errorMsg);
     }
     
-    console.log(`[Instagram API] API key retrieved successfully (length: ${apiKey.length})`);
+    // console.log(`[Instagram API] API key retrieved successfully (length: ${apiKey.length})`);
     
     const url = `${BASE_URL}/userreels/?username_or_id=${encodeURIComponent(usernameOrId)}`;
-    console.log(`[Instagram API] Making request to: ${url}`);
+    // console.log(`[Instagram API] Making request to: ${url}`);
     
     const options = {
         method: 'GET',
@@ -117,42 +113,38 @@ async function getUserReels(usernameOrId) {
         }
     };
     
-    console.log(`[Instagram API] Request headers:`, {
-        'x-rapidapi-key': `${apiKey.substring(0, 8)}...`, // Log only first 8 chars for security
-        'x-rapidapi-host': `${RAPIDAPI_HOST} (added by Vite proxy)`
-    });
+    // console.log(`[Instagram API] Request headers:`, {
+    //     'x-rapidapi-key': `${apiKey.substring(0, 8)}...`, // Log only first 8 chars for security
+    //     'x-rapidapi-host': `${RAPIDAPI_HOST} (added by Vite proxy)`
+    // });
     
     try {
         const response = await fetch(url, options);
         
-        console.log(`[Instagram API] Response status: ${response.status} ${response.statusText}`);
-        console.log(`[Instagram API] Response headers:`, Object.fromEntries(response.headers.entries()));
+        // console.log(`[Instagram API] Response status: ${response.status} ${response.statusText}`);
+        // console.log(`[Instagram API] Response headers:`, Object.fromEntries(response.headers.entries()));
         
         if (!response.ok) {
             const errorText = await response.text();
-            console.error(`[Instagram API] Error response body:`, errorText);
+            console.error(`Instagram API: Error response body:`, errorText);
             throw new Error(`Instagram API error: ${response.status} - ${errorText}`);
         }
         
         const result = await response.json();
-        console.log(`[Instagram API] Success! Response data structure:`, {
-            hasData: !!result,
-            dataType: typeof result,
-            isArray: Array.isArray(result),
-            keys: result && typeof result === 'object' ? Object.keys(result) : null,
-            itemCount: Array.isArray(result) ? result.length : (result && result.items ? result.items.length : 'unknown')
-        });
+        // console.log(`[Instagram API] Success! Response data structure:`, {
+        //     hasData: !!result,
+        //     dataType: typeof result,
+        //     isArray: Array.isArray(result),
+        //     keys: result && typeof result === 'object' ? Object.keys(result) : null,
+        //     itemCount: Array.isArray(result) ? result.length : (result && result.items ? result.items.length : 'unknown')
+        // });
         
         trackOperation('instagram', 'request');
-        console.log(`[Instagram API] Operation tracked successfully`);
+        // console.log(`[Instagram API] Operation tracked successfully`);
         
         return result;
     } catch (error) {
-        console.error(`[Instagram API] Error in getUserReels:`, {
-            errorMessage: error.message,
-            errorType: error.constructor.name,
-            stack: error.stack
-        });
+        console.error(`Instagram API: Error in getUserReels:`, error.message);
         throw error;
     }
 }

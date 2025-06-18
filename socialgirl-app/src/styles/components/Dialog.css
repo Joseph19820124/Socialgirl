@@ -1,0 +1,137 @@
+/* Dialog Overlay - Full viewport with backdrop blur */
+.dialog-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10001;
+    animation: overlayFadeIn 0.3s ease-out;
+}
+
+@keyframes overlayFadeIn {
+    0% {
+        opacity: 0;
+        backdrop-filter: blur(0px);
+    }
+    100% {
+        opacity: 1;
+        backdrop-filter: blur(10px);
+    }
+}
+
+/* Base dialog styles */
+.dialog {
+    padding: 32px;
+    border-radius: 16px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    min-width: 320px;
+    max-width: 500px;
+    animation: dialogEntry 0.5s ease-out;
+}
+
+.dialog h3 {
+    margin: 0 0 24px 0;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.4;
+    color: #fff;
+}
+
+.button-group {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: 12px 32px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    min-width: 120px;
+}
+
+/* Fractal specific styles */
+.fractal-dialog {
+    background: #111;
+    border: 2px solid transparent;
+    background-image: linear-gradient(#111, #111),
+                      linear-gradient(45deg, #00c9ff, #92fe9d, #fc00ff);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    position: relative;
+}
+
+
+
+.fractal-dialog .btn-yes {
+    background: linear-gradient(45deg, #00c9ff, #92fe9d);
+    color: #000;
+    font-weight: 600;
+}
+
+.fractal-dialog .btn-yes:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 201, 255, 0.4);
+}
+
+.fractal-dialog .btn-no {
+    background: transparent;
+    color: #fc00ff;
+    border: 2px solid #fc00ff;
+}
+
+.fractal-dialog .btn-no:hover {
+    background: rgba(252, 0, 255, 0.1);
+    box-shadow: 0 0 15px rgba(252, 0, 255, 0.3);
+}
+
+/* Entry animation */
+@keyframes dialogEntry {
+    0% {
+        transform: scale(0.8) translateY(20px);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .dialog {
+        margin: 20px;
+        min-width: 280px;
+        padding: 24px;
+    }
+    
+    .dialog h3 {
+        font-size: 18px;
+    }
+    
+    .button-group {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .btn {
+        padding: 14px 24px;
+        font-size: 14px;
+        min-width: auto;
+    }
+}

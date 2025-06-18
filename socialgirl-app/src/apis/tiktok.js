@@ -46,7 +46,7 @@ async function searchVideos(keyword, cursor = 0, searchId = 0) {
         trackOperation('tiktok', 'request');
         return await response.json();
     } catch (error) {
-        console.error('Error searching TikTok content:', error);
+        // console.error('Error searching TikTok content:', error);
         throw error;
     }
 }
@@ -86,7 +86,7 @@ async function getUserInfo(uniqueId) {
         trackOperation('tiktok', 'request');
         return await response.json();
     } catch (error) {
-        console.error('Error fetching TikTok user info:', error);
+        // console.error('Error fetching TikTok user info:', error);
         throw error;
     }
 }
@@ -134,7 +134,7 @@ async function getUserPopularPosts(secUid, count = 35, cursor = 0) {
         trackOperation('tiktok', 'request');
         return await response.json();
     } catch (error) {
-        console.error('Error fetching TikTok user popular posts:', error);
+        // console.error('Error fetching TikTok user popular posts:', error);
         throw error;
     }
 }

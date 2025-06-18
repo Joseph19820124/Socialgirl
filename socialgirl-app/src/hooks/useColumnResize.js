@@ -15,16 +15,16 @@ export const useColumnResize = (columns) => {
     const getPredefinedWidth = (columnKey) => {
         const widthMap = {
             // Shared columns (consistent across both tables)
-            'username': 140,
-            'followers': 100,
-            'url': 80,
+            'username': 90,
+            'followers': 70,
+            'url': 70,
             
             // Videos table specific columns
             'title': 250,
-            'views': 80,
-            'comments': 80,
-            'likes': 80,
-            'shares': 80,
+            'views': 70,
+            'comments': 70,
+            'likes': 70,
+            'shares': 70,
             
             // Users table specific columns
             'about': 350,
@@ -36,9 +36,9 @@ export const useColumnResize = (columns) => {
     const getMinimumWidth = (columnKey) => {
         const minWidthMap = {
             // Shared columns
-            'username': 120,
-            'followers': 90,
-            'url': 80,
+            'username': 90,
+            'followers': 70,
+            'url': 70,
             
             // Videos table specific columns
             'title': 200,

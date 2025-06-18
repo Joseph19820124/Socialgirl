@@ -1,0 +1,143 @@
+/* Base toast styles */
+.toast {
+    padding: 16px 24px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    min-width: 300px;
+    max-width: 400px;
+}
+
+.toast:hover {
+    transform: translateY(-2px);
+}
+
+.toast-icon {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+}
+
+.toast-content {
+    flex: 1;
+}
+
+.toast-title {
+    font-weight: 600;
+    font-size: 16px;
+    margin-bottom: 4px;
+    color: #fff;
+}
+
+.toast-message {
+    font-size: 14px;
+    opacity: 0.8;
+    line-height: 1.4;
+    color: #fff;
+}
+
+.close-btn {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity 0.2s ease;
+    margin-left: 12px;
+    color: #fff;
+}
+
+.close-btn:hover {
+    opacity: 1;
+}
+
+/* Cosmic Dust specific styles */
+.cosmic-toast {
+    background: radial-gradient(ellipse at center, #1a0033 0%, #000 100%);
+    border: 1px solid rgba(138, 43, 226, 0.5);
+    animation: slideFromBottom 0.5s ease-out;
+    position: relative;
+    overflow: visible;
+}
+
+
+.star {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: #fff;
+    border-radius: 50%;
+    animation: twinkle 2s ease-in-out infinite;
+}
+
+.cosmic-toast .star:nth-child(6) { top: 20%; left: 30%; animation-delay: 0s; }
+.cosmic-toast .star:nth-child(7) { top: 60%; left: 60%; animation-delay: 0.5s; }
+.cosmic-toast .star:nth-child(8) { top: 40%; left: 80%; animation-delay: 1s; }
+.cosmic-toast .star:nth-child(9) { top: 80%; left: 20%; animation-delay: 1.5s; }
+
+@keyframes slideFromBottom {
+    0% {
+        transform: translateY(100vh);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+
+@keyframes twinkle {
+    0%, 100% { 
+        opacity: 0; 
+        transform: scale(0); 
+    }
+    50% { 
+        opacity: 1; 
+        transform: scale(1); 
+    }
+}
+
+@keyframes fadeOut {
+    to {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+}
+
+/* Toast Container - positioned in bottom right */
+.toast-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    pointer-events: none;
+}
+
+.toast-container .toast {
+    pointer-events: all;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .toast-container {
+        bottom: 15px;
+        right: 15px;
+        left: 15px;
+    }
+    
+    .toast {
+        min-width: auto;
+        max-width: none;
+    }
+}

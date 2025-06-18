@@ -12,7 +12,10 @@ const Header = () => {
     return (
         <div className={`header-v2 ${isMobileMenuOpen ? 'menu-open' : ''}`}>
             <div className="header-mobile-row">
-                <div className="logo-v8">SocialGirl</div>
+                <div className="logo-morph">
+                    <div className="morph-shape"></div>
+                </div>
+                <h1 className="gradient-wave">SOCIALGIRL</h1>
                 <button 
                     className={`mobile-menu-toggle ${isMobileMenuOpen ? 'active' : ''}`}
                     onClick={toggleMobileMenu}

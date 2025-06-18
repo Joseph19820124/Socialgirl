@@ -25,10 +25,18 @@ const Navigation = ({ closeMenu }) => {
                 <Link
                     key={item.path}
                     to={item.path}
-                    className={`nav-item-v2 ${location.pathname === item.path ? 'active' : ''}`}
+                    className={`nav-item-v2 particle-menu ${location.pathname === item.path ? 'active' : ''}`}
                     onClick={handleClick}
                 >
-                    <span>{item.label}</span>
+                    {item.label}
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
                 </Link>
             ))}
         </>
