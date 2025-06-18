@@ -322,9 +322,12 @@ const GenericResizableTable = ({ data, isLoading, columns, cellRenderers, skelet
         currentPage * itemsPerPage
     );
 
+    // Determine if scroll is needed
+    const needsScroll = paginatedData.length > 0 && itemsPerPage > 15;
+    
     return (
         <>
-            <div className="table-wrapper">
+            <div className={`table-wrapper ${needsScroll ? 'needs-scroll' : ''}`}>
                 <table ref={tableRef}>
                     <thead>
                         <tr>

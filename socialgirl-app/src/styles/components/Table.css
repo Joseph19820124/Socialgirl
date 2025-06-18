@@ -51,7 +51,9 @@
 .table-wrapper {
     background: var(--aurora-gradient-dark);
     border-radius: var(--aurora-radius-xl);
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    max-height: 70vh;
     box-shadow: 
         0 12px 40px rgba(0, 0, 0, 0.6),
         0 0 80px rgba(0, 245, 255, 0.05),
@@ -98,6 +100,42 @@
 .table-wrapper > table {
     position: relative;
     z-index: 1;
+}
+
+/* Custom scrollbar styling for Aurora theme */
+.table-wrapper::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.table-wrapper::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb {
+    background: var(--aurora-purple);
+    border-radius: 4px;
+    transition: background var(--aurora-transition-fast);
+}
+
+.table-wrapper::-webkit-scrollbar-thumb:hover {
+    background: var(--aurora-purple-light);
+}
+
+.table-wrapper::-webkit-scrollbar-corner {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* Firefox scrollbar styling */
+.table-wrapper {
+    scrollbar-width: thin;
+    scrollbar-color: var(--aurora-purple) rgba(255, 255, 255, 0.05);
+}
+
+/* Conditional scrolling - only when needed */
+.table-wrapper.needs-scroll {
+    overflow-y: auto;
 }
 
 table {
@@ -590,16 +628,18 @@ tr:hover .title {
     }
     
     .table-wrapper {
-        overflow-x: auto;
+        overflow-x: hidden;
+        overflow-y: hidden;
+        max-height: 60vh;
         -webkit-overflow-scrolling: touch;
         margin: 0 -16px 24px;
         padding: 0 16px;
         position: relative;
     }
     
-    /* Horizontal scroll indicator */
-    .table-wrapper::after {
-        content: '→ Scroll horizontally →';
+    /* Scroll indicator - only show when scrolling is needed */
+    .table-wrapper.needs-scroll::after {
+        content: '↕ Scroll to see more';
         position: absolute;
         bottom: 10px;
         right: 20px;
@@ -610,6 +650,8 @@ tr:hover .title {
         text-transform: uppercase;
         letter-spacing: 1px;
         animation: fadeInOut 3s ease-in-out infinite;
+        pointer-events: none;
+        z-index: 2;
     }
     
     @keyframes fadeInOut {
@@ -670,6 +712,11 @@ tr:hover .title {
     .table-wrapper {
         margin: 0 -12px 20px;
         padding: 0 12px;
+        max-height: 50vh;
+    }
+    
+    .table-wrapper.needs-scroll {
+        overflow-y: auto;
     }
     
     table {

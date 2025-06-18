@@ -49,6 +49,7 @@ const TableContainer = ({ videosData, usersData, userVideosData = [], isLoading,
     const renderTable = () => {
         return (
             <GenericResizableTable 
+                key={activeTab}
                 data={getTableData()} 
                 isLoading={isLoading} 
                 columns={getTableColumns()}
