@@ -42,7 +42,7 @@ export const instagramColumns = [
     { key: 'comments', label: '💬 Comments', align: 'right' },
     { key: 'likes', label: '❤️ Likes', align: 'right' },
     { key: 'shares', label: '📤 Shares', align: 'right' },
-    { key: 'url', label: '🔗 View Post', align: 'center', sortable: false }
+    { key: 'url', label: '🔗 Watch', align: 'center', sortable: false }
 ];
 
 // TikTok-specific table columns

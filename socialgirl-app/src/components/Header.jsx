@@ -1,14 +1,9 @@
 import React, { useState } from 'react';
 import Navigation from './Navigation';
-import SearchBar from './SearchBar';
 import '../styles/components/Header.css';
 
 const Header = () => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-    const handleSearch = (query) => {
-        // Search functionality is handled by individual platform pages
-    };
 
     const toggleMobileMenu = () => {
         setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -36,7 +31,6 @@ const Header = () => {
             )}
             <nav className={`nav-v2 ${isMobileMenuOpen ? 'mobile-menu-open' : ''}`}>
                 <Navigation closeMenu={() => setIsMobileMenuOpen(false)} />
-                <SearchBar onSearch={handleSearch} />
             </nav>
         </div>
     );

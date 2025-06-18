@@ -54,6 +54,11 @@
     box-shadow: 0 0 10px rgba(145, 70, 255, 0.3);
 }
 
+.page-size-select option {
+    color: #000;
+    background: #fff;
+}
+
 .pagination-info {
     color: #efeff1;
     font-family: 'Roboto', sans-serif;

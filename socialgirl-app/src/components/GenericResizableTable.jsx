@@ -22,7 +22,7 @@ const GenericResizableTable = ({ data, isLoading, columns, cellRenderers, skelet
     // Initialize page size from localStorage or default
     const [itemsPerPage, setItemsPerPage] = useState(() => {
         const stored = getStoredPageSize(tableId);
-        return stored || 10;
+        return stored || 15;
     });
     
     const {

@@ -8,11 +8,8 @@ const Tabs = ({ activeTab, onTabChange, platform = 'default' }) => {
             { id: 'userVideos', label: 'User Videos', icon: '🎭' }
         ];
 
-        if (platform === 'tiktok' || platform === 'instagram') {
-            return [
-                ...baseTabs,
-                { id: 'users', label: 'Users', icon: '👥' }
-            ];
+        if (platform === 'tiktok' || platform === 'instagram' || platform === 'youtube') {
+            return baseTabs;
         }
 
         return [

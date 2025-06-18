@@ -11,6 +11,79 @@ const RAPIDAPI_HOST = 'instagram-scraper-20251.p.rapidapi.com';
 const BASE_URL = `/api/instagram`; // Vite proxy will route to https://instagram-scraper-20251.p.rapidapi.com
 
 /**
+ * Search for Instagram reels by keyword
+ * @param {string} keyword - Search keyword
+ * @returns {Promise<Object>} Search results response
+ */
+async function searchReels(keyword) {
+    console.log(`[Instagram API] Starting searchReels for keyword: ${keyword}`);
+    
+    if (!canPerformOperation('instagram', 'request')) {
+        const errorMsg = 'Instagram API quota exceeded. Please try again next month.';
+        console.error(`[Instagram API] Quota check failed: ${errorMsg}`);
+        throw new Error(errorMsg);
+    }
+    
+    const apiKey = await getRapidApiKey();
+    if (!apiKey) {
+        const errorMsg = 'RapidAPI key not found. Please configure it in Settings.';
+        console.error(`[Instagram API] API key missing: ${errorMsg}`);
+        throw new Error(errorMsg);
+    }
+    
+    console.log(`[Instagram API] API key retrieved successfully (length: ${apiKey.length})`);
+    
+    const url = `${BASE_URL}/searchreels/?keyword=${encodeURIComponent(keyword)}`;
+    console.log(`[Instagram API] Making request to: ${url}`);
+    
+    const options = {
+        method: 'GET',
+        headers: {
+            'x-rapidapi-key': apiKey
+            // x-rapidapi-host header is added by Vite proxy
+        }
+    };
+    
+    console.log(`[Instagram API] Request headers:`, {
+        'x-rapidapi-key': `${apiKey.substring(0, 8)}...`, // Log only first 8 chars for security
+        'x-rapidapi-host': `${RAPIDAPI_HOST} (added by Vite proxy)`
+    });
+    
+    try {
+        const response = await fetch(url, options);
+        
+        console.log(`[Instagram API] Response status: ${response.status} ${response.statusText}`);
+        console.log(`[Instagram API] Response headers:`, Object.fromEntries(response.headers.entries()));
+        
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error(`[Instagram API] Error response body:`, errorText);
+            throw new Error(`Instagram API error: ${response.status} - ${errorText}`);
+        }
+        
+        const result = await response.json();
+        console.log(`[Instagram API] Success! Response data structure:`, {
+            hasData: !!result,
+            dataType: typeof result,
+            hasDataObject: !!result.data,
+            itemCount: result.data?.items?.length || 0
+        });
+        
+        trackOperation('instagram', 'request');
+        console.log(`[Instagram API] Operation tracked successfully`);
+        
+        return result;
+    } catch (error) {
+        console.error(`[Instagram API] Error in searchReels:`, {
+            errorMessage: error.message,
+            errorType: error.constructor.name,
+            stack: error.stack
+        });
+        throw error;
+    }
+}
+
+/**
  * Fetch user reels/posts from Instagram
  * @param {string} usernameOrId - Instagram username or user ID
  * @returns {Promise<Object>} User reels data response
@@ -85,5 +158,6 @@ async function getUserReels(usernameOrId) {
 }
 
 export {
+    searchReels,
     getUserReels
 };

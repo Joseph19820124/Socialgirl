@@ -1,9 +1,9 @@
 import { searchVideos as searchYouTube, getVideosStatistics, getChannelVideosByHandle } from '../apis/youtube';
 import { searchVideos as searchTikTok, getUserInfo, getUserPopularPosts } from '../apis/tiktok';
-import { getUserReels } from '../apis/instagram';
+import { searchReels, getUserReels } from '../apis/instagram';
 import { extractVideoData as extractYouTubeData } from '../mappers/youtube';
 import { extractVideoData as extractTikTokData, extractUsersDataFromSearch as extractTikTokUsersData, extractUserPostsData as extractTikTokUserPostsData } from '../mappers/tiktok';
-import { extractUserPostsData as extractInstagramUserPostsData } from '../mappers/instagram';
+import { extractVideoData as extractInstagramVideoData, extractUserPostsData as extractInstagramUserPostsData } from '../mappers/instagram';
 
 class SearchService {
     constructor() {
@@ -136,14 +136,52 @@ class InstagramSearchStrategy {
         
         const { activeTab } = context;
         
-        // For User Posts tab, fetch user reels/posts
-        if (activeTab === 'userPosts') {
+        // For Videos tab, search reels by keyword
+        if (activeTab === 'videos') {
+            return await this.searchVideos(query);
+        }
+        
+        // For User Videos tab, fetch user reels/posts
+        if (activeTab === 'userVideos') {
             return await this.searchUserPosts(query);
         }
         
         // For other tabs, Instagram search is not yet implemented
         console.warn(`[Instagram Search] Tab "${activeTab}" not yet implemented`);
         return [];
+    }
+
+    async searchVideos(keyword) {
+        console.log(`[Instagram Search] Starting video search for keyword: "${keyword}"`);
+        
+        try {
+            console.log(`[Instagram Search] Calling searchReels API...`);
+            const apiResponse = await searchReels(keyword);
+            
+            console.log(`[Instagram Search] API call successful, processing response...`);
+            const extractedData = extractInstagramVideoData(apiResponse);
+            
+            console.log(`[Instagram Search] Data extraction complete. Found ${extractedData.length} videos`);
+            
+            return extractedData;
+            
+        } catch (error) {
+            console.error(`[Instagram Search] Error in searchVideos:`, {
+                keyword,
+                errorMessage: error.message,
+                errorType: error.constructor.name,
+                stack: error.stack
+            });
+            
+            // Re-throw with more user-friendly message if needed
+            if (error.message.includes('API key')) {
+                throw new Error('Instagram API key not configured. Please check your settings.');
+            } else if (error.message.includes('quota exceeded')) {
+                throw new Error('Instagram API quota exceeded. Please try again later.');
+            } else {
+                throw new Error(`Failed to search Instagram videos: ${error.message}`);
+            }
+        }
     }
 
     async searchUserPosts(username) {

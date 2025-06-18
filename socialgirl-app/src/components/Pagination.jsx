@@ -7,7 +7,7 @@ const Pagination = ({
     itemsPerPage, 
     onPageChange,
     onItemsPerPageChange,
-    pageSizeOptions = [10, 25, 50, 100]
+    pageSizeOptions = [15, 25, 50, 100]
 }) => {
     const totalPages = Math.ceil(totalItems / itemsPerPage);
     
@@ -54,9 +54,11 @@ const Pagination = ({
             </div>
             
             <div className="pagination-center">
-                <div className="pagination-info">
-                    Showing {((currentPage - 1) * itemsPerPage) + 1}-{Math.min(currentPage * itemsPerPage, totalItems)} of {totalItems}
-                </div>
+                {totalItems > 0 && (
+                    <div className="pagination-info">
+                        Showing {((currentPage - 1) * itemsPerPage) + 1}-{Math.min(currentPage * itemsPerPage, totalItems)} of {totalItems}
+                    </div>
+                )}
             </div>
             
             {totalPages > 1 && (

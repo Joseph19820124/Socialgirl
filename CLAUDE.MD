@@ -93,6 +93,13 @@
 - Use parameterized queries (if applicable)
 - Hash passwords appropriately (if applicable)
 
+## 13. MANDATORY POST-EXECUTION STEP
+After completing any code modification task, you must:
+
+1. Run: `find . -name "src" -type d | head -1 | xargs tokei --files -t typescript,javascript,python,rust,go,java,cpp,c`
+2. Identify any files exceeding 300 lines of code
+3. For each violation, provide specific refactoring recommendations
+
 ---
 
 # Language-Specific Applications

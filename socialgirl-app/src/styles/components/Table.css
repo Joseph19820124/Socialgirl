@@ -198,15 +198,15 @@ tr:last-child td {
 
 .followers-col { 
     text-align: right; 
-    width: 100px;
-    min-width: 90px;
+    width: 70px;
+    min-width: 70px;
     font-family: 'Courier New', monospace;
     font-weight: 500;
 }
 
 .views-col, .comments-col, .shares-col, .likes-col { 
     text-align: right; 
-    width: 80px;
+    width: 70px;
     min-width: 70px;
     font-family: 'Courier New', monospace;
     font-weight: 500;
@@ -221,7 +221,7 @@ tr:last-child td {
 
 .url-col { 
     text-align: center; 
-    width: 85px;
+    width: 70px;
     min-width: 85px;
 }
 
@@ -443,8 +443,8 @@ tr:last-child td {
     }
     
     .followers-col { 
-        width: 85px;
-        min-width: 85px;
+        width: 70px;
+        min-width: 70px;
     }
     
     .views-col, .comments-col, .shares-col, .likes-col { 
@@ -459,7 +459,7 @@ tr:last-child td {
     }
     
     .url-col { 
-        width: 75px;
+        width: 70px;
         min-width: 75px;
     }
 }

@@ -1,0 +1,23 @@
+# For Instagram 'Search Query' on the Instagram page, for the Videos tab.
+
+Endpoint to use:
+
+const url = 'https://instagram-scraper-20251.p.rapidapi.com/searchreels/?keyword=insta';
+const options = {
+	method: 'GET',
+	headers: {
+		'x-rapidapi-key': '05190f78f6msh18b5c339652b410p105a0ejsn01a80d032b0b',
+		'x-rapidapi-host': 'instagram-scraper-20251.p.rapidapi.com'
+	}
+};
+
+try {
+	const response = await fetch(url, options);
+	const result = await response.text();
+	console.log(result);
+} catch (error) {
+	console.error(error);
+}
+
+1. Run a test script to the above end point and extract the parameters required, based on the table setup
+2. Map each to the columns in the table

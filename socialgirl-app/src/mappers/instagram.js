@@ -1,4 +1,101 @@
 /**
+ * Extract video data from Instagram search reels API response
+ * @param {Object} apiResponse - Instagram search reels API response
+ * @returns {Array} Array of video objects for table display
+ */
+export function extractVideoData(apiResponse) {
+    console.log(`[Instagram Mapper] Starting video data extraction from search results`);
+    console.log(`[Instagram Mapper] Raw API response:`, {
+        hasData: !!apiResponse,
+        dataType: typeof apiResponse,
+        hasDataObject: !!apiResponse?.data,
+        itemsCount: apiResponse?.data?.items?.length || 0
+    });
+
+    // Handle empty or invalid response
+    if (!apiResponse || !apiResponse.data || !apiResponse.data.items) {
+        console.error(`[Instagram Mapper] Invalid API response structure`);
+        return [];
+    }
+
+    const items = apiResponse.data.items;
+    console.log(`[Instagram Mapper] Processing ${items.length} video items`);
+
+    const extractedData = items.map((item, index) => {
+        console.log(`[Instagram Mapper] Processing video ${index + 1}/${items.length}`);
+        
+        try {
+            // Extract user information
+            const user = item.user || {};
+            const username = user.username || 'Unknown';
+            
+            // For search results, we don't have follower count in the user object
+            // We might need to make additional calls or set to 0
+            const followers = user.follower_count || 0;
+            
+            // Extract caption/title
+            const caption = item.caption || {};
+            const title = caption.text || 'No caption';
+            
+            // Extract engagement metrics
+            const views = item.play_count || item.ig_play_count || 0;
+            const likes = item.like_count || 0;
+            const comments = item.comment_count || 0;
+            const shares = item.share_count || 0;
+            
+            // Generate URL from code
+            const code = item.code;
+            const url = code ? `https://www.instagram.com/reel/${code}/` : 'https://www.instagram.com/';
+            
+            const extractedItem = {
+                username,
+                followers,
+                title: truncateText(title, 100),
+                views,
+                likes,
+                comments,
+                shares,
+                url
+            };
+
+            console.log(`[Instagram Mapper] Extracted video ${index + 1}:`, {
+                username: extractedItem.username,
+                followers: extractedItem.followers,
+                titleLength: extractedItem.title.length,
+                views: extractedItem.views,
+                likes: extractedItem.likes,
+                comments: extractedItem.comments,
+                shares: extractedItem.shares,
+                hasUrl: !!extractedItem.url
+            });
+
+            return extractedItem;
+
+        } catch (error) {
+            console.error(`[Instagram Mapper] Error processing video ${index + 1}:`, {
+                error: error.message,
+                item: item
+            });
+            
+            // Return a fallback item
+            return {
+                username: 'Error',
+                followers: 0,
+                title: 'Error processing video',
+                views: 0,
+                likes: 0,
+                comments: 0,
+                shares: 0,
+                url: 'https://www.instagram.com/'
+            };
+        }
+    });
+
+    console.log(`[Instagram Mapper] Successfully extracted ${extractedData.length} videos`);
+    return extractedData;
+}
+
+/**
  * Extract user posts data from Instagram user reels API response
  * @param {Object} apiResponse - Instagram user reels API response
  * @returns {Array} Array of user post objects for table display
