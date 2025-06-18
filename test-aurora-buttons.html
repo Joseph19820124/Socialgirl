@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aurora Button Test</title>
+    <link rel="stylesheet" href="socialgirl-app/src/styles/globals.css">
+    <link rel="stylesheet" href="socialgirl-app/src/styles/components/Table.css">
+    <link rel="stylesheet" href="socialgirl-app/src/styles/components/Dialog.css">
+    <link rel="stylesheet" href="socialgirl-app/src/pages/SettingsPage.css">
+    <link rel="stylesheet" href="socialgirl-app/src/styles/components/Header.css">
+    <style>
+        body {
+            padding: 40px;
+            background: var(--aurora-bg-primary);
+        }
+        .test-section {
+            margin-bottom: 40px;
+        }
+        .test-section h2 {
+            color: var(--aurora-cyan);
+            margin-bottom: 20px;
+            font-family: 'Roboto', sans-serif;
+        }
+        .button-row {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-section">
+        <h2>Aurora Button Design System</h2>
+        <div class="button-row">
+            <button class="aurora-btn aurora-btn-primary">Primary</button>
+            <button class="aurora-btn aurora-btn-secondary">Secondary</button>
+            <button class="aurora-btn aurora-btn-success">Success</button>
+            <button class="aurora-btn aurora-btn-danger">Danger</button>
+            <button class="aurora-btn aurora-btn-surface">Surface</button>
+            <button class="aurora-btn aurora-btn-ghost">Ghost</button>
+        </div>
+        <div class="button-row">
+            <button class="aurora-btn aurora-btn-primary aurora-btn-sm">Small</button>
+            <button class="aurora-btn aurora-btn-primary">Default</button>
+            <button class="aurora-btn aurora-btn-primary aurora-btn-lg">Large</button>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>Table Buttons</h2>
+        <div class="button-row">
+            <button class="export-btn export-csv">Export CSV</button>
+            <button class="export-btn export-json">Export JSON</button>
+            <a href="#" class="watch-btn">WATCH</a>
+            <a href="#" class="visit-btn">VISIT</a>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>Settings Page Buttons</h2>
+        <div class="button-row">
+            <button class="btn-primary">Save Settings</button>
+            <button class="btn-secondary">Cancel</button>
+            <button class="btn-danger">Delete</button>
+            <label class="file-input-label">Choose File</label>
+            <button class="toggle-btn">👁</button>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>Dialog Buttons</h2>
+        <div class="button-row">
+            <button class="btn">Default</button>
+            <button class="btn fractal-dialog btn-yes">Yes</button>
+            <button class="btn fractal-dialog btn-no">No</button>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>Header Button</h2>
+        <div class="button-row">
+            <button class="mobile-menu-toggle">
+                <span class="hamburger-line" style="top: 0;"></span>
+                <span class="hamburger-line" style="top: 50%; transform: translateY(-50%);"></span>
+                <span class="hamburger-line" style="bottom: 0;"></span>
+            </button>
+        </div>
+    </div>
+</body>
+</html>

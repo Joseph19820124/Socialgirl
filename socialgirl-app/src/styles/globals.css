@@ -276,6 +276,132 @@ tr:hover .animated-stat {
     }
 }
 
+/* Aurora Button Design System */
+.aurora-btn {
+    padding: 8px 16px;
+    border-radius: var(--aurora-radius-sm);
+    font-weight: 600;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all var(--aurora-transition-base);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    border: none;
+    color: var(--aurora-text-primary);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+/* Shimmer effect for all aurora buttons */
+.aurora-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.2),
+        transparent
+    );
+    transition: left 0.5s ease;
+}
+
+.aurora-btn:hover::before {
+    left: 100%;
+}
+
+/* Primary aurora button */
+.aurora-btn-primary {
+    background: var(--aurora-gradient-primary);
+}
+
+.aurora-btn-primary:hover {
+    filter: brightness(1.1);
+    transform: translateY(-1px);
+    box-shadow: var(--aurora-glow-cyan);
+}
+
+/* Secondary aurora button */
+.aurora-btn-secondary {
+    background: var(--aurora-gradient-secondary);
+}
+
+.aurora-btn-secondary:hover {
+    filter: brightness(1.1);
+    transform: translateY(-1px);
+    box-shadow: var(--aurora-glow-purple);
+}
+
+/* Success aurora button */
+.aurora-btn-success {
+    background: var(--aurora-gradient-success);
+}
+
+.aurora-btn-success:hover {
+    filter: brightness(1.1);
+    transform: translateY(-1px);
+    box-shadow: 0 0 20px rgba(146, 254, 157, 0.3);
+}
+
+/* Surface aurora button */
+.aurora-btn-surface {
+    background: var(--aurora-gradient-surface);
+}
+
+.aurora-btn-surface:hover {
+    filter: brightness(1.2);
+    transform: translateY(-1px);
+    box-shadow: var(--aurora-shadow-elevated);
+}
+
+/* Ghost aurora button (transparent with border) */
+.aurora-btn-ghost {
+    background: transparent;
+    border: 2px solid var(--aurora-cyan);
+    color: var(--aurora-cyan);
+}
+
+.aurora-btn-ghost:hover {
+    background: rgba(0, 245, 255, 0.1);
+    filter: brightness(1.2);
+    transform: translateY(-1px);
+    box-shadow: var(--aurora-glow-cyan);
+}
+
+/* Danger aurora button */
+.aurora-btn-danger {
+    background: linear-gradient(135deg, var(--aurora-red) 0%, var(--aurora-pink) 100%);
+}
+
+.aurora-btn-danger:hover {
+    filter: brightness(1.1);
+    transform: translateY(-1px);
+    box-shadow: 0 0 20px rgba(255, 107, 107, 0.3);
+}
+
+/* Button sizes */
+.aurora-btn-sm {
+    padding: 4px 12px;
+    font-size: 12px;
+}
+
+.aurora-btn-lg {
+    padding: 12px 24px;
+    font-size: 16px;
+}
+
+/* Button active state */
+.aurora-btn:active {
+    transform: translateY(0);
+}
+
 /* Touch-friendly tap targets */
 @media (max-width: 768px) {
     button, a, .clickable {

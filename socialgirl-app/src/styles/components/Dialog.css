@@ -55,14 +55,45 @@
 .btn {
     padding: 12px 32px;
     border: none;
-    border-radius: 8px;
+    border-radius: var(--aurora-radius-sm);
     font-size: 16px;
     font-weight: 500;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all var(--aurora-transition-base);
     text-transform: uppercase;
     letter-spacing: 1px;
     min-width: 120px;
+    position: relative;
+    overflow: hidden;
+    background: var(--aurora-gradient-surface);
+    color: var(--aurora-text-primary);
+}
+
+/* Shimmer effect for dialog buttons */
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.2),
+        transparent
+    );
+    transition: left 0.5s ease;
+}
+
+.btn:hover::before {
+    left: 100%;
+}
+
+.btn:hover {
+    filter: brightness(1.1);
+    transform: translateY(-1px);
+    box-shadow: var(--aurora-shadow-elevated);
 }
 
 /* Fractal specific styles */
@@ -79,25 +110,27 @@
 
 
 .fractal-dialog .btn-yes {
-    background: linear-gradient(45deg, #00c9ff, #92fe9d);
-    color: #000;
+    background: var(--aurora-gradient-primary);
+    color: var(--aurora-text-primary);
     font-weight: 600;
 }
 
 .fractal-dialog .btn-yes:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 201, 255, 0.4);
+    box-shadow: var(--aurora-glow-cyan);
+    filter: brightness(1.1);
 }
 
 .fractal-dialog .btn-no {
     background: transparent;
-    color: #fc00ff;
-    border: 2px solid #fc00ff;
+    color: var(--aurora-purple-light);
+    border: 2px solid var(--aurora-purple-light);
 }
 
 .fractal-dialog .btn-no:hover {
     background: rgba(252, 0, 255, 0.1);
-    box-shadow: 0 0 15px rgba(252, 0, 255, 0.3);
+    box-shadow: var(--aurora-glow-purple);
+    filter: brightness(1.2);
 }
 
 /* Entry animation */

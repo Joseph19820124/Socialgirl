@@ -78,16 +78,46 @@
 /* Mobile menu toggle button */
 .mobile-menu-toggle {
     display: none;
-    background: none;
-    border: none;
+    background: var(--aurora-gradient-surface);
+    border: 1px solid var(--aurora-border-primary);
+    border-radius: var(--aurora-radius-sm);
     cursor: pointer;
     padding: 8px;
     flex-direction: column;
     justify-content: space-between;
-    width: 30px;
-    height: 24px;
+    width: 40px;
+    height: 40px;
     position: relative;
     z-index: 1001;
+    transition: all var(--aurora-transition-base);
+    overflow: hidden;
+}
+
+/* Shimmer effect for mobile toggle */
+.mobile-menu-toggle::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.1),
+        transparent
+    );
+    transition: left 0.5s ease;
+}
+
+.mobile-menu-toggle:hover::before {
+    left: 100%;
+}
+
+.mobile-menu-toggle:hover {
+    background: linear-gradient(135deg, var(--aurora-surface-light) 0%, var(--aurora-bg-tertiary) 100%);
+    box-shadow: var(--aurora-glow-cyan);
+    transform: scale(1.05);
 }
 
 .hamburger-line {
