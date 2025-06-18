@@ -109,19 +109,50 @@
     align-items: center;
 }
 
+.button-group-compact {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: nowrap;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.button-separator {
+    color: var(--aurora-text-tertiary);
+    font-size: 16px;
+    padding: 0 4px;
+    user-select: none;
+}
+
+/* Disabled button styles */
+.button-group-compact .aurora-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.button-group-compact .aurora-btn:disabled:hover {
+    transform: none;
+    box-shadow: none;
+}
+
 .export-button-wrapper {
     position: relative;
 }
 
 .export-error {
     position: absolute;
-    top: 100%;
+    top: -20px;
     left: 50%;
     transform: translateX(-50%);
     color: #f44336;
     font-size: 11px;
-    margin-top: 2px;
     white-space: nowrap;
+    background: var(--aurora-bg-secondary);
+    padding: 2px 8px;
+    border-radius: var(--aurora-radius-sm);
+    border: 1px solid rgba(244, 67, 54, 0.3);
+    z-index: 10;
 }
 
 
@@ -358,5 +389,35 @@
     
     .settings-grid {
         gap: 24px;
+    }
+}
+
+/* Responsive styles for compact button layout */
+@media (max-width: 768px) {
+    .button-group-compact {
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+    
+    .button-separator {
+        display: none;
+    }
+    
+    .button-group-compact .aurora-btn {
+        flex: 1 1 calc(50% - 3px);
+        min-width: 80px;
+    }
+}
+
+@media (max-width: 480px) {
+    .button-group-compact {
+        justify-content: center;
+    }
+    
+    .button-group-compact .aurora-btn {
+        flex: 1 1 auto;
+        min-width: 60px;
+        font-size: 11px;
+        padding: 6px 10px;
     }
 }

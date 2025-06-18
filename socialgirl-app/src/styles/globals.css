@@ -20,6 +20,13 @@
     --aurora-red: #ff6b6b;
     --aurora-pink: #ff69b4;
     
+    /* Darker Aurora Colors for Better Contrast */
+    --aurora-green-dark: #4a7f52;
+    --aurora-green-light-dark: #00b863;
+    --aurora-orange-dark: #cc9400;
+    --aurora-red-dark: #cc5555;
+    --aurora-pink-dark: #cc5590;
+    
     /* Text Colors */
     --aurora-text-primary: #efeff1;
     --aurora-text-secondary: rgba(239, 239, 241, 0.7);

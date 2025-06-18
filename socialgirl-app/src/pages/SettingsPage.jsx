@@ -282,28 +282,30 @@ const SettingsPage = () => {
                 <div className="settings-section">
                     <h3 className="section-subtitle">Actions</h3>
                     
-                    <div className="button-group">
-                        <button onClick={handleSave} className="aurora-btn aurora-btn-primary">
-                            Save Settings
+                    <div className="button-group-compact">
+                        <button onClick={handleSave} className="aurora-btn aurora-btn-primary aurora-btn-sm">
+                            Save
                         </button>
                         
-                        {hasStoredSettings && (
-                            <button onClick={handleLoad} className="aurora-btn aurora-btn-secondary">
-                                Load Saved Settings
-                            </button>
-                        )}
-                    </div>
-
-                    <div className="button-group">
+                        <button 
+                            onClick={handleLoad} 
+                            className="aurora-btn aurora-btn-secondary aurora-btn-sm"
+                            disabled={!hasStoredSettings}
+                        >
+                            Load
+                        </button>
+                        
+                        <span className="button-separator">•</span>
+                        
                         <div className="export-button-wrapper">
-                            <button onClick={handleExport} className="aurora-btn aurora-btn-surface">
-                                Export Settings
+                            <button onClick={handleExport} className="aurora-btn aurora-btn-surface aurora-btn-sm">
+                                Export
                             </button>
-                            <div className="export-error">{exportError}</div>
+                            {exportError && <div className="export-error">{exportError}</div>}
                         </div>
                         
-                        <button onClick={() => document.getElementById('import-file-input').click()} className="aurora-btn aurora-btn-surface">
-                            Import Settings
+                        <button onClick={() => document.getElementById('import-file-input').click()} className="aurora-btn aurora-btn-surface aurora-btn-sm">
+                            Import
                         </button>
                         <input
                             id="import-file-input"
@@ -312,15 +314,17 @@ const SettingsPage = () => {
                             onChange={handleImport}
                             style={{ display: 'none' }}
                         />
+                        
+                        <span className="button-separator">•</span>
+                        
+                        <button 
+                            onClick={handleClear} 
+                            className="aurora-btn aurora-btn-danger aurora-btn-sm"
+                            disabled={!hasStoredSettings}
+                        >
+                            Clear All
+                        </button>
                     </div>
-
-                    {hasStoredSettings && (
-                        <div className="button-group">
-                            <button onClick={handleClear} className="aurora-btn aurora-btn-danger">
-                                Clear All Settings
-                            </button>
-                        </div>
-                    )}
                 </div>
 
                         <div className="settings-info">
