@@ -30,15 +30,15 @@
 }
 
 .progress-bar-fill.performance-medium {
-    background: linear-gradient(135deg, var(--aurora-orange) 0%, #ff8000 100%);
+    background: linear-gradient(135deg, var(--aurora-orange) 0%, var(--aurora-orange) 100%);
 }
 
 .progress-bar-fill.performance-low {
-    background: linear-gradient(135deg, #ff8000 0%, var(--aurora-red) 100%);
+    background: linear-gradient(135deg, var(--aurora-orange) 0%, var(--aurora-red) 100%);
 }
 
 .progress-bar-fill.performance-very-low {
-    background: linear-gradient(135deg, var(--aurora-red) 0%, #ff0000 100%);
+    background: linear-gradient(135deg, var(--aurora-red) 0%, var(--aurora-red) 100%);
 }
 
 /* Shimmer effect on progress bars */
@@ -188,6 +188,32 @@
     stroke-width: 4;
     stroke-linecap: round;
     transition: stroke-dashoffset var(--aurora-transition-slow);
+}
+
+/* Performance ring color classes */
+.performance-ring-progress.performance-high {
+    stroke: var(--aurora-green-light);
+    filter: drop-shadow(0 0 3px rgba(0, 255, 136, 0.5));
+}
+
+.performance-ring-progress.performance-medium-high {
+    stroke: var(--aurora-green);
+    filter: drop-shadow(0 0 3px rgba(146, 254, 157, 0.5));
+}
+
+.performance-ring-progress.performance-medium {
+    stroke: var(--aurora-orange);
+    filter: drop-shadow(0 0 3px rgba(255, 184, 0, 0.5));
+}
+
+.performance-ring-progress.performance-low {
+    stroke: var(--aurora-red);
+    filter: drop-shadow(0 0 3px rgba(255, 107, 107, 0.5));
+}
+
+.performance-ring-progress.performance-very-low {
+    stroke: var(--aurora-red);
+    filter: drop-shadow(0 0 3px rgba(255, 0, 0, 0.5));
 }
 
 .performance-ring-value {

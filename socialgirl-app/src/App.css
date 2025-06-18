@@ -1,6 +1,6 @@
 /* Aurora Waves Background */
 .aurora-waves {
-    background: #0a0a0a;
+    background: var(--aurora-bg-primary);
     position: fixed;
     top: 0;
     left: 0;
@@ -22,19 +22,19 @@
 }
 
 .aurora-layer:nth-child(1) {
-    background: radial-gradient(ellipse at center, transparent 0%, #0a0a0a 70%),
+    background: radial-gradient(ellipse at center, transparent 0%, var(--aurora-bg-primary) 70%),
                 linear-gradient(45deg, transparent 40%, rgba(0, 201, 255, 0.2) 50%, transparent 60%);
     animation: auroraWave1 15s ease-in-out infinite;
 }
 
 .aurora-layer:nth-child(2) {
-    background: radial-gradient(ellipse at center, transparent 0%, #0a0a0a 70%),
+    background: radial-gradient(ellipse at center, transparent 0%, var(--aurora-bg-primary) 70%),
                 linear-gradient(-45deg, transparent 40%, rgba(146, 254, 157, 0.2) 50%, transparent 60%);
     animation: auroraWave2 20s ease-in-out infinite;
 }
 
 .aurora-layer:nth-child(3) {
-    background: radial-gradient(ellipse at center, transparent 0%, #0a0a0a 70%),
+    background: radial-gradient(ellipse at center, transparent 0%, var(--aurora-bg-primary) 70%),
                 linear-gradient(90deg, transparent 40%, rgba(252, 0, 255, 0.2) 50%, transparent 60%);
     animation: auroraWave3 25s ease-in-out infinite;
 }
@@ -88,7 +88,7 @@
     font-family: 'Roboto', sans-serif;
     font-size: 18px;
     font-weight: 600;
-    color: #efeff1;
+    color: var(--aurora-text-primary);
     margin-bottom: 16px;
     padding: 0;
     position: relative;
@@ -99,12 +99,12 @@
 
 .section-title-v1::before {
     content: '[ ';
-    color: #00f5ff;
+    color: var(--aurora-cyan);
     font-weight: 700;
 }
 
 .section-title-v1::after {
     content: ' ]';
-    color: #00f5ff;
+    color: var(--aurora-cyan);
     font-weight: 700;
 }

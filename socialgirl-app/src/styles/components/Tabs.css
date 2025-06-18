@@ -6,30 +6,30 @@
 
 .tabs-wrapper {
     display: flex;
-    background: rgba(24, 24, 27, 0.8);
-    border-radius: 12px;
-    padding: 4px;
-    border: 1px solid #464649;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    background: var(--aurora-surface);
+    border-radius: var(--aurora-radius-lg);
+    padding: var(--aurora-space-xs);
+    border: 1px solid var(--aurora-border-primary);
+    box-shadow: var(--aurora-shadow-elevated);
     backdrop-filter: blur(10px);
 }
 
 .tab {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 12px 24px;
+    gap: var(--aurora-space-sm);
+    padding: var(--aurora-space-md) var(--aurora-space-xl);
     border: none;
     background: transparent;
-    color: #efeff1;
+    color: var(--aurora-text-primary);
     font-family: 'Roboto', sans-serif;
     font-weight: 600;
     font-size: 14px;
     text-transform: uppercase;
     letter-spacing: 1px;
     cursor: pointer;
-    border-radius: 8px;
-    transition: all 0.3s ease;
+    border-radius: var(--aurora-radius-md);
+    transition: all var(--aurora-transition-base);
     position: relative;
     overflow: hidden;
 }
@@ -51,19 +51,19 @@
 
 .tab:hover {
     background: rgba(145, 70, 255, 0.1);
-    color: #9146ff;
+    color: var(--aurora-purple);
     transform: translateY(-1px);
-    box-shadow: 0 4px 15px rgba(145, 70, 255, 0.2);
+    box-shadow: var(--aurora-glow-purple);
 }
 
 .tab.active {
-    background: linear-gradient(135deg, #9146ff 0%, #00f5ff 100%);
-    color: #000;
+    background: var(--aurora-gradient-primary);
+    color: var(--aurora-bg-primary);
     font-weight: 700;
     transform: translateY(-2px);
     box-shadow: 
         0 6px 25px rgba(145, 70, 255, 0.4),
-        0 0 20px rgba(0, 245, 255, 0.3);
+        var(--aurora-glow-cyan);
 }
 
 .tab.active::before {
@@ -71,8 +71,8 @@
 }
 
 .tab.active:hover {
-    background: linear-gradient(135deg, #a855f7 0%, #06b6d4 100%);
-    color: #000;
+    background: linear-gradient(135deg, var(--aurora-purple-light) 0%, var(--aurora-cyan-light) 100%);
+    color: var(--aurora-bg-primary);
     transform: translateY(-2px) scale(1.02);
 }
 
@@ -100,7 +100,7 @@
 /* Responsive */
 @media (max-width: 768px) {
     .tab {
-        padding: 10px 16px;
+        padding: 10px var(--aurora-space-lg);
         font-size: 12px;
     }
     

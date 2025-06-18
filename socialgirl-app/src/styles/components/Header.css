@@ -22,9 +22,9 @@
 .morph-shape {
     position: absolute;
     inset: 0;
-    background: linear-gradient(45deg, #00c9ff, #92fe9d, #fc00ff);
+    background: linear-gradient(45deg, var(--aurora-cyan-light), var(--aurora-green), var(--aurora-purple-light));
     animation: morphShape 8s ease-in-out infinite;
-    box-shadow: 0 0 20px rgba(0, 201, 255, 0.5);
+    box-shadow: var(--aurora-glow-cyan);
 }
 
 @keyframes morphShape {
@@ -50,7 +50,7 @@
 .gradient-wave {
     font-size: 32px;
     font-weight: 900;
-    background: linear-gradient(45deg, #00c9ff, #92fe9d, #fc00ff, #00c9ff);
+    background: linear-gradient(45deg, var(--aurora-cyan-light), var(--aurora-green), var(--aurora-purple-light), var(--aurora-cyan-light));
     background-size: 300% 300%;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -59,7 +59,7 @@
     text-transform: uppercase;
     letter-spacing: 2px;
     cursor: pointer;
-    transition: transform 0.3s ease;
+    transition: transform var(--aurora-transition-base);
     margin: 0;
     padding: 0;
     line-height: 1;
@@ -124,9 +124,9 @@
     display: block;
     width: 100%;
     height: 3px;
-    background-color: #00f5ff;
+    background-color: var(--aurora-cyan);
     border-radius: 2px;
-    transition: all 0.3s ease;
+    transition: all var(--aurora-transition-base);
     position: absolute;
     left: 0;
 }
@@ -197,13 +197,13 @@
         right: -100%;
         width: 280px;
         height: 100vh;
-        background: linear-gradient(135deg, #1a1a1d 0%, #0e0e10 100%);
-        border-left: 2px solid #9146ff;
+        background: var(--aurora-gradient-dark);
+        border-left: 2px solid var(--aurora-purple);
         flex-direction: column;
         align-items: stretch;
         gap: 0;
         padding: 80px 0 20px;
-        transition: right 0.3s ease;
+        transition: right var(--aurora-transition-base);
         z-index: 1000;
         overflow-y: auto;
         box-shadow: -5px 0 20px rgba(0, 0, 0, 0.7);

@@ -22,8 +22,8 @@
 .pagination-page-size {
     display: flex;
     align-items: center;
-    gap: 8px;
-    color: #efeff1;
+    gap: var(--aurora-space-sm);
+    color: var(--aurora-text-primary);
     font-family: 'Roboto', sans-serif;
     font-size: 12px;
     font-weight: 500;
@@ -54,12 +54,12 @@
 }
 
 .page-size-select option {
-    color: #000;
-    background: #fff;
+    color: var(--aurora-bg-primary);
+    background: var(--aurora-text-primary);
 }
 
 .pagination-info {
-    color: #efeff1;
+    color: var(--aurora-text-primary);
     font-family: 'Roboto', sans-serif;
     font-size: 14px;
     font-weight: 500;
@@ -67,7 +67,7 @@
 
 .pagination-controls {
     display: flex;
-    gap: 8px;
+    gap: var(--aurora-space-sm);
     align-items: center;
 }
 

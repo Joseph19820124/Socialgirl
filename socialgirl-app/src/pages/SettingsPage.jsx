@@ -373,11 +373,12 @@ const SettingsPage = () => {
                                         <div className="quota-progress">
                                             <div className="quota-progress-bar">
                                                 <div 
-                                                    className="quota-progress-fill" 
+                                                    className={`quota-progress-fill ${
+                                                        status.percentage > 90 ? 'quota-critical' : 
+                                                        status.percentage > 70 ? 'quota-warning' : 'quota-healthy'
+                                                    }`}
                                                     style={{ 
-                                                        width: `${status.percentage}%`,
-                                                        backgroundColor: status.percentage > 90 ? '#e74c3c' : 
-                                                                       status.percentage > 70 ? '#f39c12' : '#2ecc71'
+                                                        width: `${status.percentage}%`
                                                     }}
                                                 ></div>
                                             </div>

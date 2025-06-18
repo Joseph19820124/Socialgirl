@@ -6,10 +6,10 @@
 
 .morph-search input {
     width: 100%;
-    padding: 15px 20px;
+    padding: var(--aurora-space-lg) var(--aurora-space-xl);
     background: transparent;
     border: none;
-    color: #fff;
+    color: var(--aurora-text-primary);
     font-size: 16px;
     outline: none;
     position: relative;
@@ -19,9 +19,9 @@
 .morph-border {
     position: absolute;
     inset: 0;
-    border-radius: 15px;
+    border-radius: var(--aurora-radius-lg);
     padding: 2px;
-    background: linear-gradient(45deg, #00c9ff, #92fe9d, #fc00ff, #00c9ff);
+    background: linear-gradient(45deg, var(--aurora-cyan-light), var(--aurora-green), var(--aurora-purple-light), var(--aurora-cyan-light));
     background-size: 400% 400%;
     animation: morphGradient 3s ease infinite;
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
@@ -37,7 +37,7 @@
 
 /* Placeholder styling */
 .morph-search input::placeholder {
-    color: rgba(255, 255, 255, 0.5);
+    color: var(--aurora-text-tertiary);
 }
 
 /* Responsive */
@@ -47,14 +47,14 @@
     }
     
     .morph-search input { 
-        padding: 12px 18px;
+        padding: var(--aurora-space-md) var(--aurora-space-lg);
         font-size: 14px;
     }
 }
 
 @media (max-width: 480px) {
     .morph-search input {
-        padding: 10px 16px;
+        padding: 10px var(--aurora-space-lg);
         font-size: 13px;
     }
 }

@@ -732,7 +732,7 @@ tr:hover .animated-stat {
     }
     
     .scrollable-x::-webkit-scrollbar-thumb {
-        background: #9146ff;
+        background: var(--aurora-purple);
         border-radius: 3px;
     }
 }

@@ -59,39 +59,17 @@ export const PerformanceRing = ({ value, max = 100, size = 40 }) => {
     const circumference = radius * 2 * Math.PI;
     const offset = circumference - (percentage / 100) * circumference;
     
-    const getStrokeColor = (percent) => {
-        if (percent >= 80) return 'url(#gradient-high)';
-        if (percent >= 60) return 'url(#gradient-medium-high)';
-        if (percent >= 40) return 'url(#gradient-medium)';
-        if (percent >= 20) return 'url(#gradient-low)';
-        return 'url(#gradient-very-low)';
+    const getStrokeClass = (percent) => {
+        if (percent >= 80) return 'performance-high';
+        if (percent >= 60) return 'performance-medium-high';
+        if (percent >= 40) return 'performance-medium';
+        if (percent >= 20) return 'performance-low';
+        return 'performance-very-low';
     };
     
     return (
         <div className="performance-ring" style={{ width: size, height: size }}>
             <svg width={size} height={size}>
-                <defs>
-                    <linearGradient id="gradient-high" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#00ff88" />
-                        <stop offset="100%" stopColor="#92fe9d" />
-                    </linearGradient>
-                    <linearGradient id="gradient-medium-high" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#92fe9d" />
-                        <stop offset="100%" stopColor="#ffb800" />
-                    </linearGradient>
-                    <linearGradient id="gradient-medium" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#ffb800" />
-                        <stop offset="100%" stopColor="#ff8000" />
-                    </linearGradient>
-                    <linearGradient id="gradient-low" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#ff8000" />
-                        <stop offset="100%" stopColor="#ff6b6b" />
-                    </linearGradient>
-                    <linearGradient id="gradient-very-low" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#ff6b6b" />
-                        <stop offset="100%" stopColor="#ff0000" />
-                    </linearGradient>
-                </defs>
                 <circle
                     className="performance-ring-bg"
                     cx={size / 2}
@@ -99,11 +77,10 @@ export const PerformanceRing = ({ value, max = 100, size = 40 }) => {
                     r={radius}
                 />
                 <circle
-                    className="performance-ring-progress"
+                    className={`performance-ring-progress ${getStrokeClass(percentage)}`}
                     cx={size / 2}
                     cy={size / 2}
                     r={radius}
-                    stroke={getStrokeColor(percentage)}
                     strokeDasharray={circumference}
                     strokeDashoffset={offset}
                 />

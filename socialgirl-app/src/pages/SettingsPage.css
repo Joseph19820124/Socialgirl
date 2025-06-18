@@ -208,7 +208,7 @@
     font-family: 'Roboto', sans-serif;
     font-size: 14px;
     font-weight: 600;
-    color: #00f5ff;
+    color: var(--aurora-cyan);
     margin: 0;
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -216,12 +216,12 @@
 
 .quota-period {
     font-size: 10px;
-    color: #b3b3b3;
+    color: var(--aurora-text-secondary);
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--aurora-surface-light);
     padding: 2px 6px;
-    border-radius: 4px;
+    border-radius: var(--aurora-radius-sm);
 }
 
 .quota-stats {
@@ -240,14 +240,14 @@
 
 .quota-stat-label {
     font-size: 10px;
-    color: #b3b3b3;
+    color: var(--aurora-text-secondary);
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
 
 .quota-stat-value {
     font-size: 12px;
-    color: #efeff1;
+    color: var(--aurora-text-primary);
     font-weight: 600;
     font-family: 'Courier New', monospace;
 }
@@ -261,7 +261,7 @@
 
 .quota-progress-bar {
     flex: 1;
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--aurora-surface-light);
     border-radius: 6px;
     height: 8px;
     overflow: hidden;
@@ -270,12 +270,28 @@
 .quota-progress-fill {
     height: 100%;
     border-radius: 6px;
-    transition: all 0.3s ease;
+    transition: all var(--aurora-transition-base);
+}
+
+/* Quota status colors */
+.quota-progress-fill.quota-healthy {
+    background: var(--aurora-gradient-success);
+    box-shadow: 0 0 10px rgba(146, 254, 157, 0.5);
+}
+
+.quota-progress-fill.quota-warning {
+    background: linear-gradient(135deg, var(--aurora-orange) 0%, var(--aurora-orange) 100%);
+    box-shadow: 0 0 10px rgba(255, 184, 0, 0.5);
+}
+
+.quota-progress-fill.quota-critical {
+    background: linear-gradient(135deg, var(--aurora-red) 0%, var(--aurora-pink) 100%);
+    box-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
 }
 
 .quota-percentage {
     font-size: 11px;
-    color: #efeff1;
+    color: var(--aurora-text-primary);
     font-weight: 600;
     font-family: 'Courier New', monospace;
     min-width: 30px;

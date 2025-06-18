@@ -1,14 +1,14 @@
 /* Base toast styles */
 .toast {
-    padding: 16px 24px;
-    border-radius: 12px;
+    padding: var(--aurora-space-lg) var(--aurora-space-xl);
+    border-radius: var(--aurora-radius-lg);
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: var(--aurora-space-md);
     position: relative;
     overflow: hidden;
     cursor: pointer;
-    transition: transform 0.3s ease;
+    transition: transform var(--aurora-transition-base);
     min-width: 300px;
     max-width: 400px;
 }
@@ -21,6 +21,7 @@
     width: 24px;
     height: 24px;
     flex-shrink: 0;
+    color: var(--aurora-purple);
 }
 
 .toast-content {
@@ -30,15 +31,15 @@
 .toast-title {
     font-weight: 600;
     font-size: 16px;
-    margin-bottom: 4px;
-    color: #fff;
+    margin-bottom: var(--aurora-space-xs);
+    color: var(--aurora-text-primary);
 }
 
 .toast-message {
     font-size: 14px;
     opacity: 0.8;
     line-height: 1.4;
-    color: #fff;
+    color: var(--aurora-text-primary);
 }
 
 .close-btn {
@@ -49,9 +50,9 @@
     justify-content: center;
     cursor: pointer;
     opacity: 0.6;
-    transition: opacity 0.2s ease;
-    margin-left: 12px;
-    color: #fff;
+    transition: opacity var(--aurora-transition-fast);
+    margin-left: var(--aurora-space-md);
+    color: var(--aurora-text-primary);
 }
 
 .close-btn:hover {
@@ -60,11 +61,12 @@
 
 /* Cosmic Dust specific styles */
 .cosmic-toast {
-    background: radial-gradient(ellipse at center, #1a0033 0%, #000 100%);
-    border: 1px solid rgba(138, 43, 226, 0.5);
+    background: radial-gradient(ellipse at center, var(--aurora-bg-tertiary) 0%, var(--aurora-bg-primary) 100%);
+    border: 1px solid var(--aurora-border-primary);
     animation: slideFromBottom 0.5s ease-out;
     position: relative;
     overflow: visible;
+    box-shadow: var(--aurora-glow-purple);
 }
 
 
@@ -72,7 +74,7 @@
     position: absolute;
     width: 2px;
     height: 2px;
-    background: #fff;
+    background: var(--aurora-text-primary);
     border-radius: 50%;
     animation: twinkle 2s ease-in-out infinite;
 }
@@ -115,12 +117,12 @@
 /* Toast Container - positioned in bottom right */
 .toast-container {
     position: fixed;
-    bottom: 20px;
-    right: 20px;
+    bottom: var(--aurora-space-xl);
+    right: var(--aurora-space-xl);
     z-index: 10000;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: var(--aurora-space-md);
     pointer-events: none;
 }
 
@@ -131,9 +133,9 @@
 /* Mobile responsive */
 @media (max-width: 768px) {
     .toast-container {
-        bottom: 15px;
-        right: 15px;
-        left: 15px;
+        bottom: var(--aurora-space-lg);
+        right: var(--aurora-space-lg);
+        left: var(--aurora-space-lg);
     }
     
     .toast {
