@@ -16,20 +16,21 @@
 
 /* Clear button styling */
 .clear-btn {
-    background: #ff4757;
-    color: white;
+    background: var(--aurora-red);
+    color: var(--aurora-text-primary);
     border: none;
     padding: 8px 16px;
-    border-radius: 6px;
+    border-radius: var(--aurora-radius-sm);
     font-size: 14px;
     font-weight: 500;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all var(--aurora-transition-fast);
 }
 
 .clear-btn:hover {
-    background: #ff3742;
+    filter: brightness(1.2);
     transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3); /* Using --aurora-red rgba value */
 }
 
 .clear-btn:active {
