@@ -1,0 +1,221 @@
+/* Aurora-themed Data Visualization Components */
+
+/* Progress Bar Container */
+.progress-bar-container {
+    display: inline-block;
+    width: 80px;
+    height: 18px;
+    background: var(--aurora-bg-tertiary);
+    border-radius: var(--aurora-radius-md);
+    overflow: hidden;
+    position: relative;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Progress Bar Fill */
+.progress-bar-fill {
+    height: 100%;
+    transition: width var(--aurora-transition-slow);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Aurora gradient based on performance */
+.progress-bar-fill.performance-high {
+    background: var(--aurora-gradient-success);
+}
+
+.progress-bar-fill.performance-medium-high {
+    background: linear-gradient(135deg, var(--aurora-green) 0%, var(--aurora-orange) 100%);
+}
+
+.progress-bar-fill.performance-medium {
+    background: linear-gradient(135deg, var(--aurora-orange) 0%, #ff8000 100%);
+}
+
+.progress-bar-fill.performance-low {
+    background: linear-gradient(135deg, #ff8000 0%, var(--aurora-red) 100%);
+}
+
+.progress-bar-fill.performance-very-low {
+    background: linear-gradient(135deg, var(--aurora-red) 0%, #ff0000 100%);
+}
+
+/* Shimmer effect on progress bars */
+.progress-bar-fill::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(255, 255, 255, 0.4), 
+        transparent);
+    animation: progressShimmer 2s infinite;
+}
+
+@keyframes progressShimmer {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+/* Progress value label */
+.progress-value {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--aurora-text-primary);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    z-index: 1;
+}
+
+/* Stat Badge - Enhanced visualization for numbers */
+.stat-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--aurora-space-xs);
+    padding: var(--aurora-space-xs) var(--aurora-space-sm);
+    border-radius: var(--aurora-radius-sm);
+    background: var(--aurora-gradient-surface);
+    border: 1px solid var(--aurora-border-primary);
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-badge::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0, 245, 255, 0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+.stat-badge:hover::before {
+    left: 100%;
+}
+
+.stat-badge-value {
+    font-family: 'Courier New', monospace;
+    font-weight: 700;
+    font-size: 12px;
+}
+
+.stat-badge-icon {
+    width: 12px;
+    height: 12px;
+    background: var(--aurora-gradient-primary);
+    border-radius: 50%;
+    position: relative;
+}
+
+/* Pulse animation for high stats */
+.stat-badge.high-value .stat-badge-icon {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 0.8;
+    }
+}
+
+/* Mini sparkline for trends */
+.trend-sparkline {
+    display: inline-block;
+    width: 40px;
+    height: 16px;
+    margin-left: var(--aurora-space-xs);
+    position: relative;
+}
+
+.trend-sparkline svg {
+    width: 100%;
+    height: 100%;
+}
+
+.trend-sparkline path {
+    fill: none;
+    stroke: var(--aurora-cyan);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    filter: drop-shadow(0 0 3px rgba(0, 245, 255, 0.5));
+}
+
+.trend-sparkline.trend-up path {
+    stroke: var(--aurora-green);
+    filter: drop-shadow(0 0 3px rgba(0, 255, 136, 0.5));
+}
+
+.trend-sparkline.trend-down path {
+    stroke: var(--aurora-red);
+    filter: drop-shadow(0 0 3px rgba(255, 107, 107, 0.5));
+}
+
+/* Performance Ring - Circular progress indicator */
+.performance-ring {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    position: relative;
+}
+
+.performance-ring svg {
+    transform: rotate(-90deg);
+}
+
+.performance-ring-bg {
+    fill: none;
+    stroke: var(--aurora-bg-tertiary);
+    stroke-width: 4;
+}
+
+.performance-ring-progress {
+    fill: none;
+    stroke-width: 4;
+    stroke-linecap: round;
+    transition: stroke-dashoffset var(--aurora-transition-slow);
+}
+
+.performance-ring-value {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--aurora-text-primary);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .progress-bar-container {
+        width: 60px;
+        height: 14px;
+    }
+    
+    .progress-value {
+        font-size: 9px;
+    }
+    
+    .stat-badge {
+        padding: 2px 6px;
+    }
+    
+    .stat-badge-value {
+        font-size: 11px;
+    }
+}

@@ -32,21 +32,12 @@
 
 .likes {
     font-weight: 600;
-    color: #ff69b4; /* Pink color for likes */
+    color: var(--aurora-pink); /* Pink color for likes */
     font-family: 'Roboto', sans-serif;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
-.likes.high-stats { 
-    color: #ff1493; /* Deep pink for high likes */
-}
-
-.likes.medium-stats { 
-    color: #ff69b4; /* Medium pink for medium likes */
-}
-
-.likes.low-stats { 
-    color: #ffc0cb; /* Light pink for low likes */
-}
+/* Likes use global stat highlighting from globals.css */
 
 /* Skeleton for likes column */
 .skeleton.likes { 

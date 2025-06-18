@@ -11,26 +11,34 @@ export const useColumnResize = (columns) => {
     const minWidthsCache = useRef({});
     const tableRef = useRef(null);
 
-    // Predefined column widths that match our CSS
+    // Predefined column widths that match our updated CSS
     const getPredefinedWidth = (columnKey) => {
         const widthMap = {
             // Shared columns (consistent across both tables)
-            'username': 90,
-            'followers': 70,
-            'url': 70,
+            'username': 120,
+            'followers': 100,
+            'url': 85,
             
             // Videos table specific columns
-            'title': 250,
+            'title': 126, // Reduced by 30% from 180
             'views': 70,
             'comments': 70,
             'likes': 70,
             'shares': 70,
+            'performance': 70,
             
             // Users table specific columns
             'about': 350,
-            'media': 80
+            'media': 70,
+            
+            // User Videos aggregated columns
+            'videoCount': 100,
+            'totalViews': 120,
+            'avgViews': 120,
+            'totalLikes': 120,
+            'avgPerformance': 100
         };
-        return widthMap[columnKey] || 80; // Default to 80px if not defined
+        return widthMap[columnKey] || 100; // Default to 100px if not defined
     };
 
     const getMinimumWidth = (columnKey) => {
@@ -41,17 +49,25 @@ export const useColumnResize = (columns) => {
             'url': 70,
             
             // Videos table specific columns
-            'title': 200,
+            'title': 126, // Reduced minimum to match new width
             'views': 70,
             'comments': 70,
             'likes': 70,
             'shares': 70,
+            'performance': 70,
             
             // Users table specific columns
             'about': 250,
-            'media': 70
+            'media': 70,
+            
+            // User Videos aggregated columns
+            'videoCount': 70,
+            'totalViews': 80,
+            'avgViews': 80,
+            'totalLikes': 80,
+            'avgPerformance': 80
         };
-        return minWidthMap[columnKey] || 70; // Default minimum
+        return minWidthMap[columnKey] || 60; // Default minimum
     };
 
     // Initialize minimum widths cache only, no initial widths
@@ -72,8 +88,9 @@ export const useColumnResize = (columns) => {
         e.preventDefault();
         setIsResizing(true);
         
-        // Get current width from element or predefined width
-        const currentWidth = columnWidths[columnKey] || getPredefinedWidth(columnKey);
+        // Get current width from element, column config, or predefined width
+        const column = columns.find(col => col.key === columnKey);
+        const currentWidth = columnWidths[columnKey] || column?.width || getPredefinedWidth(columnKey);
         
         // Cache resize data
         resizeData.current = {
@@ -91,7 +108,7 @@ export const useColumnResize = (columns) => {
         if (tableRef.current) {
             tableRef.current.classList.add('resizing');
         }
-    }, [columnWidths]);
+    }, [columnWidths, columns]);
 
     const handleMouseMove = useCallback((e) => {
         if (!isResizing || !resizeData.current) return;

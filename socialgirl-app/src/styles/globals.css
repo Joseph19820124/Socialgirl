@@ -1,5 +1,72 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&family=Exo+2:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700;900&display=swap');
 
+/* Aurora Theme CSS Variables */
+:root {
+    /* Primary Colors */
+    --aurora-bg-primary: #0a0a0a;
+    --aurora-bg-secondary: #18181b;
+    --aurora-bg-tertiary: #1f1f23;
+    --aurora-surface: #1a1a1d;
+    --aurora-surface-light: #2a2a2e;
+    
+    /* Aurora Accent Colors */
+    --aurora-cyan: #00f5ff;
+    --aurora-cyan-light: #00c9ff;
+    --aurora-purple: #9146ff;
+    --aurora-purple-light: #fc00ff;
+    --aurora-green: #92fe9d;
+    --aurora-green-light: #00ff88;
+    --aurora-orange: #ffb800;
+    --aurora-red: #ff6b6b;
+    --aurora-pink: #ff69b4;
+    
+    /* Text Colors */
+    --aurora-text-primary: #efeff1;
+    --aurora-text-secondary: rgba(239, 239, 241, 0.7);
+    --aurora-text-tertiary: rgba(239, 239, 241, 0.5);
+    
+    /* Border Colors */
+    --aurora-border-primary: #464649;
+    --aurora-border-secondary: #2f2f35;
+    
+    /* Gradient Definitions */
+    --aurora-gradient-primary: linear-gradient(135deg, var(--aurora-cyan) 0%, var(--aurora-purple) 100%);
+    --aurora-gradient-secondary: linear-gradient(135deg, var(--aurora-purple) 0%, var(--aurora-pink) 100%);
+    --aurora-gradient-success: linear-gradient(135deg, var(--aurora-green-light) 0%, var(--aurora-green) 100%);
+    --aurora-gradient-surface: linear-gradient(135deg, var(--aurora-surface) 0%, var(--aurora-surface-light) 100%);
+    --aurora-gradient-dark: linear-gradient(135deg, var(--aurora-bg-secondary) 0%, var(--aurora-bg-tertiary) 100%);
+    
+    /* Aurora Wave Gradients */
+    --aurora-wave-1: radial-gradient(circle at 30% 107%, rgba(0, 245, 255, 0.2) 0%, transparent 50%);
+    --aurora-wave-2: radial-gradient(circle at 80% 20%, rgba(145, 70, 255, 0.2) 0%, transparent 50%);
+    --aurora-wave-3: radial-gradient(circle at 10% 50%, rgba(146, 254, 157, 0.2) 0%, transparent 50%);
+    
+    /* Shadows and Glows */
+    --aurora-glow-cyan: 0 0 20px rgba(0, 245, 255, 0.3);
+    --aurora-glow-purple: 0 0 20px rgba(145, 70, 255, 0.3);
+    --aurora-glow-soft: 0 4px 12px rgba(0, 0, 0, 0.2);
+    --aurora-shadow-elevated: 0 2px 8px rgba(0, 0, 0, 0.3);
+    
+    /* Animation Timings */
+    --aurora-transition-fast: 0.15s ease;
+    --aurora-transition-base: 0.3s ease;
+    --aurora-transition-slow: 0.8s ease-out;
+    
+    /* Spacing Scale */
+    --aurora-space-xs: 4px;
+    --aurora-space-sm: 8px;
+    --aurora-space-md: 12px;
+    --aurora-space-lg: 16px;
+    --aurora-space-xl: 24px;
+    --aurora-space-2xl: 32px;
+    
+    /* Border Radius */
+    --aurora-radius-sm: 4px;
+    --aurora-radius-md: 8px;
+    --aurora-radius-lg: 12px;
+    --aurora-radius-xl: 16px;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -40,14 +107,40 @@ html, body {
     position: relative;
 }
 
-/* Loading Skeleton Animation */
+/* Aurora-themed Loading Skeleton Animation */
 .skeleton {
-    background: linear-gradient(90deg, #2f2f35 25%, #464649 50%, #2f2f35 75%);
+    background: linear-gradient(
+        90deg, 
+        var(--aurora-surface) 0%,
+        rgba(0, 245, 255, 0.1) 25%,
+        rgba(145, 70, 255, 0.1) 50%,
+        rgba(0, 245, 255, 0.1) 75%,
+        var(--aurora-surface) 100%
+    );
     background-size: 200% 100%;
-    animation: loading 1.5s infinite;
-    border-radius: 4px;
+    animation: auroraLoading 2s ease-in-out infinite;
+    border-radius: var(--aurora-radius-sm);
     height: 16px;
     margin: 2px 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.skeleton::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.1),
+        transparent
+    );
+    transform: translateX(-100%);
+    animation: shimmerOverlay 2s ease-in-out infinite;
 }
 
 .skeleton.username { width: 80px; }
@@ -57,16 +150,34 @@ html, body {
 .skeleton.comments { width: 40px; margin-left: auto; }
 .skeleton.shares { width: 35px; margin-left: auto; }
 .skeleton.url { width: 70px; height: 24px; margin: 0 auto; }
+.skeleton.media { width: 45px; margin-left: auto; }
+.skeleton.about { width: 150px; }
+.skeleton.performance { width: 80px; margin-left: auto; }
 
-@keyframes loading {
-    0% { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
+@keyframes auroraLoading {
+    0% { 
+        background-position: 200% 0;
+        opacity: 0.7;
+    }
+    50% { 
+        opacity: 1;
+    }
+    100% { 
+        background-position: -200% 0;
+        opacity: 0.7;
+    }
+}
+
+@keyframes shimmerOverlay {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
 }
 
 /* Animated Statistics */
 .animated-stat {
     display: inline-block;
     animation: countUp 0.8s ease-out;
+    transition: all var(--aurora-transition-base);
 }
 
 @keyframes countUp {
@@ -78,6 +189,12 @@ html, body {
         opacity: 1;
         transform: translateY(0) scale(1);
     }
+}
+
+/* Enhanced hover effect for stats */
+tr:hover .animated-stat {
+    transform: scale(1.05);
+    filter: brightness(1.2);
 }
 
 .stat-highlight {
@@ -101,10 +218,19 @@ html, body {
     100% { left: 100%; }
 }
 
-/* Stats highlighting */
-.high-stats { color: #00ff88; }
-.medium-stats { color: #ffb800; }
-.low-stats { color: #ff6b6b; }
+/* Stats highlighting with enhanced styling */
+.high-stats { 
+    color: var(--aurora-green-light);
+    filter: drop-shadow(0 0 3px rgba(0, 255, 136, 0.4));
+}
+.medium-stats { 
+    color: var(--aurora-orange);
+    filter: drop-shadow(0 0 3px rgba(255, 184, 0, 0.4));
+}
+.low-stats { 
+    color: var(--aurora-red);
+    filter: drop-shadow(0 0 3px rgba(255, 107, 107, 0.4));
+}
 
 /* Section Styles */
 .section {
