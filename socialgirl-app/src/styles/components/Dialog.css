@@ -45,55 +45,18 @@
     color: #fff;
 }
 
-.button-group {
+.dialog-btn-group {
     display: flex;
     gap: 16px;
     justify-content: center;
     flex-wrap: wrap;
+    border-radius: 0;
+    overflow: visible;
 }
 
-.btn {
-    padding: 12px 32px;
-    border: none;
-    border-radius: var(--aurora-radius-sm);
-    font-size: 16px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all var(--aurora-transition-base);
-    text-transform: uppercase;
-    letter-spacing: 1px;
+.dialog-btn-group .aurora-btn {
     min-width: 120px;
-    position: relative;
-    overflow: hidden;
-    background: var(--aurora-gradient-surface);
-    color: var(--aurora-text-primary);
-}
-
-/* Shimmer effect for dialog buttons */
-.btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(255, 255, 255, 0.2),
-        transparent
-    );
-    transition: left 0.5s ease;
-}
-
-.btn:hover::before {
-    left: 100%;
-}
-
-.btn:hover {
-    filter: brightness(1.1);
-    transform: translateY(-1px);
-    box-shadow: var(--aurora-shadow-elevated);
+    border-radius: var(--aurora-radius-sm);
 }
 
 /* Fractal specific styles */
@@ -105,32 +68,6 @@
     background-origin: border-box;
     background-clip: padding-box, border-box;
     position: relative;
-}
-
-
-
-.fractal-dialog .btn-yes {
-    background: var(--aurora-gradient-primary);
-    color: var(--aurora-text-primary);
-    font-weight: 600;
-}
-
-.fractal-dialog .btn-yes:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--aurora-glow-cyan);
-    filter: brightness(1.1);
-}
-
-.fractal-dialog .btn-no {
-    background: transparent;
-    color: var(--aurora-purple-light);
-    border: 2px solid var(--aurora-purple-light);
-}
-
-.fractal-dialog .btn-no:hover {
-    background: rgba(252, 0, 255, 0.1);
-    box-shadow: var(--aurora-glow-purple);
-    filter: brightness(1.2);
 }
 
 /* Entry animation */
@@ -157,14 +94,13 @@
         font-size: 18px;
     }
     
-    .button-group {
+    .dialog-btn-group {
         flex-direction: column;
         gap: 12px;
     }
     
-    .btn {
-        padding: 14px 24px;
-        font-size: 14px;
+    .dialog-btn-group .aurora-btn {
+        width: 100%;
         min-width: auto;
     }
 }

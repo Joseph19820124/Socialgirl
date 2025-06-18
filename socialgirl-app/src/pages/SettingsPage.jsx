@@ -232,8 +232,9 @@ const SettingsPage = () => {
                             />
                             <button 
                                 type="button" 
-                                className="toggle-btn"
+                                className="aurora-btn aurora-btn-subtle aurora-btn-icon aurora-btn-icon-only aurora-btn-sm toggle-btn"
                                 onClick={() => toggleVisibility('youtubeApiKey')}
+                                aria-label={showKeys.youtubeApiKey ? 'Hide API key' : 'Show API key'}
                             >
                                 {showKeys.youtubeApiKey ? '🙈' : '👁️'}
                             </button>
@@ -251,8 +252,9 @@ const SettingsPage = () => {
                             />
                             <button 
                                 type="button" 
-                                className="toggle-btn"
+                                className="aurora-btn aurora-btn-subtle aurora-btn-icon aurora-btn-icon-only aurora-btn-sm toggle-btn"
                                 onClick={() => toggleVisibility('rapidApiKey')}
+                                aria-label={showKeys.rapidApiKey ? 'Hide API key' : 'Show API key'}
                             >
                                 {showKeys.rapidApiKey ? '🙈' : '👁️'}
                             </button>
@@ -281,12 +283,12 @@ const SettingsPage = () => {
                     <h3 className="section-subtitle">Actions</h3>
                     
                     <div className="button-group">
-                        <button onClick={handleSave} className="btn-primary">
+                        <button onClick={handleSave} className="aurora-btn aurora-btn-primary">
                             Save Settings
                         </button>
                         
                         {hasStoredSettings && (
-                            <button onClick={handleLoad} className="btn-secondary">
+                            <button onClick={handleLoad} className="aurora-btn aurora-btn-secondary">
                                 Load Saved Settings
                             </button>
                         )}
@@ -294,13 +296,13 @@ const SettingsPage = () => {
 
                     <div className="button-group">
                         <div className="export-button-wrapper">
-                            <button onClick={handleExport} className="btn-secondary">
+                            <button onClick={handleExport} className="aurora-btn aurora-btn-surface">
                                 Export Settings
                             </button>
                             <div className="export-error">{exportError}</div>
                         </div>
                         
-                        <button onClick={() => document.getElementById('import-file-input').click()} className="btn-secondary">
+                        <button onClick={() => document.getElementById('import-file-input').click()} className="aurora-btn aurora-btn-surface">
                             Import Settings
                         </button>
                         <input
@@ -314,7 +316,7 @@ const SettingsPage = () => {
 
                     {hasStoredSettings && (
                         <div className="button-group">
-                            <button onClick={handleClear} className="btn-danger">
+                            <button onClick={handleClear} className="aurora-btn aurora-btn-danger">
                                 Clear All Settings
                             </button>
                         </div>
@@ -385,7 +387,7 @@ const SettingsPage = () => {
                                         <div className="quota-card-actions">
                                             <button 
                                                 onClick={() => handleResetQuota(platform)} 
-                                                className="btn-danger small"
+                                                className="aurora-btn aurora-btn-danger aurora-btn-sm"
                                             >
                                                 Reset
                                             </button>
@@ -395,7 +397,7 @@ const SettingsPage = () => {
                             </div>
                             
                             <div className="quota-global-actions">
-                                <button onClick={refreshQuotaStatus} className="btn-secondary">
+                                <button onClick={refreshQuotaStatus} className="aurora-btn aurora-btn-surface">
                                     Refresh All Status
                                 </button>
                             </div>

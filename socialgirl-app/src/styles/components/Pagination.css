@@ -71,70 +71,14 @@
     align-items: center;
 }
 
-.pagination-btn {
-    background: var(--aurora-gradient-surface);
-    border: 1px solid var(--aurora-border-primary);
-    color: var(--aurora-text-primary);
-    padding: var(--aurora-space-sm) var(--aurora-space-md);
-    border-radius: var(--aurora-radius-sm);
-    cursor: pointer;
-    font-family: 'Roboto', sans-serif;
-    font-size: 12px;
-    font-weight: 600;
-    transition: all var(--aurora-transition-base);
+/* Pagination-specific button adjustments */
+.pagination-controls .aurora-btn {
     min-width: 40px;
     height: 36px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    overflow: hidden;
 }
 
-.pagination-btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(0, 245, 255, 0.2), transparent);
-    transition: left 0.5s ease;
-}
-
-.pagination-btn:hover:not(:disabled) {
-    background: linear-gradient(135deg, var(--aurora-surface-light) 0%, #35353a 100%);
-    color: var(--aurora-cyan);
-    border-color: var(--aurora-cyan);
-    box-shadow: 0 0 10px rgba(0, 245, 255, 0.3);
-    transform: translateY(-1px);
-}
-
-.pagination-btn:hover:not(:disabled)::before {
-    left: 100%;
-}
-
-.pagination-btn.active {
-    background: var(--aurora-gradient-primary);
-    border-color: transparent;
-    color: #fff;
+.pagination-controls .aurora-btn-primary {
     box-shadow: 0 0 15px rgba(145, 70, 255, 0.4), var(--aurora-glow-purple);
-}
-
-.pagination-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    background: var(--aurora-bg-secondary);
-    border-color: var(--aurora-border-secondary);
-    color: var(--aurora-text-tertiary);
-}
-
-.pagination-btn:disabled:hover {
-    background: var(--aurora-bg-secondary);
-    border-color: var(--aurora-border-secondary);
-    color: var(--aurora-text-tertiary);
-    box-shadow: none;
-    transform: none;
 }
 
 /* Responsive */
@@ -153,9 +97,7 @@
         gap: 4px;
     }
     
-    .pagination-btn {
-        padding: 6px 8px;
-        font-size: 11px;
+    .pagination-controls .aurora-btn {
         min-width: 32px;
         height: 32px;
     }

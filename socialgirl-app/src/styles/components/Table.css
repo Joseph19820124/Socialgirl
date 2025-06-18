@@ -1,4 +1,4 @@
-/* Export controls */
+/* Export controls - container for export-related UI elements */
 .export-controls {
     display: flex;
     align-items: center;
@@ -41,71 +41,12 @@
     margin-right: 10px;
 }
 
-.export-btn {
-    background: var(--aurora-gradient-secondary);
-    color: var(--aurora-text-primary);
-    border: none;
-    padding: 6px 12px;
-    border-radius: var(--aurora-radius-sm);
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all var(--aurora-transition-fast);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    position: relative;
-    overflow: hidden;
-    z-index: 1;
-}
-
-/* Export button shimmer effect */
-.export-btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(255, 255, 255, 0.2),
-        transparent
-    );
-    transition: left 0.5s ease;
-}
-
-.export-btn:hover::before {
-    left: 100%;
-}
-
-.export-btn:hover {
-    filter: brightness(1.1);
-    transform: translateY(-1px);
-    box-shadow: var(--aurora-glow-purple);
-}
-
-.export-btn:active {
-    transform: translateY(0);
-}
-
-.export-csv {
-    background: var(--aurora-gradient-success);
-}
-
-.export-csv:hover {
-    filter: brightness(1.1);
-    box-shadow: 0 4px 12px rgba(146, 254, 157, 0.3); /* Using --aurora-green rgba value */
-}
-
-.export-json {
-    background: var(--aurora-gradient-primary);
-}
-
-.export-json:hover {
-    filter: brightness(1.1);
-    box-shadow: var(--aurora-glow-cyan);
-}
+/* Note: Use aurora-btn classes for export buttons
+   Examples:
+   - aurora-btn aurora-btn-secondary aurora-btn-sm (for standard export)
+   - aurora-btn aurora-btn-primary aurora-btn-sm (for important exports)
+   - aurora-btn aurora-btn-subtle aurora-btn-sm (for less prominent exports)
+*/
 
 .table-wrapper {
     background: var(--aurora-gradient-dark);

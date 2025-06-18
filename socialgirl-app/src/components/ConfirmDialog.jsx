@@ -14,12 +14,12 @@ const ConfirmDialog = ({ isOpen, title, onConfirm, onCancel, confirmText = "CONF
         <div className="dialog-overlay" onClick={handleOverlayClick}>
             <div className="dialog fractal-dialog">
                 <h3>{title}</h3>
-                <div className="button-group">
-                    <button className="btn btn-yes" onClick={onConfirm}>
+                <div className="aurora-btn-group dialog-btn-group">
+                    <button className="aurora-btn aurora-btn-primary" onClick={onConfirm}>
                         {confirmText}
                     </button>
                     {cancelText && (
-                        <button className="btn btn-no" onClick={onCancel}>
+                        <button className="aurora-btn aurora-btn-ghost-secondary" onClick={onCancel}>
                             {cancelText}
                         </button>
                     )}

@@ -285,7 +285,25 @@ tr:hover .animated-stat {
     }
 }
 
-/* Aurora Button Design System */
+/* ========================================
+   Aurora Button Design System
+   ========================================
+   
+   Button Variants:
+   - Primary: Main CTAs with cyan gradient
+   - Secondary: Alternative actions with purple gradient  
+   - Success: Positive actions with green gradient
+   - Danger: Destructive actions with red/pink gradient
+   - Surface: Standard actions with subtle gradient
+   - Ghost: Transparent with colored border
+   - Subtle: Low emphasis with translucent background
+   
+   Modifiers:
+   - Sizes: sm, default, lg
+   - States: hover, active, focus, disabled, loading
+   - Layouts: block (full width), icon-only
+   ======================================== */
+
 .aurora-btn {
     padding: 8px 16px;
     border-radius: var(--aurora-radius-sm);
@@ -303,6 +321,13 @@ tr:hover .animated-stat {
     align-items: center;
     justify-content: center;
     gap: 8px;
+    /* Prevent text selection on double click */
+    user-select: none;
+    -webkit-user-select: none;
+    /* Smooth transform origin for animations */
+    transform-origin: center;
+    /* Z-index for proper stacking */
+    z-index: 1;
 }
 
 /* Shimmer effect for all aurora buttons */
@@ -331,21 +356,9 @@ tr:hover .animated-stat {
     background: var(--aurora-gradient-primary);
 }
 
-.aurora-btn-primary:hover {
-    filter: brightness(1.1);
-    transform: translateY(-1px);
-    box-shadow: var(--aurora-glow-cyan);
-}
-
 /* Secondary aurora button */
 .aurora-btn-secondary {
     background: var(--aurora-gradient-secondary);
-}
-
-.aurora-btn-secondary:hover {
-    filter: brightness(1.1);
-    transform: translateY(-1px);
-    box-shadow: var(--aurora-glow-purple);
 }
 
 /* Success aurora button */
@@ -353,21 +366,9 @@ tr:hover .animated-stat {
     background: var(--aurora-gradient-success);
 }
 
-.aurora-btn-success:hover {
-    filter: brightness(1.1);
-    transform: translateY(-1px);
-    box-shadow: 0 0 20px rgba(146, 254, 157, 0.3);
-}
-
 /* Surface aurora button */
 .aurora-btn-surface {
     background: var(--aurora-gradient-surface);
-}
-
-.aurora-btn-surface:hover {
-    filter: brightness(1.2);
-    transform: translateY(-1px);
-    box-shadow: var(--aurora-shadow-elevated);
 }
 
 /* Ghost aurora button (transparent with border) */
@@ -389,12 +390,6 @@ tr:hover .animated-stat {
     background: linear-gradient(135deg, var(--aurora-red) 0%, var(--aurora-pink) 100%);
 }
 
-.aurora-btn-danger:hover {
-    filter: brightness(1.1);
-    transform: translateY(-1px);
-    box-shadow: 0 0 20px rgba(255, 107, 107, 0.3);
-}
-
 /* Button sizes */
 .aurora-btn-sm {
     padding: 4px 12px;
@@ -408,7 +403,296 @@ tr:hover .animated-stat {
 
 /* Button active state */
 .aurora-btn:active {
-    transform: translateY(0);
+    transform: translateY(1px) scale(0.98);
+    transition-duration: 0.1s;
+}
+
+/* Ripple effect on click */
+.aurora-btn::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.aurora-btn:active::after {
+    width: 300px;
+    height: 300px;
+    opacity: 0;
+}
+
+/* Focus states for accessibility */
+.aurora-btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 245, 255, 0.3);
+}
+
+.aurora-btn:focus-visible {
+    outline: 2px solid var(--aurora-cyan);
+    outline-offset: 2px;
+}
+
+/* Disabled state */
+.aurora-btn:disabled,
+.aurora-btn.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+    filter: none !important;
+}
+
+.aurora-btn:disabled:hover,
+.aurora-btn.disabled:hover {
+    transform: none;
+    filter: none;
+    box-shadow: none;
+}
+
+/* Loading state */
+.aurora-btn.loading {
+    color: transparent;
+    pointer-events: none;
+}
+
+.aurora-btn.loading::after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: 50%;
+    left: 50%;
+    margin-left: -8px;
+    margin-top: -8px;
+    border: 2px solid var(--aurora-text-primary);
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: auroraSpinner 0.8s linear infinite;
+}
+
+@keyframes auroraSpinner {
+    to { transform: rotate(360deg); }
+}
+
+/* Icon support */
+.aurora-btn-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    height: auto;
+    line-height: 1;
+}
+
+.aurora-btn-icon svg {
+    width: 1em;
+    height: 1em;
+    fill: currentColor;
+}
+
+/* Icon-only buttons */
+.aurora-btn-icon-only {
+    padding: 8px;
+    gap: 0;
+}
+
+.aurora-btn-icon-only.aurora-btn-sm {
+    padding: 6px;
+}
+
+.aurora-btn-icon-only.aurora-btn-lg {
+    padding: 12px;
+}
+
+/* Button groups */
+.aurora-btn-group {
+    display: inline-flex;
+    gap: 0;
+    border-radius: var(--aurora-radius-sm);
+    overflow: hidden;
+}
+
+.aurora-btn-group .aurora-btn {
+    border-radius: 0;
+    margin: 0;
+}
+
+.aurora-btn-group .aurora-btn:not(:last-child) {
+    border-right: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.aurora-btn-group .aurora-btn:first-child {
+    border-top-left-radius: var(--aurora-radius-sm);
+    border-bottom-left-radius: var(--aurora-radius-sm);
+}
+
+.aurora-btn-group .aurora-btn:last-child {
+    border-top-right-radius: var(--aurora-radius-sm);
+    border-bottom-right-radius: var(--aurora-radius-sm);
+}
+
+/* Vertical button group */
+.aurora-btn-group-vertical {
+    flex-direction: column;
+    width: fit-content;
+}
+
+.aurora-btn-group-vertical .aurora-btn {
+    width: 100%;
+    border-radius: 0;
+    border-right: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.aurora-btn-group-vertical .aurora-btn:not(:last-child) {
+    border-right: none;
+}
+
+.aurora-btn-group-vertical .aurora-btn:last-child {
+    border-bottom: none;
+}
+
+.aurora-btn-group-vertical .aurora-btn:first-child {
+    border-top-left-radius: var(--aurora-radius-sm);
+    border-top-right-radius: var(--aurora-radius-sm);
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.aurora-btn-group-vertical .aurora-btn:last-child {
+    border-bottom-left-radius: var(--aurora-radius-sm);
+    border-bottom-right-radius: var(--aurora-radius-sm);
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+/* Ghost button variants */
+.aurora-btn-ghost-secondary {
+    background: transparent;
+    border: 2px solid var(--aurora-purple);
+    color: var(--aurora-purple);
+}
+
+.aurora-btn-ghost-secondary:hover {
+    background: rgba(145, 70, 255, 0.1);
+    filter: brightness(1.2);
+    transform: translateY(-1px);
+    box-shadow: var(--aurora-glow-purple);
+}
+
+.aurora-btn-ghost-danger {
+    background: transparent;
+    border: 2px solid var(--aurora-red);
+    color: var(--aurora-red);
+}
+
+.aurora-btn-ghost-danger:hover {
+    background: rgba(255, 107, 107, 0.1);
+    filter: brightness(1.2);
+    transform: translateY(-1px);
+    box-shadow: 0 0 20px rgba(255, 107, 107, 0.3);
+}
+
+/* Subtle button variant */
+.aurora-btn-subtle {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--aurora-border-primary);
+}
+
+.aurora-btn-subtle:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--aurora-cyan);
+    transform: translateY(-1px);
+    box-shadow: var(--aurora-glow-soft);
+}
+
+/* Full width button */
+.aurora-btn-block {
+    width: 100%;
+}
+
+/* Pulse animation for primary CTAs */
+.aurora-btn-pulse {
+    animation: auroraPulse 2s infinite;
+}
+
+@keyframes auroraPulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(0, 245, 255, 0.4);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(0, 245, 255, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(0, 245, 255, 0);
+    }
+}
+
+/* Glow animation for hover */
+.aurora-btn-glow:hover {
+    animation: auroraGlow 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes auroraGlow {
+    from {
+        box-shadow: 0 0 10px rgba(0, 245, 255, 0.5),
+                    0 0 20px rgba(0, 245, 255, 0.3),
+                    0 0 30px rgba(0, 245, 255, 0.1);
+    }
+    to {
+        box-shadow: 0 0 20px rgba(0, 245, 255, 0.8),
+                    0 0 30px rgba(0, 245, 255, 0.6),
+                    0 0 40px rgba(0, 245, 255, 0.4);
+    }
+}
+
+/* Enhanced hover effects for different variants */
+.aurora-btn-primary:hover {
+    filter: brightness(1.1);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(0, 245, 255, 0.4),
+                var(--aurora-glow-cyan);
+}
+
+.aurora-btn-secondary:hover {
+    filter: brightness(1.1);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(145, 70, 255, 0.4),
+                var(--aurora-glow-purple);
+}
+
+.aurora-btn-success:hover {
+    filter: brightness(1.1);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(146, 254, 157, 0.4),
+                0 0 20px rgba(146, 254, 157, 0.3);
+}
+
+.aurora-btn-danger:hover {
+    filter: brightness(1.1);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(255, 107, 107, 0.4),
+                0 0 20px rgba(255, 107, 107, 0.3);
+}
+
+/* Surface button enhanced hover */
+.aurora-btn-surface:hover {
+    filter: brightness(1.2);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(255, 255, 255, 0.1),
+                var(--aurora-shadow-elevated);
+}
+
+/* Smooth transitions for all interactive states */
+.aurora-btn {
+    transition: all var(--aurora-transition-base),
+                transform 0.1s ease-out,
+                box-shadow 0.3s ease;
 }
 
 /* Touch-friendly tap targets */

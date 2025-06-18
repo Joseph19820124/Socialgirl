@@ -64,7 +64,7 @@ const Pagination = ({
             {totalPages > 1 && (
                 <div className="pagination-controls">
                 <button
-                    className="pagination-btn"
+                    className="aurora-btn aurora-btn-subtle aurora-btn-sm"
                     onClick={() => onPageChange(currentPage - 1)}
                     disabled={currentPage === 1}
                 >
@@ -74,7 +74,7 @@ const Pagination = ({
                 {getPageNumbers().map(page => (
                     <button
                         key={page}
-                        className={`pagination-btn ${page === currentPage ? 'active' : ''}`}
+                        className={`aurora-btn aurora-btn-sm ${page === currentPage ? 'aurora-btn-primary' : 'aurora-btn-subtle'}`}
                         onClick={() => onPageChange(page)}
                     >
                         {page}
@@ -82,7 +82,7 @@ const Pagination = ({
                 ))}
                 
                 <button
-                    className="pagination-btn"
+                    className="aurora-btn aurora-btn-subtle aurora-btn-sm"
                     onClick={() => onPageChange(currentPage + 1)}
                     disabled={currentPage === totalPages}
                 >
