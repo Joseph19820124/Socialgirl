@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aurora Polished Aesthetics Test</title>
+    <link rel="stylesheet" href="socialgirl-app/src/styles/globals.css">
+    <link rel="stylesheet" href="socialgirl-app/src/styles/components/Table.css">
+    <style>
+        body {
+            padding: 40px;
+            background: var(--aurora-bg-primary);
+            color: var(--aurora-text-primary);
+            font-family: 'Roboto', sans-serif;
+        }
+        .demo-section {
+            margin-bottom: 40px;
+        }
+        .demo-section h2 {
+            color: var(--aurora-cyan);
+            margin-bottom: 20px;
+            text-shadow: 
+                0 1px 2px rgba(0, 0, 0, 0.5),
+                0 0 8px rgba(0, 245, 255, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-section">
+        <h2>Enhanced Table with Polished Aesthetics</h2>
+        
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th class="username-col">Creator</th>
+                        <th class="followers-col">Followers</th>
+                        <th class="title-col">Title</th>
+                        <th class="views-col">Views</th>
+                        <th class="likes-col">Likes</th>
+                        <th class="performance-col">Performance</th>
+                        <th class="url-col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="username">@aurora_user</span></td>
+                        <td><span class="followers high-stats animated-stat">2.5M</span></td>
+                        <td><span class="title">Amazing Aurora Waves Tutorial</span></td>
+                        <td><span class="views high-stats animated-stat">850K</span></td>
+                        <td><span class="likes high-stats animated-stat">125K</span></td>
+                        <td>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar-fill performance-high" style="width: 95%;"></div>
+                                <span class="progress-value">95%</span>
+                            </div>
+                        </td>
+                        <td><a href="#" class="watch-btn">WATCH</a></td>
+                    </tr>
+                    <tr>
+                        <td><span class="username">@neon_creator</span></td>
+                        <td><span class="followers medium-stats animated-stat">450K</span></td>
+                        <td><span class="title">Neon Lights Photography Tips</span></td>
+                        <td><span class="views medium-stats animated-stat">120K</span></td>
+                        <td><span class="likes medium-stats animated-stat">15K</span></td>
+                        <td>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar-fill performance-medium-high" style="width: 70%;"></div>
+                                <span class="progress-value">70%</span>
+                            </div>
+                        </td>
+                        <td><a href="#" class="watch-btn">WATCH</a></td>
+                    </tr>
+                    <tr>
+                        <td><span class="username">@cyber_art</span></td>
+                        <td><span class="followers low-stats animated-stat">25K</span></td>
+                        <td><span class="title">Cyberpunk Art Showcase</span></td>
+                        <td><span class="views low-stats animated-stat">8.5K</span></td>
+                        <td><span class="likes low-stats animated-stat">450</span></td>
+                        <td>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar-fill performance-low" style="width: 25%;"></div>
+                                <span class="progress-value">25%</span>
+                            </div>
+                        </td>
+                        <td><a href="#" class="watch-btn">WATCH</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="demo-section">
+        <h2>Aesthetic Features Showcase</h2>
+        
+        <h3 style="color: var(--aurora-purple); margin: 20px 0;">✨ Rounded Corners</h3>
+        <p style="color: var(--aurora-text-secondary);">
+            Table wrapper has enhanced rounded corners with border-radius: var(--aurora-radius-xl)
+        </p>
+        
+        <h3 style="color: var(--aurora-purple); margin: 20px 0;">✨ Enhanced Shadows</h3>
+        <p style="color: var(--aurora-text-secondary);">
+            Multiple layered shadows including aurora glow effects and inset shadows for depth
+        </p>
+        
+        <h3 style="color: var(--aurora-purple); margin: 20px 0;">✨ Text Shadows</h3>
+        <p style="color: var(--aurora-text-secondary);">
+            Headers and stats have subtle text shadows for improved readability
+        </p>
+        
+        <h3 style="color: var(--aurora-purple); margin: 20px 0;">✨ Stat Glow Effects</h3>
+        <div style="display: flex; gap: 20px; margin: 10px 0;">
+            <span class="high-stats animated-stat">High: 2.5M</span>
+            <span class="medium-stats animated-stat">Medium: 450K</span>
+            <span class="low-stats animated-stat">Low: 25K</span>
+        </div>
+        
+        <h3 style="color: var(--aurora-purple); margin: 20px 0;">✨ CSS Variables</h3>
+        <p style="color: var(--aurora-text-secondary);">
+            All colors now use aurora theme CSS variables for consistency
+        </p>
+    </div>
+</body>
+</html>

@@ -4,21 +4,21 @@ export const PLATFORMS = {
     youtube: {
         id: 'youtube',
         name: 'YouTube',
-        title: 'YouTube Analytics',
+        title: 'YouTube Data',
         path: '/youtube',
         columns: youtubeColumns
     },
     instagram: {
         id: 'instagram',
         name: 'Instagram', 
-        title: 'Instagram Analytics',
+        title: 'Instagram Data',
         path: '/instagram',
         columns: instagramColumns
     },
     tiktok: {
         id: 'tiktok',
         name: 'TikTok',
-        title: 'TikTok Analytics',
+        title: 'TikTok Data',
         path: '/tiktok',
         columns: tiktokColumns
     }

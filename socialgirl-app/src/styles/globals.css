@@ -218,18 +218,27 @@ tr:hover .animated-stat {
     100% { left: 100%; }
 }
 
-/* Stats highlighting with enhanced styling */
+/* Stats highlighting with enhanced glow effects */
 .high-stats { 
     color: var(--aurora-green-light);
-    filter: drop-shadow(0 0 3px rgba(0, 255, 136, 0.4));
+    filter: drop-shadow(0 0 6px rgba(0, 255, 136, 0.6));
+    text-shadow: 
+        0 0 8px rgba(0, 255, 136, 0.4),
+        0 0 16px rgba(0, 255, 136, 0.2);
 }
 .medium-stats { 
     color: var(--aurora-orange);
-    filter: drop-shadow(0 0 3px rgba(255, 184, 0, 0.4));
+    filter: drop-shadow(0 0 6px rgba(255, 184, 0, 0.6));
+    text-shadow: 
+        0 0 8px rgba(255, 184, 0, 0.4),
+        0 0 16px rgba(255, 184, 0, 0.2);
 }
 .low-stats { 
     color: var(--aurora-red);
-    filter: drop-shadow(0 0 3px rgba(255, 107, 107, 0.4));
+    filter: drop-shadow(0 0 6px rgba(255, 107, 107, 0.6));
+    text-shadow: 
+        0 0 8px rgba(255, 107, 107, 0.4),
+        0 0 16px rgba(255, 107, 107, 0.2);
 }
 
 /* Section Styles */
