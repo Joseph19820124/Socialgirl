@@ -65,7 +65,6 @@ function AppContent() {
                                 videosData={platformData.getPlatformData('instagram').videosData} 
                                 usersData={platformData.getPlatformData('instagram').usersData} 
                                 userVideosData={platformData.getPlatformData('instagram').userVideosData}
-                                userPostsData={platformData.getPlatformData('instagram').userPostsData}
                                 isLoading={platformData.getPlatformData('instagram').isLoading}
                                 onSearch={handleInstagramSearch}
                                 onClearData={() => platformData.clearPlatformData('instagram')}
@@ -79,7 +78,6 @@ function AppContent() {
                                 videosData={platformData.getPlatformData('tiktok').videosData} 
                                 usersData={platformData.getPlatformData('tiktok').usersData} 
                                 userVideosData={platformData.getPlatformData('tiktok').userVideosData}
-                                userPostsData={platformData.getPlatformData('tiktok').userPostsData}
                                 isLoading={platformData.getPlatformData('tiktok').isLoading}
                                 onSearch={handleTikTokSearch}
                                 onClearData={() => platformData.clearPlatformData('tiktok')}

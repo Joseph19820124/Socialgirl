@@ -11,7 +11,6 @@ const Tabs = ({ activeTab, onTabChange, platform = 'default' }) => {
         if (platform === 'tiktok' || platform === 'instagram') {
             return [
                 ...baseTabs,
-                { id: 'userPosts', label: 'User Posts', icon: '📱' },
                 { id: 'users', label: 'Users', icon: '👥' }
             ];
         }

@@ -6,7 +6,7 @@ import { videosColumns, usersColumns } from '../config/tableColumns';
 import { PLATFORMS } from '../config/platforms';
 import './TableContainer.css';
 
-const TableContainer = ({ videosData, usersData, userVideosData = [], userPostsData = [], isLoading, platform = 'default', onSearch, onClearData }) => {
+const TableContainer = ({ videosData, usersData, userVideosData = [], isLoading, platform = 'default', onSearch, onClearData }) => {
     const [activeTab, setActiveTab] = useState('videos');
 
     const handleTabChange = (tabId) => {
@@ -24,8 +24,6 @@ const TableContainer = ({ videosData, usersData, userVideosData = [], userPostsD
                 return "Search user";
             case 'users':
                 return "Search user";
-            case 'userPosts':
-                return "Enter username";
             case 'videos':
             default:
                 return "Search query";
@@ -38,8 +36,6 @@ const TableContainer = ({ videosData, usersData, userVideosData = [], userPostsD
                 return userVideosData;
             case 'users':
                 return usersData;
-            case 'userPosts':
-                return userPostsData;
             case 'videos':
             default:
                 return videosData;
@@ -81,8 +77,6 @@ const TableContainer = ({ videosData, usersData, userVideosData = [], userPostsD
                         onSearch.userVideos(query);
                     } else if (activeTab === 'users' && onSearch.users) {
                         onSearch.users(query);
-                    } else if (activeTab === 'userPosts' && onSearch.userPosts) {
-                        onSearch.userPosts(query);
                     } else if (onSearch.videos) {
                         onSearch.videos(query);
                     } else if (typeof onSearch === 'function') {
