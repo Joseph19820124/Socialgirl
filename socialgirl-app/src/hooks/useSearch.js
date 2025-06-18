@@ -28,11 +28,12 @@ const useSearch = (platformData) => {
                 console.error(`${platform} search error:`, error);
                 
                 // Show user-friendly error message
-                if (activeTab === 'userPosts') {
+                if (activeTab === 'userPosts' || activeTab === 'userVideos') {
+                    const tabName = activeTab === 'userVideos' ? 'User Videos' : 'User Posts';
                     if (error.message.includes('json')) {
-                        alert(`User Posts: This user may have a private account or no popular posts available.`);
+                        alert(`${tabName}: This user may have a private account or no popular posts available.`);
                     } else {
-                        alert(`User Posts Error: ${error.message}`);
+                        alert(`${tabName} Error: ${error.message}`);
                     }
                 }
             } finally {

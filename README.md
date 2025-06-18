@@ -1310,6 +1310,112 @@ async function getRapidApiKey() {
 
 ---
 
+### API Integration: Tab Name to API Functionality Mapping
+
+**Symptoms:**
+
+- Tab functionality working previously but broken after UI changes
+- Error: "Cannot read properties of undefined (reading 'author')"
+- API calls succeeding but data extraction failing
+- User clicks "User Videos" tab but no data appears despite successful API responses
+
+**Root Cause:**
+When UI tab names are changed or replaced (e.g., "User Posts" → "User Videos"), the backend routing logic may not be updated to handle the new tab names. The search strategy checks for specific tab names (`activeTab === 'userPosts'`) but the UI now sends different tab names (`activeTab === 'userVideos'`), causing the request to route to the wrong API flow.
+
+**Solution:**
+Update search strategy routing to handle both old and new tab names, ensuring UI changes don't break existing API functionality.
+
+**Code Pattern:**
+
+```javascript
+// ❌ Wrong - Only handles old tab name
+class PlatformSearchStrategy {
+    async search(query, context = {}) {
+        const { activeTab } = context;
+        
+        if (activeTab === 'userPosts') {  // UI no longer sends this
+            return await this.searchUserPosts(query);
+        }
+        
+        return await this.searchGeneral(query);
+    }
+}
+
+// ✅ Correct - Handle both old and new tab names
+class PlatformSearchStrategy {
+    async search(query, context = {}) {
+        const { activeTab } = context;
+        
+        // Handle both old and new tab names for same functionality
+        if (activeTab === 'userVideos' || activeTab === 'userPosts') {
+            return await this.searchUserPosts(query);
+        }
+        
+        return await this.searchGeneral(query);
+    }
+}
+
+// Error handling should also be updated
+const useSearch = (platformData) => {
+    const createSearchHandler = useCallback((platform, activeTab = 'videos') => {
+        return async (query) => {
+            try {
+                // ... API call logic
+            } catch (error) {
+                // Handle both tab names in error messages
+                if (activeTab === 'userPosts' || activeTab === 'userVideos') {
+                    const tabName = activeTab === 'userVideos' ? 'User Videos' : 'User Posts';
+                    alert(`${tabName} Error: ${error.message}`);
+                }
+            }
+        };
+    }, []);
+};
+
+// Data mapping should handle different response structures
+export function extractVideoData(apiResponse) {
+    return apiResponse.data.map(dataItem => {
+        const item = dataItem.item;  // General search structure
+        
+        if (!item) {
+            return null;  // Skip invalid items
+        }
+        
+        return {
+            username: item.author?.uniqueId || 'Unknown',
+            // ... other fields
+        };
+    }).filter(item => item !== null);
+}
+
+export function extractUserPostsData(apiResponse) {
+    return apiResponse.data.itemList.map(item => {  // User posts structure
+        return {
+            username: item.author?.uniqueId || 'Unknown',
+            // ... other fields with fallback to stats if statsV2 missing
+            views: parseInt(item.statsV2?.playCount) || parseInt(item.stats?.playCount) || 0,
+        };
+    });
+}
+```
+
+**Key Points:**
+
+- Always check for both old and new tab names when refactoring UI
+- Use separate data extraction functions for different API response structures
+- Update error handling to recognize both tab names
+- Verify that API routing logic matches current UI tab names
+- Test that previously working functionality still works after UI changes
+- Consider creating a mapping object for tab name aliases
+
+**Applicable To:**
+
+- Language: JavaScript/TypeScript
+- Frameworks: React, Vue, Angular (any frontend with backend API routing)
+- Use Cases: UI refactoring, tab name changes, maintaining backward compatibility
+
+---
+
 ## Technology Stack
 
 - **Frontend**: React 18 + Vite
@@ -1320,7 +1426,7 @@ async function getRapidApiKey() {
 
 ## Project Structure
 
-```
+```text
 socialgirl-app/
 ├── src/
 │   ├── apis/           # API integration modules

@@ -11,6 +11,12 @@ export function extractVideoData(apiResponse) {
 
     return apiResponse.data.map(dataItem => {
         const item = dataItem.item;
+        
+        // Skip if item is undefined or null
+        if (!item) {
+            return null;
+        }
+        
         return {
             username: item.author?.uniqueId || 'Unknown',
             followers: parseInt(item.authorStats?.followerCount) || 0,
@@ -20,9 +26,9 @@ export function extractVideoData(apiResponse) {
             comments: parseInt(item.statsV2?.commentCount) || 0,
             shares: parseInt(item.statsV2?.shareCount) || 0,
             url: `https://tiktok.com/@${item.author?.uniqueId}/video/${item.id}`,
-            publishedAt: new Date(item.createTime * 1000).toISOString()
+            publishedAt: item.createTime ? new Date(item.createTime * 1000).toISOString() : new Date().toISOString()
         };
-    });
+    }).filter(item => item !== null);
 }
 
 /**
@@ -75,6 +81,6 @@ export function extractUserPostsData(apiResponse) {
         comments: parseInt(item.statsV2?.commentCount) || parseInt(item.stats?.commentCount) || 0,
         shares: parseInt(item.statsV2?.shareCount) || parseInt(item.stats?.shareCount) || 0,
         url: `https://tiktok.com/@${item.author?.uniqueId}/video/${item.id}`,
-        publishedAt: new Date(item.createTime * 1000).toISOString()
+        publishedAt: item.createTime ? new Date(item.createTime * 1000).toISOString() : new Date().toISOString()
     }));
 }

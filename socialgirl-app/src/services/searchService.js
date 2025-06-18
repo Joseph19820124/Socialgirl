@@ -74,8 +74,8 @@ class TikTokSearchStrategy {
     async search(query, context = {}) {
         const { activeTab } = context;
         
-        // For User Posts tab, do 2-step flow: username -> secUid -> popular posts
-        if (activeTab === 'userPosts') {
+        // For User Videos/User Posts tab, do 2-step flow: username -> secUid -> popular posts
+        if (activeTab === 'userVideos' || activeTab === 'userPosts') {
             return await this.searchUserPosts(query);
         }
         
@@ -109,10 +109,20 @@ class TikTokSearchStrategy {
             const postsResponse = await getUserPopularPosts(secUid);
             
             // Step 3: Extract and return user posts data
-            return extractTikTokUserPostsData(postsResponse);
+            const extractedData = extractTikTokUserPostsData(postsResponse);
+            
+            return extractedData;
             
         } catch (error) {
             console.error('Error in TikTok user posts search:', error);
+            
+            // Provide more specific error messages
+            if (error.message.includes('not found')) {
+                throw new Error(`TikTok user '${username}' not found. Please check the username.`);
+            } else if (error.message.includes('secUid')) {
+                throw new Error(`Unable to get user data for '${username}'. User may not exist or be private.`);
+            }
+            
             throw error;
         }
     }
