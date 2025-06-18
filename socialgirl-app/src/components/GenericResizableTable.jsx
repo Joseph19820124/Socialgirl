@@ -4,6 +4,7 @@ import { formatNumber, getStatClass } from '../utils/formatters';
 import { getStoredSortConfig, storeSortConfig, getStoredPageSize, storePageSize } from '../utils/sortPersistence';
 import Pagination from './Pagination';
 import { ProgressBar, StatBadge, PerformanceRing } from './DataVisualization';
+import AuroraTooltip from './AuroraTooltip';
 import '../styles/components/Table.css';
 import '../styles/components/DataVisualization.css';
 import '../styles/performance.css';
@@ -161,7 +162,11 @@ const GenericResizableTable = ({ data, isLoading, columns, cellRenderers, skelet
         
         switch (column.key) {
             case 'username':
-                return <span className="username">{value || ''}</span>;
+                return (
+                    <AuroraTooltip content={value}>
+                        <span className="username truncated">{value || ''}</span>
+                    </AuroraTooltip>
+                );
             case 'followers':
                 // Use StatBadge for high follower counts
                 if (value > 100000) {
@@ -173,7 +178,11 @@ const GenericResizableTable = ({ data, isLoading, columns, cellRenderers, skelet
                     </span>
                 );
             case 'title':
-                return <span className="title">{value || ''}</span>;
+                return (
+                    <AuroraTooltip content={value}>
+                        <span className="title truncated">{value || ''}</span>
+                    </AuroraTooltip>
+                );
             case 'views':
                 return (
                     <span className={`views ${getStatClass(value, 'views')} animated-stat`}>
@@ -205,7 +214,11 @@ const GenericResizableTable = ({ data, isLoading, columns, cellRenderers, skelet
                     </span>
                 );
             case 'about':
-                return <span className="about" title={value || ''}>{value || ''}</span>;
+                return (
+                    <AuroraTooltip content={value}>
+                        <span className="about truncated">{value || ''}</span>
+                    </AuroraTooltip>
+                );
             case 'performance': {
                 // Use ProgressBar for performance visualization
                 return <ProgressBar value={value || 0} max={100} />;

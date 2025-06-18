@@ -318,8 +318,8 @@ tr:hover {
 }
 
 tr:hover .username {
-    color: var(--aurora-cyan);
-    text-shadow: 0 0 5px rgba(0, 245, 255, 0.2); /* Using --aurora-cyan rgba value */
+    color: var(--aurora-blue-light);
+    text-shadow: 0 0 5px rgba(112, 184, 255, 0.3); /* Using --aurora-blue-light rgba value */
 }
 
 
@@ -372,7 +372,7 @@ tr:last-child td {
 
 .username {
     font-weight: 600;
-    color: var(--aurora-purple);
+    color: var(--aurora-blue);
     max-width: 90px;
     overflow: hidden;
     text-overflow: ellipsis;

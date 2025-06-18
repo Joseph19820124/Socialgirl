@@ -1416,6 +1416,163 @@ export function extractUserPostsData(apiResponse) {
 
 ---
 
+### UI/UX: Tooltip Implementation for Truncated Table Content
+
+**Symptoms:**
+- Table content (usernames, titles, captions) is truncated with ellipsis
+- No way to view full text content when hovering
+- Tooltips appearing in wrong position (bottom right instead of at cursor)
+- Tooltip position affected by scrollable table containers
+- Need themed tooltips matching Aurora UI design
+
+**Root Cause:**
+Truncated text in tables needs tooltips to show full content, but positioning tooltips correctly is challenging when they're rendered inside scrollable containers with `overflow-x: auto`. The tooltip inherits positioning context from parent elements, causing incorrect placement.
+
+**Solution:**
+Implement a React Portal-based tooltip component that renders to document.body, bypassing all parent positioning contexts, with smart truncation detection and cursor-following positioning.
+
+**Code Pattern:**
+```javascript
+// AuroraTooltip.jsx - Portal-based tooltip component
+import React, { useState, useRef, useEffect } from 'react';
+import ReactDOM from 'react-dom';
+
+const AuroraTooltip = ({ children, content, disabled = false }) => {
+    const [isVisible, setIsVisible] = useState(false);
+    const [position, setPosition] = useState({ top: 0, left: 0 });
+    const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+    const tooltipRef = useRef(null);
+    const targetRef = useRef(null);
+
+    // Check if text is actually truncated
+    const checkIfTruncated = () => {
+        if (!targetRef.current) return false;
+        const element = targetRef.current.querySelector('.truncated') || targetRef.current;
+        return element.scrollWidth > element.clientWidth;
+    };
+
+    // Calculate position relative to cursor
+    const calculatePosition = () => {
+        if (!tooltipRef.current) return;
+        
+        requestAnimationFrame(() => {
+            if (!tooltipRef.current) return;
+            
+            const tooltipRect = tooltipRef.current.getBoundingClientRect();
+            const cursorOffset = 2; // 2px above cursor
+            
+            let top = mousePos.y - tooltipRect.height - cursorOffset;
+            let left = mousePos.x - tooltipRect.width / 2;
+            
+            // Flip below cursor if would go off top
+            if (top < 8) {
+                top = mousePos.y + cursorOffset;
+            }
+            
+            // Keep within viewport horizontally
+            const padding = 8;
+            if (left < padding) left = padding;
+            if (left + tooltipRect.width > window.innerWidth - padding) {
+                left = window.innerWidth - tooltipRect.width - padding;
+            }
+            
+            setPosition({ top, left });
+        });
+    };
+
+    const handleMouseMove = (e) => {
+        setMousePos({ x: e.clientX, y: e.clientY });
+    };
+
+    // Render tooltip with portal
+    return (
+        <>
+            <div 
+                ref={targetRef}
+                onMouseEnter={handleMouseEnter}
+                onMouseMove={handleMouseMove}
+                onMouseLeave={handleMouseLeave}
+            >
+                {children}
+            </div>
+            {isVisible && content && ReactDOM.createPortal(
+                <div 
+                    ref={tooltipRef}
+                    className="aurora-tooltip"
+                    style={{
+                        position: 'fixed',
+                        top: `${position.top}px`,
+                        left: `${position.left}px`,
+                        pointerEvents: 'none'
+                    }}
+                >
+                    <div className="aurora-tooltip-content">{content}</div>
+                    <div className="aurora-tooltip-arrow" />
+                </div>,
+                document.body
+            )}
+        </>
+    );
+};
+
+// Usage in table cells
+<AuroraTooltip content={value}>
+    <span className="username truncated">{value}</span>
+</AuroraTooltip>
+```
+
+```css
+/* Aurora-themed tooltip styles */
+.aurora-tooltip {
+    position: fixed !important;
+    z-index: 99999;
+    pointer-events: none;
+    opacity: 0;
+    animation: tooltipFadeIn 0.3s ease-out forwards;
+}
+
+.aurora-tooltip-content {
+    background: linear-gradient(135deg, 
+        var(--aurora-bg-tertiary) 0%, 
+        var(--aurora-surface) 50%,
+        var(--aurora-bg-tertiary) 100%);
+    color: var(--aurora-text-primary);
+    padding: 10px 14px;
+    border-radius: var(--aurora-radius-md);
+    max-width: 300px;
+    box-shadow: 
+        0 4px 20px rgba(0, 0, 0, 0.6),
+        0 0 40px rgba(0, 245, 255, 0.1),
+        inset 0 0 20px rgba(0, 245, 255, 0.05);
+    border: 1px solid rgba(0, 245, 255, 0.2);
+}
+
+/* Ensure content is marked as truncated */
+.truncated {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+    display: block;
+}
+```
+
+**Key Points:**
+- Use ReactDOM.createPortal to render tooltip to document.body
+- Track cursor position with clientX/Y for viewport-relative positioning
+- Only show tooltip when content is actually truncated (scrollWidth > clientWidth)
+- Use requestAnimationFrame to ensure tooltip dimensions are calculated correctly
+- Set pointerEvents: 'none' on tooltip to prevent interference with mouse tracking
+- Position tooltip 2px above cursor with smart flipping when near viewport edge
+- Add '.truncated' class to content elements for ellipsis detection
+
+**Applicable To:**
+- Language: JavaScript/TypeScript
+- Frameworks: React (adaptable to Vue/Angular with portal equivalents)
+- Use Cases: Data tables with truncated content, responsive layouts, themed tooltips
+
+---
+
 ## Technology Stack
 
 - **Frontend**: React 18 + Vite
