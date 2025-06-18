@@ -3,7 +3,9 @@ import { useColumnResize } from '../hooks/useColumnResize';
 import { formatNumber, getStatClass } from '../utils/formatters';
 import { getStoredSortConfig, storeSortConfig, getStoredPageSize, storePageSize } from '../utils/sortPersistence';
 import Pagination from './Pagination';
+import { ProgressBar, StatBadge, PerformanceRing } from './DataVisualization';
 import '../styles/components/Table.css';
+import '../styles/components/DataVisualization.css';
 import '../styles/performance.css';
 
 const GenericResizableTable = ({ data, isLoading, columns, cellRenderers, skeletonComponents, tableId = 'default' }) => {
@@ -161,6 +163,10 @@ const GenericResizableTable = ({ data, isLoading, columns, cellRenderers, skelet
             case 'username':
                 return <span className="username">{value || ''}</span>;
             case 'followers':
+                // Use StatBadge for high follower counts
+                if (value > 100000) {
+                    return <StatBadge value={formatNumber(value)} isHigh={true} />;
+                }
                 return (
                     <span className={`followers ${getStatClass(value, 'followers')} animated-stat stat-highlight`}>
                         {formatNumber(value)}
@@ -201,19 +207,8 @@ const GenericResizableTable = ({ data, isLoading, columns, cellRenderers, skelet
             case 'about':
                 return <span className="about" title={value || ''}>{value || ''}</span>;
             case 'performance': {
-                const getPerformanceClass = (score) => {
-                    if (score >= 80) return 'performance-high';
-                    if (score >= 60) return 'performance-medium-high';
-                    if (score >= 40) return 'performance-medium';
-                    if (score >= 20) return 'performance-low';
-                    return 'performance-very-low';
-                };
-                
-                return (
-                    <span className={`performance-score ${getPerformanceClass(value)}`}>
-                        {value}
-                    </span>
-                );
+                // Use ProgressBar for performance visualization
+                return <ProgressBar value={value || 0} max={100} />;
             }
             case 'videoCount':
                 return (
@@ -240,19 +235,8 @@ const GenericResizableTable = ({ data, isLoading, columns, cellRenderers, skelet
                     </span>
                 );
             case 'avgPerformance': {
-                const getPerformanceClass = (score) => {
-                    if (score >= 5) return 'performance-high';
-                    if (score >= 3) return 'performance-medium-high';
-                    if (score >= 2) return 'performance-medium';
-                    if (score >= 1) return 'performance-low';
-                    return 'performance-very-low';
-                };
-                
-                return (
-                    <span className={`performance-score ${getPerformanceClass(value)}`}>
-                        {value}%
-                    </span>
-                );
+                // Use PerformanceRing for average performance visualization
+                return <PerformanceRing value={value || 0} max={10} size={40} />;
             }
             case 'url': {
                 // Determine button text and class based on table type
