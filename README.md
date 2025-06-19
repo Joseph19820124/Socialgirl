@@ -1,6 +1,8 @@
-# Socialgirl App - Content Analytics Dashboard
+# Socialgirl
 
 A web application that helps you track and analyze content performance across YouTube, Instagram, and TikTok. Search for videos, view engagement metrics, and monitor your API usage all in one place.
+
+By Ken Kai does AI <https://www.skool.com/kenkai>
 
 ## What You Need Before Starting
 
@@ -61,12 +63,6 @@ Once you see output like:
 
 Open your web browser and go to: **<http://localhost:5173>**
 
-## What You'll See
-
-- A cyberpunk-themed dashboard with navigation for YouTube, Instagram, and TikTok
-- Search bars to look up content on each platform
-- Tables showing video/content metrics like views, likes, and engagement
-- A settings page where you can manage API keys and monitor usage quotas
 
 ## Stopping the App
 
