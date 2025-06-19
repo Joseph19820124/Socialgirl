@@ -66,6 +66,58 @@ const TableContainer = ({ videosData, usersData, userVideosData = [], isLoading,
         }
     };
 
+    const handleExportJSON = () => {
+        const data = getTableData();
+        const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
+        const filename = `${platform}-${activeTab}-${timestamp}.json`;
+        
+        const jsonString = JSON.stringify(data, null, 2);
+        const blob = new Blob([jsonString], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    };
+
+    const handleExportCSV = () => {
+        const data = getTableData();
+        const columns = getTableColumns();
+        const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
+        const filename = `${platform}-${activeTab}-${timestamp}.csv`;
+        
+        // Create CSV header
+        const headers = columns.map(col => col.label).join(',');
+        
+        // Create CSV rows
+        const rows = data.map(item => {
+            return columns.map(col => {
+                const value = item[col.key];
+                // Handle values that might contain commas or quotes
+                if (typeof value === 'string' && (value.includes(',') || value.includes('"') || value.includes('\n'))) {
+                    return `"${value.replace(/"/g, '""')}"`;
+                }
+                return value || '';
+            }).join(',');
+        });
+        
+        const csvContent = [headers, ...rows].join('\n');
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    };
+
     const currentData = getTableData();
     const hasData = currentData && currentData.length > 0;
 
@@ -86,9 +138,27 @@ const TableContainer = ({ videosData, usersData, userVideosData = [], isLoading,
                     }
                 }} placeholder={getSearchPlaceholder()} />}
                 <div className="table-actions">
+                    {hasData && (
+                        <>
+                            <button 
+                                className="aurora-btn aurora-btn-primary aurora-btn-sm"
+                                onClick={handleExportJSON}
+                                title="Export data as JSON"
+                            >
+                                Export JSON
+                            </button>
+                            <button 
+                                className="aurora-btn aurora-btn-secondary aurora-btn-sm"
+                                onClick={handleExportCSV}
+                                title="Export data as CSV"
+                            >
+                                Export CSV
+                            </button>
+                        </>
+                    )}
                     {hasData && onClearData && (
                         <button 
-                            className="clear-btn"
+                            className="aurora-btn aurora-btn-danger aurora-btn-sm"
                             onClick={handleClear}
                             title="Clear all data"
                         >

@@ -14,27 +14,10 @@
     margin-left: auto;
 }
 
-/* Clear button styling */
-.clear-btn {
-    background: var(--aurora-red);
-    color: var(--aurora-text-primary);
-    border: none;
+/* Ensure aurora buttons in table actions have consistent sizing */
+.table-actions .aurora-btn-sm {
     padding: 8px 16px;
-    border-radius: var(--aurora-radius-sm);
     font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all var(--aurora-transition-fast);
-}
-
-.clear-btn:hover {
-    filter: brightness(1.2);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3); /* Using --aurora-red rgba value */
-}
-
-.clear-btn:active {
-    transform: translateY(0);
 }
 
 /* Responsive */
@@ -48,9 +31,5 @@
     .table-actions {
         margin-left: 0;
         justify-content: space-between;
-    }
-    
-    .clear-btn {
-        padding: 10px 20px;
     }
 }

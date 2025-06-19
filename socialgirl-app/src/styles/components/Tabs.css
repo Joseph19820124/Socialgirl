@@ -21,7 +21,7 @@
     padding: var(--aurora-space-md) var(--aurora-space-xl);
     border: none;
     background: transparent;
-    color: var(--aurora-text-primary);
+    color: #ffffff;
     font-family: 'Roboto', sans-serif;
     font-weight: 600;
     font-size: 14px;
@@ -51,14 +51,14 @@
 
 .tab:hover {
     background: rgba(145, 70, 255, 0.1);
-    color: var(--aurora-purple);
+    color: #ffffff;
     transform: translateY(-1px);
     box-shadow: var(--aurora-glow-purple);
 }
 
 .tab.active {
     background: var(--aurora-gradient-primary);
-    color: var(--aurora-bg-primary);
+    color: #ffffff;
     font-weight: 700;
     transform: translateY(-2px);
     box-shadow: 
@@ -72,7 +72,7 @@
 
 .tab.active:hover {
     background: linear-gradient(135deg, var(--aurora-purple-light) 0%, var(--aurora-cyan-light) 100%);
-    color: var(--aurora-bg-primary);
+    color: #ffffff;
     transform: translateY(-2px) scale(1.02);
 }
 
