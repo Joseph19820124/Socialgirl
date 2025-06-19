@@ -1,7 +1,5 @@
 # Socialgirl
 
-![Socialgirl App Screenshot](socialgirl.png)
-
 A web application that helps you track and analyze content performance across YouTube, Instagram, and TikTok. Search for videos, view engagement metrics, and monitor your API usage all in one place.
 
 By Ken Kai does AI <https://www.skool.com/kenkai>
@@ -18,7 +16,7 @@ By Ken Kai does AI <https://www.skool.com/kenkai>
 
 1. Download Node.js from <https://nodejs.org/> (choose the LTS version)
 2. Run the installer and follow the prompts
-3. Download Git from <https://git-scm.com/download/win>
+3. Download Git from <https://git-scm.com/downloads>
 4. Run the Git installer with default settings
 
 **Mac:**
