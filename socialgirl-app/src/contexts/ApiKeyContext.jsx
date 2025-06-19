@@ -19,7 +19,19 @@ export const useApiKeys = () => {
 };
 
 export const ApiKeyProvider = ({ children }) => {
-    const [apiKeys, setApiKeysState] = useState({});
+    // Initialize state from sessionStorage if available
+    const [apiKeys, setApiKeysState] = useState(() => {
+        try {
+            const stored = sessionStorage.getItem('socialgirl_session_keys');
+            if (stored) {
+                console.log('[API Key Context] Loading API keys from session storage');
+                return JSON.parse(stored);
+            }
+        } catch (error) {
+            console.error('[API Key Context] Failed to load from session storage:', error);
+        }
+        return {};
+    });
 
     const setApiKeys = (keys) => {
         console.log('[API Key Context] Setting API keys:', {
@@ -28,6 +40,14 @@ export const ApiKeyProvider = ({ children }) => {
             rapidApiLength: keys.rapidApiKey?.length || 0
         });
         setApiKeysState(keys);
+        
+        // Also save to sessionStorage for persistence during the session
+        try {
+            sessionStorage.setItem('socialgirl_session_keys', JSON.stringify(keys));
+            console.log('[API Key Context] Saved API keys to session storage');
+        } catch (error) {
+            console.error('[API Key Context] Failed to save to session storage:', error);
+        }
     };
 
     const getApiKey = (keyName) => {
@@ -43,6 +63,14 @@ export const ApiKeyProvider = ({ children }) => {
     const clearApiKeys = () => {
         console.log('[API Key Context] Clearing all API keys');
         setApiKeysState({});
+        
+        // Also clear from sessionStorage
+        try {
+            sessionStorage.removeItem('socialgirl_session_keys');
+            console.log('[API Key Context] Cleared API keys from session storage');
+        } catch (error) {
+            console.error('[API Key Context] Failed to clear session storage:', error);
+        }
     };
 
     const contextValue = {

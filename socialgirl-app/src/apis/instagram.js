@@ -7,7 +7,7 @@ async function getRapidApiKey() {
 }
 
 // Instagram RapidAPI configuration - using Vite proxy to bypass CORS
-const RAPIDAPI_HOST = import.meta.env.VITE_INSTAGRAM_RAPIDAPI_HOST || 'instagram-scraper-20251.p.rapidapi.com';
+const RAPIDAPI_HOST = 'instagram-scraper-20251.p.rapidapi.com';
 const BASE_URL = `/api/instagram`; // Vite proxy will route to https://instagram-scraper-20251.p.rapidapi.com
 
 /**

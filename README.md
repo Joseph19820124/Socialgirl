@@ -984,12 +984,13 @@ const options = {
 - "API key not found" errors despite user configuring keys in settings
 - API functions can't decrypt stored settings without password
 - Need secure key storage without external authentication services
+- Keys being removed on page refresh despite being saved to localStorage
 
 **Root Cause:**
-Encrypted localStorage requires a password for decryption, but API functions don't have access to the user's password. The settings page encrypts/decrypts keys locally, but this doesn't make them available to other components during the session.
+Encrypted localStorage requires a password for decryption, but API functions don't have access to the user's password. The settings page encrypts/decrypts keys locally, but this doesn't make them available to other components during the session. Additionally, React Context resets on page refresh, losing decrypted keys even though encrypted data remains in localStorage.
 
 **Solution:**
-Implement React Context to store decrypted API keys in memory during the user session, combined with an API key manager that checks context first before falling back to environment variables.
+Implement React Context with sessionStorage backup to store decrypted API keys during the browser session. This allows keys to persist across page refreshes within the same session while maintaining security.
 
 **Code Pattern:**
 ```javascript
@@ -1001,11 +1002,31 @@ const ApiKeyContext = createContext({
 });
 
 export const ApiKeyProvider = ({ children }) => {
-    const [apiKeys, setApiKeysState] = useState({});
+    // Initialize state from sessionStorage if available
+    const [apiKeys, setApiKeysState] = useState(() => {
+        try {
+            const stored = sessionStorage.getItem('socialgirl_session_keys');
+            if (stored) {
+                console.log('[API Key Context] Loading API keys from session storage');
+                return JSON.parse(stored);
+            }
+        } catch (error) {
+            console.error('[API Key Context] Failed to load from session storage:', error);
+        }
+        return {};
+    });
 
     const setApiKeys = (keys) => {
         console.log('[API Key Context] Setting API keys');
         setApiKeysState(keys);
+        
+        // Also save to sessionStorage for persistence during the session
+        try {
+            sessionStorage.setItem('socialgirl_session_keys', JSON.stringify(keys));
+            console.log('[API Key Context] Saved API keys to session storage');
+        } catch (error) {
+            console.error('[API Key Context] Failed to save to session storage:', error);
+        }
     };
 
     const getApiKey = (keyName) => {
@@ -1016,6 +1037,14 @@ export const ApiKeyProvider = ({ children }) => {
 
     const clearApiKeys = () => {
         setApiKeysState({});
+        
+        // Also clear from sessionStorage
+        try {
+            sessionStorage.removeItem('socialgirl_session_keys');
+            console.log('[API Key Context] Cleared API keys from session storage');
+        } catch (error) {
+            console.error('[API Key Context] Failed to clear session storage:', error);
+        }
     };
 
     return (
@@ -1087,12 +1116,13 @@ const handleLoad = async () => {
 ```
 
 **Key Points:**
-- Context stores keys only in memory - they don't persist between sessions
-- User must load settings each session to populate context
-- API functions get keys immediately without needing passwords
-- Maintains security by not persisting decrypted keys
+- sessionStorage persists data across page refreshes within the same browser session
+- Keys are automatically loaded from sessionStorage when app initializes
+- sessionStorage is cleared when browser is closed (security feature)
+- User only needs to enter password once per browser session
+- Encrypted keys remain in localStorage, decrypted keys in sessionStorage
 - Falls back to environment variables for development/testing
-- Clear context when user logs out or clears settings
+- Clear both context and sessionStorage when user logs out
 
 **Applicable To:**
 - Language: JavaScript/TypeScript
