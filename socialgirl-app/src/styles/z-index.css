@@ -1,0 +1,29 @@
+/* Z-Index Scale System
+ * This file defines a standardized z-index scale for consistent layering
+ * across the application. Use these CSS variables instead of hardcoded values.
+ */
+
+:root {
+    /* Base level: Default content */
+    --z-base: 0;
+    --z-content: 1;
+    --z-raised: 2;
+    
+    /* Interactive elements: Hover states, floating elements */
+    --z-hover: 10;
+    --z-dropdown: 100;
+    
+    /* Navigation and fixed elements */
+    --z-header: 200;
+    --z-mobile-menu: 300;
+    
+    /* Overlays and modals */
+    --z-overlay: 1000;
+    --z-modal: 2000;
+    --z-dialog: 2100;
+    
+    /* Notifications and tooltips (highest priority) */
+    --z-toast: 3000;
+    --z-tooltip: 4000;
+    --z-preloader: 5000;
+}

@@ -82,10 +82,7 @@
     box-sizing: border-box;
 }
 
-/* Ensure Roboto is used everywhere */
-* {
-    font-family: 'Roboto', sans-serif !important;
-}
+/* Font family is inherited from body */
 
 body {
     font-family: 'Roboto', sans-serif;
@@ -186,7 +183,8 @@ html, body {
 .animated-stat {
     display: inline-block;
     animation: countUp 0.8s ease-out;
-    transition: all var(--aurora-transition-base);
+    transition: transform var(--aurora-transition-base), 
+                filter var(--aurora-transition-base);
 }
 
 @keyframes countUp {
@@ -254,7 +252,7 @@ tr:hover .animated-stat {
 .section {
     margin-bottom: 48px;
     position: relative;
-    z-index: 10;
+    z-index: var(--z-hover);
 }
 
 /* Responsive Typography */
@@ -320,7 +318,11 @@ tr:hover .animated-stat {
     font-size: 14px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    transition: all var(--aurora-transition-base);
+    transition: transform 0.1s ease-out,
+                box-shadow 0.3s ease,
+                background-color var(--aurora-transition-base),
+                color var(--aurora-transition-base),
+                border-color var(--aurora-transition-base);
     cursor: pointer;
     position: relative;
     overflow: hidden;
@@ -336,7 +338,7 @@ tr:hover .animated-stat {
     /* Smooth transform origin for animations */
     transform-origin: center;
     /* Z-index for proper stacking */
-    z-index: 1;
+    z-index: var(--z-content);
 }
 
 /* Shimmer effect for all aurora buttons */
@@ -697,12 +699,7 @@ tr:hover .animated-stat {
                 var(--aurora-shadow-elevated);
 }
 
-/* Smooth transitions for all interactive states */
-.aurora-btn {
-    transition: all var(--aurora-transition-base),
-                transform 0.1s ease-out,
-                box-shadow 0.3s ease;
-}
+/* Smooth transitions for all interactive states - merged into main .aurora-btn definition above */
 
 /* Touch-friendly tap targets */
 @media (max-width: 768px) {
@@ -712,7 +709,7 @@ tr:hover .animated-stat {
     }
 }
 
-/* Utilities for mobile */
+/* Mobile utility classes - kept for future responsive design needs */
 @media (max-width: 768px) {
     .hide-mobile {
         display: none !important;

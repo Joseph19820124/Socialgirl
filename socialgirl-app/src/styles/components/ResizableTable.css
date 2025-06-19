@@ -8,7 +8,7 @@
     background: transparent;
     cursor: col-resize;
     user-select: none;
-    z-index: 10;
+    z-index: var(--z-hover);
     transition: all 0.2s ease;
 }
 

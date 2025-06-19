@@ -25,8 +25,8 @@
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
 }
 
-/* Visit Button: Similar to Watch button but with different styling */
-.visit-btn {
+/* Visit Button Ghost Style: Purple outline variant for users table */
+.visit-btn-ghost {
     color: var(--aurora-purple);
     text-decoration: none;
     font-family: 'Roboto', sans-serif;
@@ -44,7 +44,7 @@
     overflow: hidden;
 }
 
-.visit-btn::before {
+.visit-btn-ghost::before {
     content: '';
     position: absolute;
     top: 0;
@@ -55,11 +55,11 @@
     transition: left 0.5s ease;
 }
 
-.visit-btn:hover::before {
+.visit-btn-ghost:hover::before {
     left: 100%;
 }
 
-.visit-btn:hover {
+.visit-btn-ghost:hover {
     background: rgba(145, 70, 255, 0.1); /* Using --aurora-purple rgba value */
     box-shadow: 0 0 15px rgba(145, 70, 255, 0.4); /* Using --aurora-purple rgba value */
     transform: translateY(-1px);
@@ -100,7 +100,7 @@
         font-size: 11px;
     }
     
-    .visit-btn {
+    .visit-btn-ghost {
         padding: 4px 8px;
         font-size: 9px;
         letter-spacing: 0.5px;
@@ -117,7 +117,7 @@
         font-size: 10px;
     }
     
-    .visit-btn {
+    .visit-btn-ghost {
         padding: 3px 6px;
         font-size: 8px;
     }

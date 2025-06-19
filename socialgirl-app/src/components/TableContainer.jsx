@@ -4,7 +4,7 @@ import SearchBar from './SearchBar';
 import GenericResizableTable from './GenericResizableTable';
 import { videosColumns, usersColumns } from '../config/tableColumns';
 import { PLATFORMS } from '../config/platforms';
-import './TableContainer.css';
+import '../styles/components/TableContainer.css';
 
 const TableContainer = ({ videosData, usersData, userVideosData = [], isLoading, platform = 'default', onSearch, onClearData }) => {
     const [activeTab, setActiveTab] = useState('videos');

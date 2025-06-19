@@ -106,7 +106,7 @@ const UsersTable = ({ data, isLoading }) => {
                                 </span>
                             </td>
                             <td className="url-col">
-                                <a href={row.url || '#'} className="visit-btn">Visit</a>
+                                <a href={row.url || '#'} className="visit-btn-ghost">Visit</a>
                             </td>
                         </tr>
                     ))}

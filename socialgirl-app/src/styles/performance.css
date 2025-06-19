@@ -41,7 +41,8 @@
 
 /* Animation for performance scores */
 .performance-score {
-    transition: all var(--aurora-transition-base);
+    transition: transform var(--aurora-transition-base),
+                box-shadow var(--aurora-transition-base);
 }
 
 .performance-score:hover {

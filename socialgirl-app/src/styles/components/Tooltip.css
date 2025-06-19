@@ -7,7 +7,7 @@
 
 .aurora-tooltip {
     position: fixed !important;
-    z-index: 99999;
+    z-index: var(--z-tooltip);
     pointer-events: none;
     opacity: 0;
     transform: translateY(-5px) scale(0.95);
@@ -148,7 +148,7 @@
 /* Ensure tooltip content is visible */
 .aurora-tooltip-content * {
     position: relative;
-    z-index: 1;
+    z-index: var(--z-content);
 }
 
 /* Mobile adjustments */

@@ -1,52 +1,4 @@
-/* Export controls - container for export-related UI elements */
-.export-controls {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 15px;
-    padding: 12px 16px;
-    background: var(--aurora-gradient-surface);
-    border-radius: var(--aurora-radius-md);
-    border: 1px solid var(--aurora-border-primary);
-    position: relative;
-    overflow: hidden;
-}
-
-/* Shimmer effect for export controls */
-.export-controls::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(255, 255, 255, 0.05),
-        transparent
-    );
-    animation: shimmerExport 3s infinite;
-}
-
-@keyframes shimmerExport {
-    0% { left: -100%; }
-    100% { left: 100%; }
-}
-
-.export-info {
-    color: var(--aurora-text-primary);
-    font-size: 14px;
-    font-weight: 500;
-    margin-right: 10px;
-}
-
-/* Note: Use aurora-btn classes for export buttons
-   Examples:
-   - aurora-btn aurora-btn-secondary aurora-btn-sm (for standard export)
-   - aurora-btn aurora-btn-primary aurora-btn-sm (for important exports)
-   - aurora-btn aurora-btn-subtle aurora-btn-sm (for less prominent exports)
-*/
+/* Export controls removed - not used in current implementation */
 
 .table-wrapper {
     background: var(--aurora-gradient-dark);
@@ -78,7 +30,7 @@
     opacity: 0.3;
     animation: auroraFlow 20s ease-in-out infinite;
     pointer-events: none;
-    z-index: 0;
+    z-index: var(--z-base);
 }
 
 @keyframes auroraFlow {
@@ -99,7 +51,7 @@
 /* Ensure table content is above aurora waves */
 .table-wrapper > table {
     position: relative;
-    z-index: 1;
+    z-index: var(--z-content);
 }
 
 /* Custom scrollbar styling for Aurora theme */
@@ -157,7 +109,9 @@ th {
     border-bottom: 2px solid var(--aurora-purple);
     border-right: 1px solid var(--aurora-border-primary);
     cursor: pointer;
-    transition: all var(--aurora-transition-base);
+    transition: background var(--aurora-transition-base),
+                color var(--aurora-transition-base),
+                filter var(--aurora-transition-base);
     position: relative;
     user-select: none;
     white-space: nowrap;
@@ -297,7 +251,9 @@ td {
     border-right: 1px solid var(--aurora-border-secondary);
     font-size: 12px;
     vertical-align: middle;
-    transition: all var(--aurora-transition-base);
+    transition: background var(--aurora-transition-base),
+                background-position var(--aurora-transition-base),
+                box-shadow var(--aurora-transition-base);
     background: linear-gradient(135deg, transparent 0%, transparent 100%);
     background-size: 200% 200%;
     background-position: 0% 0%;
@@ -309,7 +265,8 @@ td:last-child {
 }
 
 tr {
-    transition: all var(--aurora-transition-fast);
+    transition: opacity var(--aurora-transition-fast),
+                transform var(--aurora-transition-fast);
     animation: rowFadeIn 0.6s ease-out forwards;
     opacity: 0;
 }
@@ -350,7 +307,7 @@ tr:hover td {
 
 tr:hover {
     position: relative;
-    z-index: 10;
+    z-index: var(--z-hover);
 }
 
 tr:hover .username {
@@ -456,7 +413,10 @@ tr:last-child td {
     text-overflow: ellipsis;
     white-space: nowrap;
     max-width: 80px;
-    transition: all var(--aurora-transition-fast);
+    transition: transform var(--aurora-transition-fast),
+                filter var(--aurora-transition-fast),
+                color var(--aurora-transition-fast),
+                text-shadow var(--aurora-transition-fast);
     display: inline-block;
     text-shadow: 0 0 4px rgba(0, 245, 255, 0.3);
 }
@@ -522,7 +482,9 @@ tr:hover .title {
     border-radius: var(--aurora-radius-sm);
     background: var(--aurora-gradient-primary);
     border: none;
-    transition: all var(--aurora-transition-base);
+    transition: filter var(--aurora-transition-base),
+                transform var(--aurora-transition-base),
+                box-shadow var(--aurora-transition-base);
     display: inline-block;
     font-size: 10px;
     text-transform: uppercase;
@@ -564,12 +526,7 @@ tr:hover .title {
     width: 100%;
 }
 
-.performance-score {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    max-width: 80px;
-}
+/* Performance score styles moved to performance.css */
 
 .visit-btn {
     color: var(--aurora-text-primary);
@@ -580,7 +537,9 @@ tr:hover .title {
     border-radius: var(--aurora-radius-sm);
     background: var(--aurora-gradient-secondary);
     border: none;
-    transition: all var(--aurora-transition-base);
+    transition: filter var(--aurora-transition-base),
+                transform var(--aurora-transition-base),
+                box-shadow var(--aurora-transition-base);
     display: inline-block;
     font-size: 10px;
     text-transform: uppercase;
@@ -615,24 +574,6 @@ tr:hover .title {
 
 /* Mobile Responsive Styles */
 @media (max-width: 768px) {
-    .export-controls {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 8px;
-        padding: 10px 12px;
-    }
-    
-    .export-info {
-        text-align: center;
-        margin-right: 0;
-        margin-bottom: 5px;
-    }
-    
-    .export-btn {
-        padding: 10px 16px;
-        font-size: 14px;
-    }
-    
     .table-wrapper {
         overflow-x: hidden;
         overflow-y: hidden;
@@ -657,7 +598,7 @@ tr:hover .title {
         letter-spacing: 1px;
         animation: fadeInOut 3s ease-in-out infinite;
         pointer-events: none;
-        z-index: 2;
+        z-index: var(--z-raised);
     }
     
     @keyframes fadeInOut {

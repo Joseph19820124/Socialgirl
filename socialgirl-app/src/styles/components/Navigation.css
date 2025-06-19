@@ -4,7 +4,9 @@
     color: var(--aurora-text-primary);
     font-family: 'Roboto', sans-serif;
     font-weight: 600;
-    transition: all var(--aurora-transition-base);
+    transition: color var(--aurora-transition-base),
+                background var(--aurora-transition-base),
+                transform var(--aurora-transition-base);
     position: relative;
     display: flex;
     align-items: center;
