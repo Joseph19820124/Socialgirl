@@ -1,4 +1,4 @@
-# Socialgirl
+# Socialgirl App - Content Analytics Dashboard
 
 A web application that helps you track and analyze content performance across YouTube, Instagram, and TikTok. Search for videos, view engagement metrics, and monitor your API usage all in one place.
 
@@ -14,7 +14,7 @@ A web application that helps you track and analyze content performance across Yo
 
 1. Download Node.js from <https://nodejs.org/> (choose the LTS version)
 2. Run the installer and follow the prompts
-3. Download Git from <https://git-scm.com/downloads>
+3. Download Git from <https://git-scm.com/download/win>
 4. Run the Git installer with default settings
 
 **Mac:**
@@ -60,6 +60,13 @@ Once you see output like:
 ```
 
 Open your web browser and go to: **<http://localhost:5173>**
+
+## What You'll See
+
+- A cyberpunk-themed dashboard with navigation for YouTube, Instagram, and TikTok
+- Search bars to look up content on each platform
+- Tables showing video/content metrics like views, likes, and engagement
+- A settings page where you can manage API keys and monitor usage quotas
 
 ## Stopping the App
 
