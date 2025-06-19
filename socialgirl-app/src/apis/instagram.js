@@ -26,9 +26,7 @@ async function searchReels(keyword) {
     
     const apiKey = await getRapidApiKey();
     if (!apiKey) {
-        const errorMsg = 'RapidAPI key not found. Please configure it in Settings.';
-        console.error(`Instagram API: API key missing: ${errorMsg}`);
-        throw new Error(errorMsg);
+        throw new Error('RapidAPI key not found. Please configure it in Settings.');
     }
     
     // console.log(`[Instagram API] API key retrieved successfully (length: ${apiKey.length})`);
@@ -95,9 +93,7 @@ async function getUserReels(usernameOrId) {
     
     const apiKey = await getRapidApiKey();
     if (!apiKey) {
-        const errorMsg = 'RapidAPI key not found. Please configure it in Settings.';
-        console.error(`Instagram API: API key missing: ${errorMsg}`);
-        throw new Error(errorMsg);
+        throw new Error('RapidAPI key not found. Please configure it in Settings.');
     }
     
     // console.log(`[Instagram API] API key retrieved successfully (length: ${apiKey.length})`);

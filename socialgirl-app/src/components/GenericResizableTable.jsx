@@ -9,7 +9,7 @@ import '../styles/components/Table.css';
 import '../styles/components/DataVisualization.css';
 import '../styles/performance.css';
 
-const GenericResizableTable = ({ data, isLoading, columns, cellRenderers, skeletonComponents, tableId = 'default' }) => {
+const GenericResizableTable = ({ data, isLoading, columns, cellRenderers, skeletonComponents, tableId = 'default', onSelectionChange }) => {
     // Initialize sort config from localStorage or default
     const [sortConfig, setSortConfig] = useState(() => {
         const stored = getStoredSortConfig(tableId);
@@ -19,6 +19,7 @@ const GenericResizableTable = ({ data, isLoading, columns, cellRenderers, skelet
     const [sortedData, setSortedData] = useState(data);
     const [currentPage, setCurrentPage] = useState(1);
     const [isSorting, setIsSorting] = useState(false);
+    const [selectedRows, setSelectedRows] = useState(new Set());
     
     // Initialize page size from localStorage or default
     const [itemsPerPage, setItemsPerPage] = useState(() => {
@@ -88,6 +89,7 @@ const GenericResizableTable = ({ data, isLoading, columns, cellRenderers, skelet
         
         setSortedData(dataToSet);
         setCurrentPage(1); // Reset to first page when data changes
+        setSelectedRows(new Set()); // Clear selections when data changes
     }, [data, sortConfig.key, sortConfig.direction]);
 
     const handleItemsPerPageChange = (newItemsPerPage) => {
@@ -95,6 +97,23 @@ const GenericResizableTable = ({ data, isLoading, columns, cellRenderers, skelet
         setCurrentPage(1); // Reset to first page when changing page size
         storePageSize(tableId, newItemsPerPage); // Persist page size
     };
+
+    const handleRowClick = (globalIndex) => {
+        const newSelectedRows = new Set(selectedRows);
+        if (newSelectedRows.has(globalIndex)) {
+            newSelectedRows.delete(globalIndex);
+        } else {
+            newSelectedRows.add(globalIndex);
+        }
+        setSelectedRows(newSelectedRows);
+        
+        // Notify parent component of selection change
+        if (onSelectionChange) {
+            const selectedData = Array.from(newSelectedRows).map(index => sortedData[index]);
+            onSelectionChange(selectedData);
+        }
+    };
+
 
     const handleSort = (key) => {
         // Don't allow sorting if already sorting
@@ -356,19 +375,28 @@ const GenericResizableTable = ({ data, isLoading, columns, cellRenderers, skelet
                         </tr>
                     </thead>
                     <tbody>
-                        {paginatedData.map((row, index) => (
-                            <tr key={index}>
-                                {columns.map((column) => (
-                                    <td
-                                        key={column.key}
-                                        className={`${column.key}-col`}
-                                        style={{ textAlign: column.align }}
-                                    >
-                                        {renderCellContent(row, column)}
-                                    </td>
-                                ))}
-                            </tr>
-                        ))}
+                        {paginatedData.map((row, pageIndex) => {
+                            const globalIndex = (currentPage - 1) * itemsPerPage + pageIndex;
+                            const isSelected = selectedRows.has(globalIndex);
+                            return (
+                                <tr 
+                                    key={pageIndex} 
+                                    className={isSelected ? 'selected' : ''}
+                                    onClick={() => handleRowClick(globalIndex)}
+                                    style={isSelected ? { '--animation-delay': `${(globalIndex * 0.2) % 2}s` } : {}}
+                                >
+                                    {columns.map((column) => (
+                                        <td
+                                            key={column.key}
+                                            className={`${column.key}-col`}
+                                            style={{ textAlign: column.align }}
+                                        >
+                                            {renderCellContent(row, column)}
+                                        </td>
+                                    ))}
+                                </tr>
+                            );
+                        })}
                     </tbody>
                 </table>
             </div>

@@ -10,9 +10,11 @@ import '../styles/components/TableContainer.css';
 const TableContainer = ({ videosData, usersData, userVideosData = [], isLoading, platform = 'default', onSearch, onClearData, onSettingsChange }) => {
     const [activeTab, setActiveTab] = useState('videos');
     const [showSettingsDialog, setShowSettingsDialog] = useState(false);
+    const [selectedRows, setSelectedRows] = useState([]);
 
     const handleTabChange = (tabId) => {
         setActiveTab(tabId);
+        setSelectedRows([]); // Clear selections when switching tabs
     };
 
     const getVideoColumns = () => {
@@ -56,6 +58,7 @@ const TableContainer = ({ videosData, usersData, userVideosData = [], isLoading,
                 isLoading={isLoading} 
                 columns={getTableColumns()}
                 tableId={`${platform}-${activeTab}`}
+                onSelectionChange={setSelectedRows}
             />
         );
     };
@@ -69,9 +72,10 @@ const TableContainer = ({ videosData, usersData, userVideosData = [], isLoading,
     };
 
     const handleExportJSON = () => {
-        const data = getTableData();
+        const data = selectedRows.length > 0 ? selectedRows : getTableData();
         const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
-        const filename = `${platform}-${activeTab}-${timestamp}.json`;
+        const selectionPart = selectedRows.length > 0 ? `-selected-${selectedRows.length}` : '';
+        const filename = `${platform}-${activeTab}${selectionPart}-${timestamp}.json`;
         
         const jsonString = JSON.stringify(data, null, 2);
         const blob = new Blob([jsonString], { type: 'application/json' });
@@ -87,10 +91,11 @@ const TableContainer = ({ videosData, usersData, userVideosData = [], isLoading,
     };
 
     const handleExportCSV = () => {
-        const data = getTableData();
+        const data = selectedRows.length > 0 ? selectedRows : getTableData();
         const columns = getTableColumns();
         const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
-        const filename = `${platform}-${activeTab}-${timestamp}.csv`;
+        const selectionPart = selectedRows.length > 0 ? `-selected-${selectedRows.length}` : '';
+        const filename = `${platform}-${activeTab}${selectionPart}-${timestamp}.csv`;
         
         // Create CSV header
         const headers = columns.map(col => col.label).join(',');
@@ -161,14 +166,14 @@ const TableContainer = ({ videosData, usersData, userVideosData = [], isLoading,
                                 onClick={handleExportJSON}
                                 title="Export data as JSON"
                             >
-                                Export JSON
+                                {selectedRows.length > 0 ? `Export ${selectedRows.length} JSON` : 'Export JSON'}
                             </button>
                             <button 
                                 className="aurora-btn aurora-btn-secondary aurora-btn-sm"
                                 onClick={handleExportCSV}
                                 title="Export data as CSV"
                             >
-                                Export CSV
+                                {selectedRows.length > 0 ? `Export ${selectedRows.length} CSV` : 'Export CSV'}
                             </button>
                         </>
                     )}

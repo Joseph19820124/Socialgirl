@@ -24,18 +24,13 @@ async function getVideoData(videoId) {
     }
     const url = `${BASE_URL}/videos?part=snippet,statistics&id=${videoId}&key=${apiKey}`;
     
-    try {
-        const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error(`YouTube API error: ${response.status}`);
-        }
-        
-        trackOperation('youtube', 'videos');
-        return await response.json();
-    } catch (error) {
-        // console.error('Error fetching YouTube video data:', error);
-        throw error;
+    const response = await fetch(url);
+    if (!response.ok) {
+        throw new Error(`YouTube API error: ${response.status}`);
     }
+    
+    trackOperation('youtube', 'videos');
+    return await response.json();
 }
 
 /**
@@ -54,18 +49,13 @@ async function getChannelData(channelId) {
     }
     const url = `${BASE_URL}/channels?part=snippet,statistics&id=${channelId}&key=${apiKey}`;
     
-    try {
-        const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error(`YouTube API error: ${response.status}`);
-        }
-        
-        trackOperation('youtube', 'channels');
-        return await response.json();
-    } catch (error) {
-        // console.error('Error fetching YouTube channel data:', error);
-        throw error;
+    const response = await fetch(url);
+    if (!response.ok) {
+        throw new Error(`YouTube API error: ${response.status}`);
     }
+    
+    trackOperation('youtube', 'channels');
+    return await response.json();
 }
 
 /**
@@ -110,18 +100,13 @@ async function searchVideos(query, maxResults = 10, options = {}) {
         url += `&regionCode=${regionCode}`;
     }
     
-    try {
-        const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error(`YouTube API error: ${response.status}`);
-        }
-        
-        trackOperation('youtube', 'search');
-        return await response.json();
-    } catch (error) {
-        // console.error('Error searching YouTube videos:', error);
-        throw error;
+    const response = await fetch(url);
+    if (!response.ok) {
+        throw new Error(`YouTube API error: ${response.status}`);
     }
+    
+    trackOperation('youtube', 'search');
+    return await response.json();
 }
 
 /**
@@ -145,18 +130,13 @@ async function getVideosStatistics(videoIds) {
     
     const url = `${BASE_URL}/videos?part=snippet,statistics&id=${videoIds.join(',')}&key=${apiKey}`;
     
-    try {
-        const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error(`YouTube API error: ${response.status}`);
-        }
-        
-        trackOperation('youtube', 'videos', videoIds.length);
-        return await response.json();
-    } catch (error) {
-        // console.error('Error fetching YouTube videos statistics:', error);
-        throw error;
+    const response = await fetch(url);
+    if (!response.ok) {
+        throw new Error(`YouTube API error: ${response.status}`);
     }
+    
+    trackOperation('youtube', 'videos', videoIds.length);
+    return await response.json();
 }
 
 /**
@@ -183,24 +163,19 @@ async function getChannelByHandle(handle) {
     // Search for the channel by handle
     const url = `${BASE_URL}/search?part=snippet&q=${encodeURIComponent(cleanHandle)}&type=channel&maxResults=1&key=${apiKey}`;
     
-    try {
-        const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error(`YouTube API error: ${response.status}`);
-        }
-        
-        trackOperation('youtube', 'search');
-        const data = await response.json();
-        
-        if (data.items && data.items.length > 0) {
-            return data.items[0].id.channelId;
-        }
-        
-        return null;
-    } catch (error) {
-        // console.error('Error finding YouTube channel:', error);
-        throw error;
+    const response = await fetch(url);
+    if (!response.ok) {
+        throw new Error(`YouTube API error: ${response.status}`);
     }
+    
+    trackOperation('youtube', 'search');
+    const data = await response.json();
+    
+    if (data.items && data.items.length > 0) {
+        return data.items[0].id.channelId;
+    }
+    
+    return null;
 }
 
 /**
@@ -226,32 +201,26 @@ async function getChannelVideos(channelId, maxResults = 20, options = {}) {
     // Search for videos from the specific channel with specified ordering
     const url = `${BASE_URL}/search?part=snippet&channelId=${channelId}&type=video&order=${order}&maxResults=${maxResults}&key=${apiKey}`;
     
-    try {
-        const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error(`YouTube API error: ${response.status}`);
-        }
-        
-        trackOperation('youtube', 'search');
-        const searchData = await response.json();
-        
-        // Get video IDs to fetch statistics
-        const videoIds = searchData.items
-            .map(item => item.id?.videoId)
-            .filter(id => id);
-        
-        if (videoIds.length === 0) {
-            return { items: [] };
-        }
-        
-        // Fetch detailed statistics for the videos
-        const videosWithStats = await getVideosStatistics(videoIds);
-        return videosWithStats;
-        
-    } catch (error) {
-        // console.error('Error fetching channel videos:', error);
-        throw error;
+    const response = await fetch(url);
+    if (!response.ok) {
+        throw new Error(`YouTube API error: ${response.status}`);
     }
+    
+    trackOperation('youtube', 'search');
+    const searchData = await response.json();
+    
+    // Get video IDs to fetch statistics
+    const videoIds = searchData.items
+        .map(item => item.id?.videoId)
+        .filter(id => id);
+    
+    if (videoIds.length === 0) {
+        return { items: [] };
+    }
+    
+    // Fetch detailed statistics for the videos
+    const videosWithStats = await getVideosStatistics(videoIds);
+    return videosWithStats;
 }
 
 /**
@@ -262,17 +231,12 @@ async function getChannelVideos(channelId, maxResults = 20, options = {}) {
  * @returns {Promise<Object>} Channel videos response
  */
 async function getChannelVideosByHandle(handle, maxResults = 20, options = {}) {
-    try {
-        const channelId = await getChannelByHandle(handle);
-        if (!channelId) {
-            throw new Error(`Channel not found for handle: ${handle}`);
-        }
-        
-        return await getChannelVideos(channelId, maxResults, options);
-    } catch (error) {
-        // console.error('Error fetching channel videos by handle:', error);
-        throw error;
+    const channelId = await getChannelByHandle(handle);
+    if (!channelId) {
+        throw new Error(`Channel not found for handle: ${handle}`);
     }
+    
+    return await getChannelVideos(channelId, maxResults, options);
 }
 
 export {

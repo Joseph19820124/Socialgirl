@@ -1,0 +1,261 @@
+
+ RUN  v3.2.4 /home/ken/Projects/Socialgirl/socialgirl-app
+      Coverage enabled with v8
+
+ ❯ src/__tests__/contexts/ApiKeyContext.test.jsx (12 tests | 1 failed) 76ms
+   × ApiKeyContext > useApiKeys hook > should throw error when used outside ApiKeyProvider 22ms
+     → expected [Function] to throw an error
+   ✓ ApiKeyContext > useApiKeys hook > should provide context functions when used within ApiKeyProvider 2ms
+   ✓ ApiKeyContext > ApiKeyProvider > should render children 17ms
+   ✓ ApiKeyContext > ApiKeyProvider > should initialize with empty state when no session storage 5ms
+   ✓ ApiKeyContext > ApiKeyProvider > should initialize from session storage when available 3ms
+   ✓ ApiKeyContext > ApiKeyProvider > should handle session storage load error gracefully 4ms
+   ✓ ApiKeyContext > ApiKeyProvider > should set API keys and save to session storage 5ms
+   ✓ ApiKeyContext > ApiKeyProvider > should handle session storage save error gracefully 6ms
+   ✓ ApiKeyContext > ApiKeyProvider > should get API key with logging 3ms
+   ✓ ApiKeyContext > ApiKeyProvider > should return null for non-existent key 2ms
+   ✓ ApiKeyContext > ApiKeyProvider > should clear all API keys and session storage 3ms
+   ✓ ApiKeyContext > ApiKeyProvider > should handle session storage clear error gracefully 3ms
+ ❯ src/__tests__/components/SearchBar.test.jsx (11 tests | 2 failed) 271ms
+   ✓ SearchBar > should render with default placeholder 49ms
+   ✓ SearchBar > should render with custom placeholder 2ms
+   × SearchBar > should render search icon 66ms
+     → Unable to find an element with the role "img"
+
+Here are the available roles:
+
+  textbox:
+
+  Name "":
+  [36m<input[39m
+    [33mplaceholder[39m=[32m"Search Users"[39m
+    [33mtype[39m=[32m"text"[39m
+    [33mvalue[39m=[32m""[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<form>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"morph-search"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"morph-border"[39m
+        [36m/>[39m
+        [36m<svg[39m
+          [33mclass[39m=[32m"search-icon"[39m
+          [33mfill[39m=[32m"none"[39m
+          [33mheight[39m=[32m"16"[39m
+          [33mviewBox[39m=[32m"0 0 24 24"[39m
+          [33mwidth[39m=[32m"16"[39m
+          [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+        [36m>[39m
+          [36m<path[39m
+            [33md[39m=[32m"M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z"[39m
+            [33mstroke[39m=[32m"currentColor"[39m
+            [33mstroke-linecap[39m=[32m"round"[39m
+            [33mstroke-linejoin[39m=[32m"round"[39m
+            [33mstroke-width[39m=[32m"2"[39m
+          [36m/>[39m
+        [36m</svg>[39m
+        [36m<input[39m
+          [33mplaceholder[39m=[32m"Search Users"[39m
+          [33mtype[39m=[32m"text"[39m
+          [33mvalue[39m=[32m""[39m
+        [36m/>[39m
+      [36m</div>[39m
+    [36m</form>[39m
+  [36m</div>[39m
+[36m</body>[39m
+   ✓ SearchBar > should update input value when typing 82ms
+   ✓ SearchBar > should call onSearch when form is submitted 8ms
+   ✓ SearchBar > should call onSearch with empty string when submitted without input 2ms
+   ✓ SearchBar > should prevent default form submission 2ms
+   ✓ SearchBar > should have proper CSS classes for styling 3ms
+   ✓ SearchBar > should handle rapid input changes 47ms
+   × SearchBar > should maintain state between searches 5ms
+     → [2mexpect([22m[31melement[39m[2m).toHaveValue()[22m
+
+Expected the element to have value:
+[32m[39m
+Received:
+[31m  first search[39m
+   ✓ SearchBar > should handle special characters in search 2ms
+ ✓ src/__tests__/utils/apiKeyManager.test.js (8 tests) 16ms
+stdout | src/__tests__/services/searchService.test.js > SearchService > Instagram search > should search Instagram videos
+[Instagram Search] Starting search with query: "test query"
+[Instagram Search] Search context: { activeTab: [32m'videos'[39m }
+[Instagram Search] Starting video search for keyword: "test query"
+[Instagram Search] Calling searchReels API...
+
+stdout | src/__tests__/services/searchService.test.js > SearchService > Instagram search > should search Instagram videos
+[Instagram Search] API call successful, processing response...
+[Instagram Search] Data extraction complete. Found 1 videos
+
+stdout | src/__tests__/services/searchService.test.js > SearchService > Instagram search > should search Instagram user posts
+[Instagram Search] Starting search with query: "@username"
+[Instagram Search] Search context: { activeTab: [32m'userVideos'[39m }
+[Instagram Search] Starting user posts search for username: "@username"
+[Instagram Search] Cleaned username: "username"
+[Instagram Search] Calling getUserReels API...
+
+stdout | src/__tests__/services/searchService.test.js > SearchService > Instagram search > should search Instagram user posts
+[Instagram Search] API call successful, processing response...
+[Instagram Search] Data extraction complete. Found 1 posts
+[Instagram Search] Sample extracted post: {
+  username: [90mundefined[39m,
+  title: [32m'Post 1...'[39m,
+  likes: [90mundefined[39m,
+  views: [90mundefined[39m
+}
+
+stdout | src/__tests__/services/searchService.test.js > SearchService > Instagram search > should handle Instagram API key error
+[Instagram Search] Starting search with query: "test"
+[Instagram Search] Search context: { activeTab: [32m'videos'[39m }
+[Instagram Search] Starting video search for keyword: "test"
+[Instagram Search] Calling searchReels API...
+
+stdout | src/__tests__/services/searchService.test.js > SearchService > Instagram search > should handle Instagram quota exceeded error
+[Instagram Search] Starting search with query: "test"
+[Instagram Search] Search context: { activeTab: [32m'videos'[39m }
+[Instagram Search] Starting video search for keyword: "test"
+[Instagram Search] Calling searchReels API...
+
+stdout | src/__tests__/services/searchService.test.js > SearchService > Instagram search > should handle Instagram user not found error
+[Instagram Search] Starting search with query: "unknownuser"
+[Instagram Search] Search context: { activeTab: [32m'userVideos'[39m }
+[Instagram Search] Starting user posts search for username: "unknownuser"
+[Instagram Search] Cleaned username: "unknownuser"
+[Instagram Search] Calling getUserReels API...
+
+stdout | src/__tests__/services/searchService.test.js > SearchService > Instagram search > should return empty array for unimplemented Instagram tabs
+[Instagram Search] Starting search with query: "test"
+[Instagram Search] Search context: { activeTab: [32m'users'[39m }
+
+ ❯ src/__tests__/utils/encryption.test.js (8 tests | 2 failed) 20ms
+   × encryption utilities > encryptData > should encrypt data successfully 13ms
+     → expected "spy" to be called with arguments: [ 'raw', Any<Uint8Array>, …(3) ][90m
+
+Received: 
+
+[1m  1st spy call:
+
+[22m[33m@@ -1,8 +1,22 @@[90m
+[2m  [[22m
+[2m    "raw",[22m
+[32m-   Any<Uint8Array>,[90m
+[31m+   Uint8Array [[90m
+[31m+     116,[90m
+[31m+     101,[90m
+[31m+     115,[90m
+[31m+     116,[90m
+[31m+     45,[90m
+[31m+     112,[90m
+[31m+     97,[90m
+[31m+     115,[90m
+[31m+     115,[90m
+[31m+     119,[90m
+[31m+     111,[90m
+[31m+     114,[90m
+[31m+     100,[90m
+[31m+   ],[90m
+[2m    {[22m
+[2m      "name": "PBKDF2",[22m
+[2m    },[22m
+[2m    false,[22m
+[2m    [[22m
+[39m[90m
+
+Number of calls: [1m1[22m
+[39m
+   ✓ encryption utilities > encryptData > should handle encryption errors 2ms
+   × encryption utilities > decryptData > should decrypt data successfully 2ms
+     → expected "spy" to be called with arguments: [ 'raw', Any<Uint8Array>, …(3) ][90m
+
+Received: 
+
+[1m  1st spy call:
+
+[22m[33m@@ -1,8 +1,22 @@[90m
+[2m  [[22m
+[2m    "raw",[22m
+[32m-   Any<Uint8Array>,[90m
+[31m+   Uint8Array [[90m
+[31m+     116,[90m
+[31m+     101,[90m
+[31m+     115,[90m
+[31m+     116,[90m
+[31m+     45,[90m
+[31m+     112,[90m
+[31m+     97,[90m
+[31m+     115,[90m
+[31m+     115,[90m
+[31m+     119,[90m
+[31m+     111,[90m
+[31m+     114,[90m
+[31m+     100,[90m
+[31m+   ],[90m
+[2m    {[22m
+[2m      "name": "PBKDF2",[22m
+[2m    },[22m
+[2m    false,[22m
+[2m    [[22m
+[39m[90m
+
+Number of calls: [1m1[22m
+[39m
+   ✓ encryption utilities > decryptData > should handle decryption errors 0ms
+   ✓ encryption utilities > localStorage helpers > should save encrypted settings to localStorage 0ms
+   ✓ encryption utilities > localStorage helpers > should load encrypted settings from localStorage 0ms
+   ✓ encryption utilities > localStorage helpers > should return null when no settings in localStorage 0ms
+   ✓ encryption utilities > localStorage helpers > should clear stored settings from localStorage 0ms
+ ❯ src/__tests__/apis/youtube.test.js (12 tests | 8 failed) 69ms
+   ✓ YouTube API > searchVideos > should search videos successfully 9ms
+   × YouTube API > searchVideos > should use custom options 28ms
+     → expected 'https://www.googleapis.com/youtube/v3…' to contain 'publishedAfter=2024-01-01T00%3A00%3A0…'
+   ✓ YouTube API > searchVideos > should throw error when quota exceeded 3ms
+   ✓ YouTube API > searchVideos > should throw error when API key not found 0ms
+   ✓ YouTube API > searchVideos > should throw error on API error response 0ms
+   × YouTube API > getVideosStatistics > should get video statistics for multiple videos 6ms
+     → expected "spy" to be called with arguments: [ StringContaining{…} ][90m
+
+Received: 
+
+[1m  1st spy call:
+
+[22m[2m  [[22m
+[32m-   StringContaining "id=video1%2Cvideo2",[90m
+[31m+   "https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics&id=video1,video2&key=test-api-key",[90m
+[2m  ][22m
+[39m[90m
+
+Number of calls: [1m1[22m
+[39m
+   × YouTube API > getVideosStatistics > should handle empty video IDs array 3ms
+     → expected { items: [] } to deeply equal []
+   × YouTube API > getVideosStatistics > should batch large video ID arrays 1ms
+     → expected "spy" to be called 2 times, but got 1 times
+   × YouTube API > getChannelIdFromHandle > should get channel ID from handle 1ms
+     → getChannelIdFromHandle is not a function
+   × YouTube API > getChannelIdFromHandle > should throw error when channel not found 1ms
+     → getChannelIdFromHandle is not a function
+   × YouTube API > getChannelVideosByHandle > should get channel videos by handle 14ms
+     → Channel not found for handle: @testchannel
+   × YouTube API > getChannelVideosByHandle > should filter out videos without videoId 1ms
+     → Channel not found for handle: @testchannel
+ ✓ src/__tests__/services/searchService.test.js (17 tests) 45ms
+ ✓ src/__tests__/hooks/useSearch.test.js (10 tests) 60ms
+ ✓ src/__tests__/contexts/ToastContext.test.jsx (9 tests) 115ms
+ ✓ src/__tests__/utils/formatters.test.js (23 tests) 17ms
+ ✓ src/__tests__/components/GenericResizableTable.test.jsx (10 tests) 321ms
+ ✓ src/__tests__/components/Pagination.test.jsx (15 tests) 262ms
+ ✓ src/__tests__/contexts/DialogContext.test.jsx (12 tests) 237ms
+
+ Test Files  4 failed | 8 passed (12)
+      Tests  13 failed | 134 passed (147)
+   Start at  17:32:23
+   Duration  2.57s (transform 714ms, setup 1.17s, collect 1.61s, tests 1.51s, environment 6.36s, prepare 1.48s)
+

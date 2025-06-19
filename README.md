@@ -15,6 +15,7 @@ A React-based dashboard for analyzing social media metrics across YouTube, Insta
 ### React: Pagination Implementation for Large Datasets
 
 **Symptoms:**
+
 - Tables showing all data at once causing performance issues
 - Need to limit display to 10 items per page
 - Pagination controls needed for navigation
@@ -26,6 +27,7 @@ Rendering large datasets (50+ items) in tables without pagination causes poor UX
 Implement client-side pagination with data slicing and pagination controls.
 
 **Code Pattern:**
+
 ```javascript
 // State management for pagination
 const [currentPage, setCurrentPage] = useState(1);
@@ -53,12 +55,14 @@ useEffect(() => {
 ```
 
 **Key Points:**
+
 - Always slice data before rendering to improve performance
 - Reset to page 1 when new data arrives
 - Calculate total pages: `Math.ceil(totalItems / itemsPerPage)`
 - Use consistent itemsPerPage across all tables
 
 **Applicable To:**
+
 - Language: JavaScript/TypeScript
 - Frameworks: React
 - Use Cases: Any large dataset display in tables
@@ -68,6 +72,7 @@ useEffect(() => {
 ### Vite: Environment Variables Configuration
 
 **Symptoms:**
+
 - "process is not defined" error in browser console
 - Environment variables not accessible in Vite React app
 - API keys not loading from .env file
@@ -79,6 +84,7 @@ Vite uses a different environment variable system than traditional Node.js. Vari
 Use Vite-specific environment variable patterns.
 
 **Code Pattern:**
+
 ```javascript
 // ❌ Wrong - Node.js pattern won't work in Vite
 const API_KEY = process.env.YOUTUBE_API_KEY;
@@ -92,12 +98,14 @@ VITE_TIKTOK_RAPIDAPI_KEY=your_rapidapi_key_here
 ```
 
 **Key Points:**
+
 - All client-side environment variables must start with `VITE_`
 - Use `import.meta.env` instead of `process.env`
 - Variables are exposed to client-side code (don't put secrets here)
 - Restart dev server after changing .env files
 
 **Applicable To:**
+
 - Language: JavaScript/TypeScript
 - Frameworks: Vite + React
 - Use Cases: Environment configuration in Vite projects
@@ -107,6 +115,7 @@ VITE_TIKTOK_RAPIDAPI_KEY=your_rapidapi_key_here
 ### CSS: Fixed Table Layout with Content Overflow Prevention
 
 **Symptoms:**
+
 - Table columns resize between pages causing layout shifts
 - Content overflowing table cells and extending beyond column boundaries
 - Inconsistent column widths based on content length
@@ -119,6 +128,7 @@ Without `table-layout: fixed` and matching content element constraints, tables a
 Implement fixed table layout with matching content element constraints and proper truncation.
 
 **Code Pattern:**
+
 ```css
 /* ✅ Fixed table layout prevents auto-sizing */
 table {
@@ -164,6 +174,7 @@ td {
 ```
 
 **Key Points:**
+
 - `table-layout: fixed` prevents content-based column resizing
 - Content element max-width must exactly match column width definitions
 - Avoid `display: flex` on text content elements (prevents truncation)
@@ -171,6 +182,7 @@ td {
 - Test that long content actually truncates instead of overflowing
 
 **Applicable To:**
+
 - Language: CSS
 - Frameworks: Any web framework using HTML tables
 - Use Cases: Data tables requiring stable layout and content constraints
@@ -180,6 +192,7 @@ td {
 ### Security: Client-Side API Key Management Without External Services
 
 **Symptoms:**
+
 - Need to store API keys securely in browser-based application
 - Want to avoid external services (Supabase, AWS, etc.) for simplicity
 - Keys deleted when clearing browser storage/history
@@ -193,6 +206,7 @@ Client-side applications expose environment variables in the bundle. Browser sto
 Implement hybrid approach with encrypted localStorage and export/import functionality for portability.
 
 **Code Pattern:**
+
 ```javascript
 // encryption.js - Web Crypto API for client-side encryption
 async function generateKey(password, salt) {
@@ -260,6 +274,7 @@ function importSettings(file, password) {
 ```
 
 **Key Points:**
+
 - Use Web Crypto API for strong encryption (AES-256-GCM)
 - PBKDF2 with 100,000 iterations for key derivation
 - Store encrypted data in localStorage for convenience
@@ -269,6 +284,7 @@ function importSettings(file, password) {
 - Password never stored, only used for encryption/decryption
 
 **Applicable To:**
+
 - Language: JavaScript/TypeScript
 - Frameworks: React, Vue, Angular (any client-side framework)
 - Use Cases: Storing sensitive configuration in browser apps without backend
@@ -278,6 +294,7 @@ function importSettings(file, password) {
 ### UI/UX: Mobile-Responsive Web Application Implementation
 
 **Symptoms:**
+
 - Website not optimized for mobile devices
 - Navigation menus too large for mobile screens
 - Search bars taking up too much space on mobile
@@ -292,6 +309,7 @@ Modern web applications need responsive design to work across devices. Without p
 Implement comprehensive mobile-responsive design with hamburger navigation, horizontal table scrolling, and progressive font/spacing reduction.
 
 **Code Pattern:**
+
 ```css
 /* Hamburger Menu Implementation */
 .mobile-menu-toggle {
@@ -438,6 +456,7 @@ const Header = () => {
 ```
 
 **Key Points:**
+
 - Use hamburger menu pattern for mobile navigation (≤768px breakpoint)
 - Implement slide-out menu with overlay and smooth animations
 - Hide less essential elements (like header search) on mobile
@@ -448,6 +467,7 @@ const Header = () => {
 - Test on actual mobile devices, not just browser dev tools
 
 **Applicable To:**
+
 - Language: CSS/JavaScript/TypeScript
 - Frameworks: React, Vue, Angular (any web framework)
 - Use Cases: Making desktop web applications mobile-responsive
@@ -457,6 +477,7 @@ const Header = () => {
 ### API Integration: Quota Manager Platform Parameter Error
 
 **Symptoms:**
+
 - Console error: `Error: Unsupported platform: videos`
 - Error occurs when fetching YouTube video statistics
 - Error trace shows: quotaManager.js:144 → youtube.js:130 → searchService.js → useSearch.js:24
@@ -469,6 +490,7 @@ The quota manager's `canPerformOperation` function expects platform name as the 
 Update API calls to properly specify platform and operation parameters separately.
 
 **Code Pattern:**
+
 ```javascript
 // ❌ Wrong - Passing operation as platform
 if (!canPerformOperation('videos')) {
@@ -485,6 +507,7 @@ trackOperation('youtube', 'videos', videoIds.length);
 ```
 
 **Key Points:**
+
 - Always pass platform name ('youtube', 'tiktok', 'instagram') as first parameter
 - Operation type ('search', 'videos', 'channels') is the second parameter
 - Include count parameter when fetching multiple items for accurate quota tracking
@@ -492,6 +515,7 @@ trackOperation('youtube', 'videos', videoIds.length);
 - This pattern applies to both `canPerformOperation` and `trackOperation` functions
 
 **Applicable To:**
+
 - Language: JavaScript/TypeScript
 - Frameworks: Any JavaScript application with API quota management
 - Use Cases: Managing API rate limits and quotas across multiple platforms
@@ -501,6 +525,7 @@ trackOperation('youtube', 'videos', videoIds.length);
 ### UI/UX: Preventing Layout Shifts with Error Messages
 
 **Symptoms:**
+
 - Error message appears at top of page causing entire content to shift down
 - Buttons or other UI elements move position when error messages show/hide
 - Poor user experience with jumpy interface
@@ -513,6 +538,7 @@ Dynamically adding/removing error messages to the DOM changes the document flow,
 Display error messages inline near the triggering element without affecting layout, using either absolute positioning or reserved space.
 
 **Code Pattern:**
+
 ```javascript
 // ❌ Wrong - Global error message causes layout shift
 const [message, setMessage] = useState('');
@@ -568,6 +594,7 @@ const handleExport = () => {
 ```
 
 **Key Points:**
+
 - Use local error states for inline messages instead of global message states
 - Keep error messages concise ("Error. [Fix]" format)
 - Either reserve space for errors (height property) or use absolute positioning
@@ -576,6 +603,7 @@ const handleExport = () => {
 - Test that UI doesn't shift when errors appear/disappear
 
 **Applicable To:**
+
 - Language: JavaScript/TypeScript, CSS
 - Frameworks: React, Vue, Angular (any component-based framework)
 - Use Cases: Form validation, action feedback, inline error displays
@@ -585,6 +613,7 @@ const handleExport = () => {
 ### CSS: Changing Google Fonts Across Application
 
 **Symptoms:**
+
 - Need to change Google Font from one font to another (e.g., Orbitron to Roboto)
 - Font declarations scattered across multiple CSS files
 - Font used in JavaScript for text measurements
@@ -597,6 +626,7 @@ Google Fonts are typically imported in a global CSS file and then referenced thr
 Update the Google Fonts import URL and replace all font-family references throughout the codebase.
 
 **Code Pattern:**
+
 ```css
 /* ❌ Old font import */
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;900&display=swap');
@@ -624,6 +654,7 @@ context.font = `${fontSize}px Roboto, sans-serif`;
 ```
 
 **Key Points:**
+
 - Update Google Fonts import URL with correct font weights
 - Search for all occurrences of old font name in CSS files
 - Check JavaScript files for canvas text measurements using the font
@@ -632,6 +663,7 @@ context.font = `${fontSize}px Roboto, sans-serif`;
 - Test that new font loads correctly and displays as expected
 
 **Applicable To:**
+
 - Language: CSS, JavaScript
 - Frameworks: Any web application using Google Fonts
 - Use Cases: Rebranding, improving readability, changing design aesthetics
@@ -639,6 +671,7 @@ context.font = `${fontSize}px Roboto, sans-serif`;
 ### Code Architecture: React Component Refactoring to Eliminate Duplication
 
 **Symptoms:**
+
 - Multiple platform page components (YouTubePage, TikTokPage, InstagramPage) with nearly identical code
 - Only difference between components is a single platform prop
 - Repetitive routing logic in App.jsx with duplicate route handlers
@@ -652,6 +685,7 @@ Platform-specific components were created separately without recognizing the sha
 Create a generic PlatformPage component and centralize platform configuration while maintaining individual platform files for future extensibility.
 
 **Code Pattern:**
+
 ```javascript
 // ✅ Generic reusable platform page component
 const PlatformPage = ({ 
@@ -717,6 +751,7 @@ const getVideoColumns = () => {
 ```
 
 **Key Points:**
+
 - Keep individual platform files as clean interfaces for future platform-specific features
 - Centralize shared logic in reusable components and configuration files
 - Use spread operator to pass props through wrapper components
@@ -725,6 +760,7 @@ const getVideoColumns = () => {
 - Consolidate duplicate configurations (userVideosColumns can reference videosColumns)
 
 **Applicable To:**
+
 - Language: JavaScript/TypeScript
 - Frameworks: React (pattern applies to Vue/Angular with modifications)
 - Use Cases: Multi-platform applications, repeated component patterns, reducing maintenance overhead
@@ -734,6 +770,7 @@ const getVideoColumns = () => {
 ### API Integration: Multi-Step API Flow Implementation
 
 **Symptoms:**
+
 - Need to make multiple API calls in sequence where second call depends on first
 - HTTP 204 (No Content) responses failing JSON parsing
 - Complex data flow requiring intermediate data extraction
@@ -746,6 +783,7 @@ Some API operations require multiple steps where data from one endpoint is neede
 Implement sequential API calls with proper error handling and 204 response management.
 
 **Code Pattern:**
+
 ```javascript
 // Multi-step API flow pattern
 async function searchUserContent(username) {
@@ -812,6 +850,7 @@ class PlatformSearchStrategy {
 ```
 
 **Key Points:**
+
 - Always check intermediate response structure before accessing nested properties
 - Handle 204 responses by returning empty data structures matching expected format
 - Use descriptive console logs to track multi-step flow progress
@@ -820,6 +859,7 @@ class PlatformSearchStrategy {
 - Consider rate limiting between sequential API calls if needed
 
 **Applicable To:**
+
 - Language: JavaScript/TypeScript
 - Frameworks: Any JavaScript application making API calls
 - Use Cases: OAuth flows, user profile lookups, content aggregation requiring user IDs
@@ -829,6 +869,7 @@ class PlatformSearchStrategy {
 ### React: Platform-Specific UI Components
 
 **Symptoms:**
+
 - Need different UI elements for different platforms/sections
 - Components should only appear on specific pages
 - Passing platform context through multiple component layers
@@ -841,6 +882,7 @@ Multi-platform applications need platform-aware components that show different U
 Implement platform-aware components with conditional rendering based on platform prop.
 
 **Code Pattern:**
+
 ```javascript
 // Platform-aware component pattern
 const NavigationTabs = ({ activeTab, onTabChange, platform = 'default' }) => {
@@ -895,6 +937,7 @@ const ParentComponent = ({ platform, data }) => {
 ```
 
 **Key Points:**
+
 - Define platform-specific configurations in functions or objects
 - Use platform prop consistently throughout component tree
 - Keep base/shared elements separate from platform-specific ones
@@ -903,6 +946,7 @@ const ParentComponent = ({ platform, data }) => {
 - Document which features are platform-specific
 
 **Applicable To:**
+
 - Language: JavaScript/TypeScript
 - Frameworks: React (adaptable to Vue/Angular)
 - Use Cases: Multi-platform dashboards, white-label applications, feature flags
@@ -912,6 +956,7 @@ const ParentComponent = ({ platform, data }) => {
 ### API Integration: Client-Side CORS Bypass with Vite Development Proxy
 
 **Symptoms:**
+
 - API works externally but fails in browser with CORS error
 - Error: `Access-Control-Allow-Origin header contains multiple values '*, *'`
 - Server returns malformed CORS headers but API endpoint is functional
@@ -924,6 +969,7 @@ External API servers sometimes have misconfigured CORS headers that browsers rej
 Configure Vite development proxy to route API requests through the dev server, completely bypassing CORS restrictions during development.
 
 **Code Pattern:**
+
 ```javascript
 // vite.config.js - Development proxy configuration
 export default defineConfig({
@@ -963,6 +1009,7 @@ const options = {
 ```
 
 **Key Points:**
+
 - Proxy only works in development - plan production CORS solution separately
 - Use `changeOrigin: true` to avoid host header issues
 - Remove headers from client requests that proxy will add automatically
@@ -971,6 +1018,7 @@ const options = {
 - Consider rate limiting if API has strict limits
 
 **Applicable To:**
+
 - Language: JavaScript/TypeScript
 - Frameworks: Vite + React (similar patterns for Webpack/other bundlers)
 - Use Cases: Third-party APIs with broken CORS, development environment API testing
@@ -980,6 +1028,7 @@ const options = {
 ### State Management: Session-Based API Key Storage with React Context
 
 **Symptoms:**
+
 - API keys stored in settings but not accessible to API functions
 - "API key not found" errors despite user configuring keys in settings
 - API functions can't decrypt stored settings without password
@@ -993,6 +1042,7 @@ Encrypted localStorage requires a password for decryption, but API functions don
 Implement React Context with sessionStorage backup to store decrypted API keys during the browser session. This allows keys to persist across page refreshes within the same session while maintaining security.
 
 **Code Pattern:**
+
 ```javascript
 // contexts/ApiKeyContext.jsx - Session storage for decrypted keys
 const ApiKeyContext = createContext({
@@ -1116,6 +1166,7 @@ const handleLoad = async () => {
 ```
 
 **Key Points:**
+
 - sessionStorage persists data across page refreshes within the same browser session
 - Keys are automatically loaded from sessionStorage when app initializes
 - sessionStorage is cleared when browser is closed (security feature)
@@ -1125,6 +1176,7 @@ const handleLoad = async () => {
 - Clear both context and sessionStorage when user logs out
 
 **Applicable To:**
+
 - Language: JavaScript/TypeScript
 - Frameworks: React (adaptable to Vue/Angular state management)
 - Use Cases: Session-based secure configuration, API key management without backend
@@ -1134,6 +1186,7 @@ const handleLoad = async () => {
 ### Data Transformation: Robust API Response Mapping with Fallback Patterns
 
 **Symptoms:**
+
 - API returns different data structures than expected
 - Fields missing or in different nested locations
 - "Cannot read property of undefined" errors when accessing response data
@@ -1146,6 +1199,7 @@ External APIs often have inconsistent response structures, optional fields, or n
 Implement robust data mapping with multiple fallback paths and comprehensive field extraction utilities.
 
 **Code Pattern:**
+
 ```javascript
 // Robust field extraction with multiple fallback paths
 function extractField(obj, paths, defaultValue = null) {
@@ -1257,6 +1311,7 @@ export function extractUserPostsData(apiResponse) {
 ```
 
 **Key Points:**
+
 - Always provide multiple fallback paths for each field
 - Use optional chaining (`?.`) and array fallbacks for robust extraction
 - Log structure information when unexpected formats are encountered
@@ -1266,6 +1321,7 @@ export function extractUserPostsData(apiResponse) {
 - Include comprehensive error handling for each item
 
 **Applicable To:**
+
 - Language: JavaScript/TypeScript
 - Frameworks: Any application consuming external APIs
 - Use Cases: API integration, data normalization, third-party service integration
@@ -1275,6 +1331,7 @@ export function extractUserPostsData(apiResponse) {
 ### API Integration: Environment Variable Standardization Pattern
 
 **Symptoms:**
+
 - Different API endpoints using different environment variable names for the same key
 - "API key not found" despite key being configured
 - Inconsistent naming patterns across platform integrations
@@ -1287,6 +1344,7 @@ When multiple API endpoints share the same API key (like RapidAPI), using differ
 Standardize environment variable names across platforms that share the same API service, ensuring consistency and reducing configuration complexity.
 
 **Code Pattern:**
+
 ```javascript
 // ❌ Inconsistent naming - each platform uses different env var
 // TikTok API
@@ -1326,6 +1384,7 @@ async function getRapidApiKey() {
 ```
 
 **Key Points:**
+
 - Use descriptive but generic names for shared API services
 - Group related platforms under the same service key when they share credentials
 - Update all platform APIs simultaneously when changing variable names  
@@ -1334,6 +1393,7 @@ async function getRapidApiKey() {
 - Consider backwards compatibility during transition periods
 
 **Applicable To:**
+
 - Language: JavaScript/TypeScript
 - Frameworks: Any application using environment variables for API keys
 - Use Cases: Multi-platform API integration, shared service credentials, configuration management
@@ -1449,6 +1509,7 @@ export function extractUserPostsData(apiResponse) {
 ### UI/UX: Tooltip Implementation for Truncated Table Content
 
 **Symptoms:**
+
 - Table content (usernames, titles, captions) is truncated with ellipsis
 - No way to view full text content when hovering
 - Tooltips appearing in wrong position (bottom right instead of at cursor)
@@ -1462,6 +1523,7 @@ Truncated text in tables needs tooltips to show full content, but positioning to
 Implement a React Portal-based tooltip component that renders to document.body, bypassing all parent positioning contexts, with smart truncation detection and cursor-following positioning.
 
 **Code Pattern:**
+
 ```javascript
 // AuroraTooltip.jsx - Portal-based tooltip component
 import React, { useState, useRef, useEffect } from 'react';
@@ -1588,6 +1650,7 @@ const AuroraTooltip = ({ children, content, disabled = false }) => {
 ```
 
 **Key Points:**
+
 - Use ReactDOM.createPortal to render tooltip to document.body
 - Track cursor position with clientX/Y for viewport-relative positioning
 - Only show tooltip when content is actually truncated (scrollWidth > clientWidth)
@@ -1597,6 +1660,7 @@ const AuroraTooltip = ({ children, content, disabled = false }) => {
 - Add '.truncated' class to content elements for ellipsis detection
 
 **Applicable To:**
+
 - Language: JavaScript/TypeScript
 - Frameworks: React (adaptable to Vue/Angular with portal equivalents)
 - Use Cases: Data tables with truncated content, responsive layouts, themed tooltips
@@ -1606,6 +1670,7 @@ const AuroraTooltip = ({ children, content, disabled = false }) => {
 ### CSS: Table Column Text Truncation Issues
 
 **Symptoms:**
+
 - Username and title/caption rows truncating too early (not at edge of column)
 - Text appears cut off with ellipsis despite available space in the column
 - Fixed column widths causing premature truncation
@@ -1618,6 +1683,7 @@ Table columns had fixed width constraints that were too narrow (e.g., username-c
 Increase column widths and remove max-width constraints to allow text to use more available space. Update tooltip component to always show on hover regardless of truncation status.
 
 **Code Pattern:**
+
 ```css
 /* ❌ Wrong - Overly restrictive column widths */
 .username-col { 
@@ -1668,6 +1734,7 @@ const handleMouseEnter = (e) => {
 ```
 
 **Key Points:**
+
 - Increase column widths to give text more room before truncating
 - Remove max-width constraints that force premature truncation
 - Ensure all column types have width definitions (add missing ones like .about-col)
@@ -1676,6 +1743,7 @@ const handleMouseEnter = (e) => {
 - Users can always see full content via tooltip on hover
 
 **Applicable To:**
+
 - Language: CSS, JavaScript
 - Frameworks: React with CSS tables
 - Use Cases: Data tables with truncated text, responsive column layouts

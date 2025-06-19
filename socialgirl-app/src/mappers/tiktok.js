@@ -5,7 +5,7 @@
  * @returns {Array} Array of video objects for database insertion
  */
 export function extractVideoData(apiResponse) {
-    if (!apiResponse.data || apiResponse.data.length === 0) {
+    if (!apiResponse || !apiResponse.data || apiResponse.data.length === 0) {
         return [];
     }
 
@@ -51,7 +51,7 @@ export function extractVideoData(apiResponse) {
  * @returns {Array} Array of unique user objects for database insertion
  */
 export function extractUsersDataFromSearch(apiResponse) {
-    if (!apiResponse.data || apiResponse.data.length === 0) {
+    if (!apiResponse || !apiResponse.data || apiResponse.data.length === 0) {
         return [];
     }
 
@@ -82,7 +82,7 @@ export function extractUsersDataFromSearch(apiResponse) {
  * @returns {Array} Array of user post objects for database insertion
  */
 export function extractUserPostsData(apiResponse) {
-    if (!apiResponse.data || !apiResponse.data.itemList || apiResponse.data.itemList.length === 0) {
+    if (!apiResponse || !apiResponse.data || !apiResponse.data.itemList || apiResponse.data.itemList.length === 0) {
         return [];
     }
 

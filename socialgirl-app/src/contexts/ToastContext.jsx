@@ -14,9 +14,9 @@ export const useToast = () => {
 export const ToastProvider = ({ children }) => {
     const [toasts, setToasts] = useState([]);
 
-    const showToast = (message, duration = 4000) => {
+    const showToast = (message, type = 'success', duration = 4000) => {
         const id = Date.now();
-        const newToast = { id, message, duration };
+        const newToast = { id, message, type, duration };
         
         setToasts(prev => [...prev, newToast]);
     };
@@ -27,17 +27,22 @@ export const ToastProvider = ({ children }) => {
 
     const showSuccessToast = (resultCount) => {
         const message = `I have found ${resultCount} results.`;
-        showToast(message);
+        showToast(message, 'success');
+    };
+
+    const showErrorToast = (message, duration = 4000) => {
+        showToast(message, 'error', duration);
     };
 
     return (
-        <ToastContext.Provider value={{ showToast, showSuccessToast, removeToast }}>
+        <ToastContext.Provider value={{ showToast, showSuccessToast, showErrorToast, removeToast }}>
             {children}
             <div className="toast-container">
                 {toasts.map(toast => (
                     <ToastNotification
                         key={toast.id}
                         message={toast.message}
+                        type={toast.type}
                         onClose={() => removeToast(toast.id)}
                         duration={toast.duration}
                     />

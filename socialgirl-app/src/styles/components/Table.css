@@ -15,40 +15,7 @@
     position: relative;
 }
 
-/* Aurora wave background animation */
-.table-wrapper::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: 
-        var(--aurora-wave-1),
-        var(--aurora-wave-2),
-        var(--aurora-wave-3);
-    opacity: 0.3;
-    animation: auroraFlow 20s ease-in-out infinite;
-    pointer-events: none;
-    z-index: var(--z-base);
-}
 
-@keyframes auroraFlow {
-    0%, 100% {
-        transform: rotate(0deg) scale(1);
-        filter: blur(40px);
-    }
-    33% {
-        transform: rotate(120deg) scale(1.1);
-        filter: blur(45px);
-    }
-    66% {
-        transform: rotate(240deg) scale(0.9);
-        filter: blur(50px);
-    }
-}
-
-/* Ensure table content is above aurora waves */
 .table-wrapper > table {
     position: relative;
     z-index: var(--z-content);
@@ -295,15 +262,6 @@ tr:nth-child(n+11) { animation-delay: 0.55s; }
     }
 }
 
-tr:hover td {
-    background: linear-gradient(135deg, var(--aurora-bg-tertiary) 0%, var(--aurora-surface) 100%);
-    background-size: 200% 200%;
-    background-position: 100% 100%;
-    box-shadow: 
-        0 2px 12px rgba(145, 70, 255, 0.1), /* Using --aurora-purple rgba value */
-        0 0 30px rgba(0, 245, 255, 0.1), /* Aurora cyan glow */
-        0 0 60px rgba(145, 70, 255, 0.05); /* Aurora purple glow */
-}
 
 tr:hover {
     position: relative;
@@ -318,6 +276,67 @@ tr:hover .username {
 
 tr:last-child td {
     border-bottom: none;
+}
+
+/* Selected row styling */
+tr.selected td {
+    position: relative;
+    background: linear-gradient(135deg, 
+        rgba(145, 70, 255, 0.08) 0%, 
+        rgba(0, 245, 255, 0.05) 100%) !important;
+    box-shadow: 
+        inset 0 0 20px rgba(145, 70, 255, 0.1),
+        inset 0 0 40px rgba(0, 245, 255, 0.05);
+}
+
+/* Subtle breathing effect using pseudo-element overlay */
+tr.selected td::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, 
+        rgba(145, 70, 255, 0.04) 0%, 
+        rgba(0, 245, 255, 0.02) 100%);
+    animation: selectedPulse 4s ease-in-out infinite;
+    animation-delay: var(--animation-delay, 0s);
+    pointer-events: none;
+}
+
+@keyframes selectedPulse {
+    0%, 100% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+}
+
+/* Row hover effect with selection consideration */
+tr {
+    cursor: pointer;
+    user-select: none;
+}
+
+tr:hover td {
+    background: linear-gradient(135deg, var(--aurora-bg-tertiary) 0%, var(--aurora-surface) 100%);
+    background-size: 200% 200%;
+    background-position: 100% 100%;
+    box-shadow: 
+        0 2px 12px rgba(145, 70, 255, 0.1),
+        0 0 30px rgba(0, 245, 255, 0.1),
+        0 0 60px rgba(145, 70, 255, 0.05);
+}
+
+tr.selected:hover td {
+    background: linear-gradient(135deg, 
+        rgba(145, 70, 255, 0.1) 0%, 
+        rgba(0, 245, 255, 0.07) 100%) !important;
+    box-shadow: 
+        inset 0 0 25px rgba(145, 70, 255, 0.12),
+        inset 0 0 50px rgba(0, 245, 255, 0.07);
 }
 
 /* Column Alignments and Widths - Consistent with Users Table */

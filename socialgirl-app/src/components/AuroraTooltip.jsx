@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import ReactDOM from 'react-dom';
 import '../styles/components/Tooltip.css';
 
@@ -11,13 +11,9 @@ const AuroraTooltip = ({ children, content, disabled = false }) => {
     const targetRef = useRef(null);
     const timeoutRef = useRef(null);
 
-    const checkIfTruncated = () => {
-        if (!targetRef.current) return false;
-        const element = targetRef.current.querySelector('.truncated') || targetRef.current;
-        return element.scrollWidth > element.clientWidth;
-    };
+    // Removed unused function - checkIfTruncated
 
-    const calculatePosition = () => {
+    const calculatePosition = useCallback(() => {
         if (!tooltipRef.current) return;
 
         // Use requestAnimationFrame to ensure tooltip dimensions are available
@@ -29,12 +25,8 @@ const AuroraTooltip = ({ children, content, disabled = false }) => {
             const cursorOffset = 2; // Distance from cursor (2px as requested)
 
             // Use the stored mouse position
-            const viewportHeight = window.innerHeight;
             const viewportWidth = window.innerWidth;
             
-            // Debug logging
-            console.log('Mouse position:', mousePos);
-            console.log('Tooltip dimensions:', tooltipRect.width, 'x', tooltipRect.height);
             
             let newPlacement = 'top';
             let top = mousePos.y - tooltipRect.height - cursorOffset;
@@ -53,12 +45,11 @@ const AuroraTooltip = ({ children, content, disabled = false }) => {
                 left = viewportWidth - tooltipRect.width - padding;
             }
 
-            console.log('Calculated position:', { top, left });
             
             setPlacement(newPlacement);
             setPosition({ top, left });
         });
-    };
+    }, [mousePos]);
 
     const handleMouseEnter = (e) => {
         if (disabled || !content) return;
@@ -91,7 +82,7 @@ const AuroraTooltip = ({ children, content, disabled = false }) => {
         if (isVisible) {
             calculatePosition();
         }
-    }, [isVisible, mousePos]);
+    }, [isVisible, mousePos, calculatePosition]);
 
     useEffect(() => {
         return () => {

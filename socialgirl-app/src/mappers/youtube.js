@@ -4,7 +4,7 @@
  * @returns {Array} Array of video objects for database insertion
  */
 export function extractVideoData(apiResponse) {
-    if (!apiResponse.items || apiResponse.items.length === 0) {
+    if (!apiResponse || !apiResponse.items || apiResponse.items.length === 0) {
         return [];
     }
 
@@ -44,15 +44,15 @@ export function extractVideoData(apiResponse) {
  * @returns {Array} Array of channel objects for database insertion
  */
 export function extractChannelData(apiResponse) {
-    if (!apiResponse.items || apiResponse.items.length === 0) {
+    if (!apiResponse || !apiResponse.items || apiResponse.items.length === 0) {
         return [];
     }
 
     return apiResponse.items.map(item => ({
         username: item.snippet.title,
-        followers: parseInt(item.statistics.subscriberCount) || 0,
+        followers: parseInt(item.statistics?.subscriberCount) || 0,
         about: item.snippet.description,
-        media: parseInt(item.statistics.videoCount) || 0,
+        media: parseInt(item.statistics?.videoCount) || 0,
         url: item.snippet.customUrl ? 
             `https://youtube.com/@${item.snippet.customUrl}` : 
             `https://youtube.com/channel/${item.id}`

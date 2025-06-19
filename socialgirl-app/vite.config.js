@@ -5,6 +5,23 @@ import react from '@vitejs/plugin-react'
 export default defineConfig(() => {
   return {
     plugins: [react()],
+    test: {
+      environment: 'jsdom',
+      globals: true,
+      setupFiles: './src/test/setup.js',
+      coverage: {
+        provider: 'v8',
+        reporter: ['text', 'json', 'html'],
+        exclude: [
+          'node_modules/',
+          'src/test/',
+          '**/*.d.ts',
+          '**/*.config.*',
+          '**/mockServiceWorker.js',
+          '**/*.test.*'
+        ]
+      }
+    },
     server: {
       proxy: {
         '/api/instagram': {

@@ -24,6 +24,10 @@
     color: var(--aurora-purple);
 }
 
+.toast-error .toast-icon {
+    color: #ff4444;
+}
+
 .toast-content {
     flex: 1;
 }
@@ -67,6 +71,16 @@
     position: relative;
     overflow: visible;
     box-shadow: var(--aurora-glow-purple);
+}
+
+/* Error toast specific styles */
+.toast-error {
+    border-color: #ff4444;
+    box-shadow: 0 0 20px rgba(255, 68, 68, 0.3);
+}
+
+.toast-error .star {
+    background: #ff4444;
 }
 
 

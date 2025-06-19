@@ -65,7 +65,12 @@ export function getQuotaUsage(platform = 'youtube') {
     
     let allData = {};
     if (stored) {
-        allData = JSON.parse(stored);
+        try {
+            allData = JSON.parse(stored);
+        } catch (e) {
+            // If JSON parsing fails, start fresh
+            allData = {};
+        }
     }
     
     // Initialize platform data if it doesn't exist

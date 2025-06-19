@@ -30,25 +30,20 @@ async function searchVideos(keyword, cursor = 0, searchId = 0) {
     
     const url = `${BASE_URL}/search/general?keyword=${encodeURIComponent(keyword)}&cursor=${cursor}&search_id=${searchId}`;
     
-    try {
-        const response = await fetch(url, {
-            method: 'GET',
-            headers: {
-                'x-rapidapi-key': apiKey,
-                'x-rapidapi-host': RAPIDAPI_HOST
-            }
-        });
-        
-        if (!response.ok) {
-            throw new Error(`TikTok API error: ${response.status}`);
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+            'x-rapidapi-key': apiKey,
+            'x-rapidapi-host': RAPIDAPI_HOST
         }
-        
-        trackOperation('tiktok', 'request');
-        return await response.json();
-    } catch (error) {
-        // console.error('Error searching TikTok content:', error);
-        throw error;
+    });
+    
+    if (!response.ok) {
+        throw new Error(`TikTok API error: ${response.status}`);
     }
+    
+    trackOperation('tiktok', 'request');
+    return await response.json();
 }
 
 /**
@@ -69,26 +64,21 @@ async function getUserInfo(uniqueId) {
     
     const url = `${BASE_URL}/user/info?uniqueId=${uniqueId}`;
     
-    try {
-        const response = await fetch(url, {
-            method: 'GET',
-            headers: {
-                'x-rapidapi-key': apiKey,
-                'x-rapidapi-host': RAPIDAPI_HOST
-            }
-        });
-        
-        if (!response.ok) {
-            const errorText = await response.text();
-            throw new Error(`TikTok API error: ${response.status} - ${errorText}`);
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+            'x-rapidapi-key': apiKey,
+            'x-rapidapi-host': RAPIDAPI_HOST
         }
-        
-        trackOperation('tiktok', 'request');
-        return await response.json();
-    } catch (error) {
-        // console.error('Error fetching TikTok user info:', error);
-        throw error;
+    });
+    
+    if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`TikTok API error: ${response.status} - ${errorText}`);
     }
+    
+    trackOperation('tiktok', 'request');
+    return await response.json();
 }
 
 /**
@@ -111,32 +101,27 @@ async function getUserPopularPosts(secUid, count = 35, cursor = 0) {
     
     const url = `${BASE_URL}/user/popular-posts?secUid=${secUid}&count=${count}&cursor=${cursor}`;
     
-    try {
-        const response = await fetch(url, {
-            method: 'GET',
-            headers: {
-                'x-rapidapi-key': apiKey,
-                'x-rapidapi-host': RAPIDAPI_HOST
-            }
-        });
-        
-        if (!response.ok) {
-            const errorText = await response.text();
-            throw new Error(`TikTok API error: ${response.status} - ${errorText}`);
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+            'x-rapidapi-key': apiKey,
+            'x-rapidapi-host': RAPIDAPI_HOST
         }
-        
-        // Handle 204 No Content response (user has no popular posts)
-        if (response.status === 204) {
-            trackOperation('tiktok', 'request');
-            return { data: { itemList: [] } }; // Return empty list structure
-        }
-        
-        trackOperation('tiktok', 'request');
-        return await response.json();
-    } catch (error) {
-        // console.error('Error fetching TikTok user popular posts:', error);
-        throw error;
+    });
+    
+    if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`TikTok API error: ${response.status} - ${errorText}`);
     }
+    
+    // Handle 204 No Content response (user has no popular posts)
+    if (response.status === 204) {
+        trackOperation('tiktok', 'request');
+        return { data: { itemList: [] } }; // Return empty list structure
+    }
+    
+    trackOperation('tiktok', 'request');
+    return await response.json();
 }
 
 export {

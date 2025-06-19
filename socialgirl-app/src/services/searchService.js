@@ -185,8 +185,8 @@ class InstagramSearchStrategy {
             });
             
             // Re-throw with more user-friendly message if needed
-            if (error.message.includes('API key')) {
-                throw new Error('Instagram API key not configured. Please check your settings.');
+            if (error.message.includes('RapidAPI key not found')) {
+                throw error; // Pass through the original error message
             } else if (error.message.includes('quota exceeded')) {
                 throw new Error('Instagram API quota exceeded. Please try again later.');
             } else {

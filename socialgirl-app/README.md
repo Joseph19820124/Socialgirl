@@ -453,6 +453,67 @@ function SettingsPage() {
 - Data export functionality
 - Dark/Light theme toggle
 
+## CSS Styling: Component-Specific Style Conflicts
+
+**Symptoms:**
+- Buttons appearing with different sizes despite using same CSS classes
+- Global styles being overridden by component-specific styles
+- Inconsistent UI elements across different pages/components
+- CSS classes not producing expected results
+
+**Root Cause:**
+Component-specific CSS files may contain style overrides that increase specificity and override global design system styles. This commonly happens when developers add "quick fixes" to component CSS files that unintentionally override carefully designed global styles.
+
+**Solution:**
+Identify and remove component-specific style overrides that conflict with global design system classes.
+
+**Code Pattern:**
+```css
+/* ❌ Wrong - Component CSS overriding global styles */
+/* TableContainer.css */
+.table-actions .aurora-btn-sm {
+    padding: 8px 16px;  /* Overrides global: 4px 12px */
+    font-size: 14px;    /* Overrides global: 12px */
+}
+
+/* ✅ Correct - Remove conflicting overrides */
+/* TableContainer.css */
+.table-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-left: auto;
+}
+/* Let aurora-btn-sm use its global definition */
+
+/* Global styles (globals.css) - Design system definition */
+.aurora-btn-sm {
+    padding: 4px 12px;
+    font-size: 12px;
+}
+```
+
+**Debugging Steps:**
+1. Inspect element in browser DevTools
+2. Check "Computed" styles to see final values
+3. Look for crossed-out styles indicating overrides
+4. Search for the class name in component-specific CSS files
+5. Remove or comment out conflicting rules
+
+**Key Points:**
+- Global design system classes should not be overridden in component CSS
+- Use browser DevTools to identify style conflicts and specificity issues
+- Component CSS should only contain layout and component-specific styles
+- When buttons/elements don't match despite same classes, check for overrides
+- Higher specificity selectors (e.g., `.parent .child`) override single classes
+
+**Applicable To:**
+- Language: CSS/SCSS
+- Frameworks: Any (React, Vue, Angular)
+- Use Cases: Design system implementation, consistent UI styling, CSS debugging
+
+---
+
 ## License
 
 This project is licensed under the MIT License.

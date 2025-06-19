@@ -50,11 +50,6 @@
     margin-left: auto;
 }
 
-/* Ensure aurora buttons in table actions have consistent sizing */
-.table-actions .aurora-btn-sm {
-    padding: 8px 16px;
-    font-size: 14px;
-}
 
 /* Responsive */
 @media (max-width: 768px) {
