@@ -5,15 +5,28 @@
  * @returns {Array} Array of video objects for database insertion
  */
 export function extractVideoData(apiResponse) {
+    console.log(`[TikTok Mapper] Starting video data extraction from general search`);
+    console.log(`[TikTok Mapper] Raw API response:`, {
+        hasData: !!apiResponse,
+        dataType: typeof apiResponse,
+        hasDataArray: Array.isArray(apiResponse?.data),
+        dataLength: apiResponse?.data?.length || 0
+    });
+    
     if (!apiResponse || !apiResponse.data || apiResponse.data.length === 0) {
+        console.log(`[TikTok Mapper] No valid data found, returning empty array`);
         return [];
     }
 
-    return apiResponse.data.map(dataItem => {
+    console.log(`[TikTok Mapper] Processing ${apiResponse.data.length} items from general search`);
+    
+    const extractedData = apiResponse.data.map((dataItem, index) => {
+        console.log(`[TikTok Mapper] Processing item ${index + 1}/${apiResponse.data.length}`);
         const item = dataItem.item;
         
         // Skip if item is undefined or null
         if (!item) {
+            console.log(`[TikTok Mapper] Skipping item ${index + 1} - no item data`);
             return null;
         }
         
@@ -43,6 +56,11 @@ export function extractVideoData(apiResponse) {
             publishedAt: item.createTime ? new Date(item.createTime * 1000).toISOString() : new Date().toISOString()
         };
     }).filter(item => item !== null);
+    
+    console.log(`[TikTok Mapper] Successfully extracted ${extractedData.length} videos from general search`);
+    console.log(`[TikTok Mapper] Sample extracted video data:`, extractedData.slice(0, 2));
+    
+    return extractedData;
 }
 
 /**
@@ -82,11 +100,33 @@ export function extractUsersDataFromSearch(apiResponse) {
  * @returns {Array} Array of user post objects for database insertion
  */
 export function extractUserPostsData(apiResponse) {
+    console.log(`[TikTok Mapper] Starting user posts data extraction`);
+    console.log(`[TikTok Mapper] Raw API response:`, {
+        hasData: !!apiResponse,
+        dataType: typeof apiResponse,
+        hasDataObject: !!apiResponse?.data,
+        hasItemList: !!apiResponse?.data?.itemList,
+        itemListLength: apiResponse?.data?.itemList?.length || 0
+    });
+    
     if (!apiResponse || !apiResponse.data || !apiResponse.data.itemList || apiResponse.data.itemList.length === 0) {
+        console.log(`[TikTok Mapper] No valid data found, returning empty array`);
         return [];
     }
 
-    return apiResponse.data.itemList.map(item => {
+    console.log(`[TikTok Mapper] Processing ${apiResponse.data.itemList.length} items`);
+    
+    const extractedData = apiResponse.data.itemList.map((item, index) => {
+        console.log(`[TikTok Mapper] Processing item ${index + 1}/${apiResponse.data.itemList.length}`);
+        if (index < 2) {
+            console.log(`[TikTok Mapper] Sample item ${index + 1} structure:`, {
+                hasItem: !!item,
+                itemId: item?.id,
+                hasAuthor: !!item?.author,
+                username: item?.author?.uniqueId,
+                hasStats: !!item?.stats || !!item?.statsV2
+            });
+        }
         const views = parseInt(item.statsV2?.playCount) || parseInt(item.stats?.playCount) || 0;
         const likes = parseInt(item.statsV2?.diggCount) || parseInt(item.stats?.diggCount) || 0;
         
@@ -113,4 +153,9 @@ export function extractUserPostsData(apiResponse) {
             publishedAt: item.createTime ? new Date(item.createTime * 1000).toISOString() : new Date().toISOString()
         };
     });
+    
+    console.log(`[TikTok Mapper] Successfully extracted ${extractedData.length} items`);
+    console.log(`[TikTok Mapper] Sample extracted data:`, extractedData.slice(0, 2));
+    
+    return extractedData;
 }

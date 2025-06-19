@@ -1750,6 +1750,121 @@ const handleMouseEnter = (e) => {
 
 ---
 
+### API Integration: Pagination Implementation for Limited API Responses
+
+**Symptoms:**
+
+- API only returns 12-15 items per request despite requesting more
+- Need to display 24-36 results but API has per-request limits
+- Different pagination mechanisms across different APIs (tokens vs cursor+id)
+- Console shows limited results: "Found 12 items in search response"
+
+**Root Cause:**
+Many third-party APIs limit the number of items returned per request for performance and rate limiting reasons. To get more results, pagination must be implemented using the API's specific pagination mechanism (pagination tokens, cursors, or cursor+search_id combinations).
+
+**Solution:**
+Implement a pagination wrapper function that makes multiple API requests and combines the results, handling each API's specific pagination requirements.
+
+**Code Pattern:**
+
+```javascript
+// Generic pagination pattern for APIs with different mechanisms
+async function fetchWithPagination(keyword, maxResults = 36) {
+    console.log(`[API] Starting paginated search, max results: ${maxResults}`);
+    
+    const allItems = [];
+    const uniqueIds = new Set();
+    let paginationState = { cursor: 0, searchId: 0, token: null };
+    let requestCount = 0;
+    const maxRequests = 3; // Limit to prevent excessive API calls
+    
+    try {
+        while (requestCount < maxRequests && allItems.length < maxResults) {
+            requestCount++;
+            console.log(`[API] Request ${requestCount} of ${maxRequests}`);
+            
+            // Make API request with current pagination state
+            const response = await makeApiRequest(keyword, paginationState);
+            
+            if (!response.data || response.data.length === 0) {
+                console.log(`[API] No items in response, stopping pagination`);
+                break;
+            }
+            
+            // Filter duplicates and add new items
+            let newItemsCount = 0;
+            for (const item of response.data) {
+                const uniqueId = item.id || item.code || item.pk;
+                if (uniqueId && !uniqueIds.has(uniqueId) && allItems.length < maxResults) {
+                    uniqueIds.add(uniqueId);
+                    allItems.push(item);
+                    newItemsCount++;
+                }
+            }
+            
+            console.log(`[API] Added ${newItemsCount} new unique items, total: ${allItems.length}`);
+            
+            // Check pagination info based on API type
+            if (response.pagination_token) {
+                // Instagram-style pagination
+                paginationState.token = response.pagination_token;
+            } else if (response.cursor && response.log_pb?.impr_id) {
+                // TikTok-style pagination
+                paginationState.cursor = response.cursor;
+                paginationState.searchId = response.log_pb.impr_id;
+            } else {
+                console.log(`[API] No pagination info, stopping`);
+                break;
+            }
+            
+            // Stop if no new items found
+            if (newItemsCount === 0 && requestCount > 1) {
+                console.log(`[API] No new items found, stopping`);
+                break;
+            }
+        }
+        
+        console.log(`[API] Pagination complete. Total unique items: ${allItems.length}`);
+        return { data: allItems };
+        
+    } catch (error) {
+        console.error(`[API] Error in pagination:`, error.message);
+        throw error;
+    }
+}
+
+// Platform-specific implementations
+// Instagram with pagination_token
+async function searchInstagramWithPagination(keyword) {
+    const response = await searchReels(keyword, paginationToken);
+    // Use response.pagination_token for next request
+}
+
+// TikTok with cursor + search_id
+async function searchTikTokWithPagination(keyword) {
+    const response = await searchVideos(keyword, cursor, searchId);
+    // Use response.cursor and response.log_pb.impr_id for next request
+}
+```
+
+**Key Points:**
+
+- Each API has different pagination mechanisms - detect and handle appropriately
+- Use Set() to track unique IDs and prevent duplicates across pages
+- Limit maximum requests to prevent infinite loops or excessive API usage
+- Stop pagination when: no new items, same pagination state returned, or no items in response
+- Log progress for debugging pagination issues
+- Return consistent data structure regardless of pagination mechanism
+- Consider API rate limits when setting max requests
+
+**Applicable To:**
+
+- Language: JavaScript/TypeScript
+- Frameworks: Any application consuming paginated APIs
+- Use Cases: Social media APIs, search results, user content feeds
+
+---
+
 ## Technology Stack
 
 - **Frontend**: React 18 + Vite

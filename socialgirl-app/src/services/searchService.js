@@ -1,6 +1,6 @@
 import { searchVideos as searchYouTube, getVideosStatistics, getChannelVideosByHandle } from '../apis/youtube';
-import { searchVideos as searchTikTok, getUserInfo, getUserPopularPosts } from '../apis/tiktok';
-import { searchReels, searchReelsWithPagination, getUserReels } from '../apis/instagram';
+import { searchVideos as searchTikTok, searchVideosWithPagination, getUserInfo, getUserPopularPosts } from '../apis/tiktok';
+import { searchReels, searchReelsWithPagination, getUserReels, getUserReelsWithPagination } from '../apis/instagram';
 import { extractVideoData as extractYouTubeData } from '../mappers/youtube';
 import { extractVideoData as extractTikTokData, extractUsersDataFromSearch as extractTikTokUsersData, extractUserPostsData as extractTikTokUserPostsData } from '../mappers/tiktok';
 import { extractVideoData as extractInstagramVideoData, extractUserPostsData as extractInstagramUserPostsData } from '../mappers/instagram';
@@ -83,14 +83,28 @@ class YouTubeSearchStrategy {
 
 class TikTokSearchStrategy {
     async search(query, context = {}) {
+        console.log(`[TikTok Search] Starting search with query: "${query}"`);
+        console.log(`[TikTok Search] Search context:`, context);
+        
         const { activeTab } = context;
         
         // For User Videos/User Posts tab, do 2-step flow: username -> secUid -> popular posts
         if (activeTab === 'userVideos' || activeTab === 'userPosts') {
+            console.log(`[TikTok Search] Routing to searchUserPosts for tab: ${activeTab}`);
             return await this.searchUserPosts(query);
         }
         
         // For other tabs, use general search
+        console.log(`[TikTok Search] Using general search for tab: ${activeTab}`);
+        
+        // For Videos tab, use paginated search to get more results
+        if (activeTab === 'videos') {
+            console.log(`[TikTok Search] Using paginated search for videos`);
+            const response = await searchVideosWithPagination(query, 36); // Get up to 36 results
+            return extractTikTokData(response);
+        }
+        
+        // For other tabs (like users), use regular search
         const response = await searchTikTok(query);
         
         // For Users tab, extract user data; otherwise extract video data
@@ -102,9 +116,18 @@ class TikTokSearchStrategy {
     }
 
     async searchUserPosts(username) {
+        console.log(`[TikTok Search] Starting searchUserPosts for username: "${username}"`);
+        
         try {
             // Step 1: Get user info to extract secUid
+            console.log(`[TikTok Search] Step 1: Getting user info for: ${username}`);
             const userInfoResponse = await getUserInfo(username);
+            
+            console.log(`[TikTok Search] User info response:`, {
+                hasUserInfo: !!userInfoResponse.userInfo,
+                hasUser: !!userInfoResponse.userInfo?.user,
+                secUid: userInfoResponse.userInfo?.user?.secUid
+            });
             
             if (!userInfoResponse.userInfo || !userInfoResponse.userInfo.user) {
                 throw new Error(`User '${username}' not found`);
@@ -117,10 +140,15 @@ class TikTokSearchStrategy {
             }
             
             // Step 2: Get popular posts using secUid
+            console.log(`[TikTok Search] Step 2: Getting popular posts for secUid: ${secUid}`);
             const postsResponse = await getUserPopularPosts(secUid);
+            
+            console.log(`[TikTok Search] Posts response received, processing data...`);
             
             // Step 3: Extract and return user posts data
             const extractedData = extractTikTokUserPostsData(postsResponse);
+            
+            console.log(`[TikTok Search] Extraction complete. Found ${extractedData.length} posts`);
             
             return extractedData;
             
@@ -209,8 +237,8 @@ class InstagramSearchStrategy {
         console.log(`[Instagram Search] Cleaned username: "${cleanUsername}"`);
 
         try {
-            console.log(`[Instagram Search] Calling getUserReels API...`);
-            const apiResponse = await getUserReels(cleanUsername);
+            console.log(`[Instagram Search] Calling getUserReelsWithPagination API...`);
+            const apiResponse = await getUserReelsWithPagination(cleanUsername, 24); // Get up to 24 results
             
             console.log(`[Instagram Search] API call successful, processing response...`);
             const extractedData = extractInstagramUserPostsData(apiResponse);
