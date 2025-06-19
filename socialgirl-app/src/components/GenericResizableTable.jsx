@@ -164,7 +164,7 @@ const GenericResizableTable = ({ data, isLoading, columns, cellRenderers, skelet
             case 'username':
                 return (
                     <AuroraTooltip content={value}>
-                        <span className="username truncated">{value || ''}</span>
+                        <span className="username">{value || ''}</span>
                     </AuroraTooltip>
                 );
             case 'followers':
@@ -180,7 +180,7 @@ const GenericResizableTable = ({ data, isLoading, columns, cellRenderers, skelet
             case 'title':
                 return (
                     <AuroraTooltip content={value}>
-                        <span className="title truncated">{value || ''}</span>
+                        <span className="title">{value || ''}</span>
                     </AuroraTooltip>
                 );
             case 'views':
@@ -216,7 +216,7 @@ const GenericResizableTable = ({ data, isLoading, columns, cellRenderers, skelet
             case 'about':
                 return (
                     <AuroraTooltip content={value}>
-                        <span className="about truncated">{value || ''}</span>
+                        <span className="about">{value || ''}</span>
                     </AuroraTooltip>
                 );
             case 'performance': {

@@ -1573,6 +1573,85 @@ const AuroraTooltip = ({ children, content, disabled = false }) => {
 
 ---
 
+### CSS: Table Column Text Truncation Issues
+
+**Symptoms:**
+- Username and title/caption rows truncating too early (not at edge of column)
+- Text appears cut off with ellipsis despite available space in the column
+- Fixed column widths causing premature truncation
+- Tooltips not showing after fixing truncation issue
+
+**Root Cause:**
+Table columns had fixed width constraints that were too narrow (e.g., username-col: 90px, title-col: 250px with max-width: 250px). These constraints caused text to truncate before reaching the actual column edge. Additionally, the tooltip component only showed when text was truncated, so increasing column widths prevented tooltips from appearing.
+
+**Solution:**
+Increase column widths and remove max-width constraints to allow text to use more available space. Update tooltip component to always show on hover regardless of truncation status.
+
+**Code Pattern:**
+```css
+/* ❌ Wrong - Overly restrictive column widths */
+.username-col { 
+    text-align: left; 
+    width: 90px;
+    min-width: 90px;
+}
+
+.title-col { 
+    text-align: left; 
+    width: 250px;
+    min-width: 200px;
+    max-width: 250px;  /* Forces truncation */
+}
+
+/* ✅ Correct - More generous widths without max-width */
+.username-col { 
+    text-align: left; 
+    width: 120px;      /* Increased from 90px */
+    min-width: 90px;
+}
+
+.title-col { 
+    text-align: left; 
+    width: 300px;      /* Increased from 250px */
+    min-width: 200px;
+    /* Removed max-width constraint */
+}
+
+.about-col {
+    text-align: left;
+    width: 200px;      /* Define if missing */
+    min-width: 150px;
+}
+```
+
+```javascript
+// ✅ Update tooltip to show always (not just when truncated)
+const handleMouseEnter = (e) => {
+    if (disabled || !content) return;  // Removed checkIfTruncated() condition
+    
+    // Show tooltip for all content
+    const x = e.clientX;
+    const y = e.clientY;
+    setMousePos({ x, y });
+    // ... rest of tooltip logic
+};
+```
+
+**Key Points:**
+- Increase column widths to give text more room before truncating
+- Remove max-width constraints that force premature truncation
+- Ensure all column types have width definitions (add missing ones like .about-col)
+- Update tooltip component to show on hover regardless of truncation
+- Text will still truncate naturally when it exceeds the new column width
+- Users can always see full content via tooltip on hover
+
+**Applicable To:**
+- Language: CSS, JavaScript
+- Frameworks: React with CSS tables
+- Use Cases: Data tables with truncated text, responsive column layouts
+
+---
+
 ## Technology Stack
 
 - **Frontend**: React 18 + Vite

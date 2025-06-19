@@ -61,7 +61,7 @@ const AuroraTooltip = ({ children, content, disabled = false }) => {
     };
 
     const handleMouseEnter = (e) => {
-        if (disabled || !content || !checkIfTruncated()) return;
+        if (disabled || !content) return;
         
         // Use clientX/Y for viewport-relative positioning
         const x = e.clientX;

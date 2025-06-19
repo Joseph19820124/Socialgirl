@@ -298,12 +298,10 @@ td {
     font-size: 12px;
     vertical-align: middle;
     transition: all var(--aurora-transition-base);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
     background: linear-gradient(135deg, transparent 0%, transparent 100%);
     background-size: 200% 200%;
     background-position: 0% 0%;
+    position: relative;
 }
 
 td:last-child {
@@ -368,7 +366,7 @@ tr:last-child td {
 /* Column Alignments and Widths - Consistent with Users Table */
 .username-col { 
     text-align: left; 
-    width: 90px;
+    width: 120px;
     min-width: 90px;
 }
 
@@ -390,9 +388,8 @@ tr:last-child td {
 
 .title-col { 
     text-align: left; 
-    width: 250px;
+    width: 300px;
     min-width: 200px;
-    max-width: 250px;
 }
 
 .url-col { 
@@ -408,14 +405,21 @@ tr:last-child td {
     text-align: center;
 }
 
+.about-col {
+    text-align: left;
+    width: 200px;
+    min-width: 150px;
+}
+
 .username {
     font-weight: 600;
     color: var(--aurora-blue);
-    max-width: 90px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    display: block;
+    width: 100%;
 }
 
 .followers {
@@ -494,13 +498,14 @@ tr:hover .media {
 }
 
 .title {
-    max-width: 250px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     font-weight: 500;
     color: var(--aurora-text-secondary);
     transition: color var(--aurora-transition-fast);
+    display: block;
+    width: 100%;
 }
 
 tr:hover .title {
@@ -555,7 +560,8 @@ tr:hover .title {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    max-width: 200px;
+    display: block;
+    width: 100%;
 }
 
 .performance-score {
@@ -735,6 +741,7 @@ tr:hover .title {
     
     .username {
         font-size: 11px;
+        max-width: 80px;
     }
     
     .followers, .views, .comments, .shares, .likes {
@@ -743,6 +750,7 @@ tr:hover .title {
     
     .title {
         font-size: 10px;
+        max-width: 180px;
     }
     
     .watch-btn, .visit-btn {
