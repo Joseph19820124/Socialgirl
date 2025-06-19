@@ -1,6 +1,6 @@
 import { searchVideos as searchYouTube, getVideosStatistics, getChannelVideosByHandle } from '../apis/youtube';
 import { searchVideos as searchTikTok, getUserInfo, getUserPopularPosts } from '../apis/tiktok';
-import { searchReels, getUserReels } from '../apis/instagram';
+import { searchReels, searchReelsWithPagination, getUserReels } from '../apis/instagram';
 import { extractVideoData as extractYouTubeData } from '../mappers/youtube';
 import { extractVideoData as extractTikTokData, extractUsersDataFromSearch as extractTikTokUsersData, extractUserPostsData as extractTikTokUserPostsData } from '../mappers/tiktok';
 import { extractVideoData as extractInstagramVideoData, extractUserPostsData as extractInstagramUserPostsData } from '../mappers/instagram';
@@ -166,8 +166,8 @@ class InstagramSearchStrategy {
         console.log(`[Instagram Search] Starting video search for keyword: "${keyword}"`);
         
         try {
-            console.log(`[Instagram Search] Calling searchReels API...`);
-            const apiResponse = await searchReels(keyword);
+            console.log(`[Instagram Search] Calling searchReelsWithPagination API...`);
+            const apiResponse = await searchReelsWithPagination(keyword, 24); // Get up to 24 results
             
             console.log(`[Instagram Search] API call successful, processing response...`);
             const extractedData = extractInstagramVideoData(apiResponse);

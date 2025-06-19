@@ -13,9 +13,10 @@ const BASE_URL = `/api/instagram`; // Vite proxy will route to https://instagram
 /**
  * Search for Instagram reels by keyword
  * @param {string} keyword - Search keyword
+ * @param {string} paginationToken - Optional pagination token for fetching more results
  * @returns {Promise<Object>} Search results response
  */
-async function searchReels(keyword) {
+async function searchReels(keyword, paginationToken = null) {
     // console.log(`[Instagram API] Starting searchReels for keyword: ${keyword}`);
     
     if (!canPerformOperation('instagram', 'request')) {
@@ -31,7 +32,11 @@ async function searchReels(keyword) {
     
     // console.log(`[Instagram API] API key retrieved successfully (length: ${apiKey.length})`);
     
-    const url = `${BASE_URL}/searchreels/?keyword=${encodeURIComponent(keyword)}`;
+    let url = `${BASE_URL}/searchreels/?keyword=${encodeURIComponent(keyword)}`;
+    if (paginationToken) {
+        url += `&pagination_token=${encodeURIComponent(paginationToken)}`;
+        // console.log(`[Instagram API] Using pagination token`);
+    }
     // console.log(`[Instagram API] Making request to: ${url}`);
     
     const options = {
@@ -64,7 +69,8 @@ async function searchReels(keyword) {
         //     hasData: !!result,
         //     dataType: typeof result,
         //     hasDataObject: !!result.data,
-        //     itemCount: result.data?.items?.length || 0
+        //     itemCount: result.data?.items?.length || 0,
+        //     hasPaginationToken: !!result.pagination_token
         // });
         
         trackOperation('instagram', 'request');
@@ -145,7 +151,83 @@ async function getUserReels(usernameOrId) {
     }
 }
 
+/**
+ * Search for Instagram reels with pagination support to get more results
+ * @param {string} keyword - Search keyword
+ * @param {number} maxResults - Maximum number of results to fetch (default: 24)
+ * @returns {Promise<Object>} Combined search results with all items and pagination info
+ */
+async function searchReelsWithPagination(keyword, maxResults = 24) {
+    console.log(`[Instagram API] Starting paginated search for keyword: ${keyword}, max results: ${maxResults}`);
+    
+    const allItems = [];
+    const uniqueCodes = new Set();
+    let paginationToken = null;
+    let requestCount = 0;
+    const maxRequests = 3; // Limit to prevent excessive API calls
+    
+    try {
+        while (requestCount < maxRequests && allItems.length < maxResults) {
+            requestCount++;
+            console.log(`[Instagram API] Request ${requestCount} of ${maxRequests}`);
+            
+            const response = await searchReels(keyword, paginationToken);
+            
+            if (!response.data?.items || response.data.items.length === 0) {
+                console.log(`[Instagram API] No items in response, stopping pagination`);
+                break;
+            }
+            
+            // Filter out duplicates and add new items
+            let newItemsCount = 0;
+            for (const item of response.data.items) {
+                if (!uniqueCodes.has(item.code) && allItems.length < maxResults) {
+                    uniqueCodes.add(item.code);
+                    allItems.push(item);
+                    newItemsCount++;
+                }
+            }
+            
+            console.log(`[Instagram API] Added ${newItemsCount} new unique items, total: ${allItems.length}`);
+            
+            // Check if we should continue
+            if (!response.pagination_token) {
+                console.log(`[Instagram API] No pagination token in response, stopping`);
+                break;
+            }
+            
+            if (response.pagination_token === paginationToken) {
+                console.log(`[Instagram API] Same pagination token returned, stopping`);
+                break;
+            }
+            
+            if (newItemsCount === 0 && requestCount > 1) {
+                console.log(`[Instagram API] No new items found, stopping`);
+                break;
+            }
+            
+            paginationToken = response.pagination_token;
+        }
+        
+        console.log(`[Instagram API] Pagination complete. Total unique items: ${allItems.length}`);
+        
+        // Return in the same format as the original API response
+        return {
+            data: {
+                items: allItems,
+                count: allItems.length
+            },
+            pagination_token: paginationToken // Include last pagination token if user wants to continue
+        };
+        
+    } catch (error) {
+        console.error(`[Instagram API] Error in searchReelsWithPagination:`, error.message);
+        throw error;
+    }
+}
+
 export {
     searchReels,
+    searchReelsWithPagination,
     getUserReels
 };
