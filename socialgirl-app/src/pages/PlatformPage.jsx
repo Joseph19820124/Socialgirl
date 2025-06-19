@@ -8,7 +8,8 @@ const PlatformPage = ({
     isLoading, 
     platform,
     onSearch, 
-    onClearData 
+    onClearData,
+    onSettingsChange 
 }) => {
     return (
         <div className="platform-page">
@@ -20,6 +21,7 @@ const PlatformPage = ({
                 platform={platform}
                 onSearch={onSearch}
                 onClearData={onClearData}
+                onSettingsChange={onSettingsChange}
             />
         </div>
     );

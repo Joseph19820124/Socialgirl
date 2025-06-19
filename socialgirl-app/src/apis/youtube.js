@@ -75,6 +75,7 @@ async function getChannelData(channelId) {
  * @param {Object} options - Additional search options
  * @param {string} options.order - Sort order: relevance, date, rating, viewCount, title (default: viewCount)
  * @param {string} options.publishedAfter - ISO date string for filtering recent videos
+ * @param {string} options.regionCode - ISO 3166-1 alpha-2 country code
  * @returns {Promise<Object>} Search results
  */
 async function searchVideos(query, maxResults = 10, options = {}) {
@@ -90,7 +91,8 @@ async function searchVideos(query, maxResults = 10, options = {}) {
     // Default options
     const {
         order = 'viewCount',
-        publishedAfter = null
+        publishedAfter = null,
+        regionCode = null
     } = options;
     
     // Calculate date 7 days ago if no publishedAfter is provided
@@ -101,7 +103,12 @@ async function searchVideos(query, maxResults = 10, options = {}) {
         publishedAfterISO = pastDate.toISOString();
     }
     
-    const url = `${BASE_URL}/search?part=snippet&q=${encodeURIComponent(query)}&type=video&order=${order}&publishedAfter=${publishedAfterISO}&maxResults=${maxResults}&key=${apiKey}`;
+    let url = `${BASE_URL}/search?part=snippet&q=${encodeURIComponent(query)}&type=video&order=${order}&publishedAfter=${publishedAfterISO}&maxResults=${maxResults}&key=${apiKey}`;
+    
+    // Add regionCode if provided
+    if (regionCode) {
+        url += `&regionCode=${regionCode}`;
+    }
     
     try {
         const response = await fetch(url);

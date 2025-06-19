@@ -6,6 +6,42 @@
     gap: 20px;
 }
 
+/* Search with settings container */
+.search-with-settings {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Settings button */
+.settings-btn {
+    background: var(--aurora-bg-tertiary);
+    border: 1px solid var(--aurora-border-secondary);
+    border-radius: var(--aurora-radius-md);
+    padding: 10px;
+    cursor: pointer;
+    color: var(--aurora-text-secondary);
+    transition: all var(--aurora-transition-fast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.settings-btn:hover {
+    color: var(--aurora-cyan);
+    border-color: var(--aurora-cyan);
+    box-shadow: 0 0 0 1px var(--aurora-cyan);
+}
+
+.settings-btn:active {
+    transform: scale(0.95);
+}
+
+.settings-btn svg {
+    width: 20px;
+    height: 20px;
+}
+
 /* Table actions container */
 .table-actions {
     display: flex;

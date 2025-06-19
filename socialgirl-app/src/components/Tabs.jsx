@@ -26,10 +26,10 @@ const Tabs = ({ activeTab, onTabChange, platform = 'default' }) => {
                 {tabs.map((tab) => (
                     <button
                         key={tab.id}
-                        className={`tab ${activeTab === tab.id ? 'active' : ''}`}
+                        className={`aurora-btn ${activeTab === tab.id ? 'aurora-btn-primary' : 'aurora-btn-ghost'} aurora-btn-sm tab-button ${activeTab === tab.id ? 'active' : ''}`}
                         onClick={() => onTabChange(tab.id)}
                     >
-                        <span className="tab-label">{tab.label}</span>
+                        {tab.label}
                     </button>
                 ))}
             </div>

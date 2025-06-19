@@ -4,6 +4,7 @@ import { searchReels, getUserReels } from '../apis/instagram';
 import { extractVideoData as extractYouTubeData } from '../mappers/youtube';
 import { extractVideoData as extractTikTokData, extractUsersDataFromSearch as extractTikTokUsersData, extractUserPostsData as extractTikTokUserPostsData } from '../mappers/tiktok';
 import { extractVideoData as extractInstagramVideoData, extractUserPostsData as extractInstagramUserPostsData } from '../mappers/instagram';
+import { getYouTubeSettings, getPublishedAfterDate } from '../utils/youtubeSettings';
 
 class SearchService {
     constructor() {
@@ -41,8 +42,18 @@ class YouTubeSearchStrategy {
     }
     
     async searchVideos(query) {
+        // Get user settings from localStorage
+        const settings = getYouTubeSettings();
+        const publishedAfter = getPublishedAfterDate(settings.publishedFilter);
+        
+        // Prepare options with user settings
+        const searchOptions = {
+            publishedAfter,
+            regionCode: settings.regionCode
+        };
+        
         // Increased from 50 to maximize API efficiency for better sorting
-        const searchResponse = await searchYouTube(query, 50);
+        const searchResponse = await searchYouTube(query, 50, searchOptions);
         
         const videoIds = searchResponse.items
             .map(item => item.id?.videoId)

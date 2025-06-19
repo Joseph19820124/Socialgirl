@@ -12,103 +12,38 @@
     border: 1px solid var(--aurora-border-primary);
     box-shadow: var(--aurora-shadow-elevated);
     backdrop-filter: blur(10px);
+    gap: var(--aurora-space-xs);
 }
 
-.tab {
-    display: flex;
-    align-items: center;
-    gap: var(--aurora-space-sm);
-    padding: var(--aurora-space-md) var(--aurora-space-xl);
-    border: none;
-    background: transparent;
-    color: #ffffff;
-    font-family: 'Roboto', sans-serif;
-    font-weight: 600;
+/* Override aurora-btn-sm when used in tabs to match export buttons */
+.tabs-wrapper .aurora-btn-sm {
+    padding: 8px 16px;
     font-size: 14px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    cursor: pointer;
-    border-radius: var(--aurora-radius-md);
-    transition: all var(--aurora-transition-base);
-    position: relative;
-    overflow: hidden;
 }
 
-.tab::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(145, 70, 255, 0.2), transparent);
-    transition: left 0.5s ease;
+/* Ensure ghost buttons in tabs have proper styling */
+.tabs-wrapper .aurora-btn-ghost {
+    background: transparent;
+    border: 1px solid var(--aurora-border-secondary);
+    color: var(--aurora-text-secondary);
 }
 
-.tab:hover::before {
-    left: 100%;
-}
-
-.tab:hover {
+.tabs-wrapper .aurora-btn-ghost:hover {
     background: rgba(145, 70, 255, 0.1);
-    color: #ffffff;
-    transform: translateY(-1px);
-    box-shadow: var(--aurora-glow-purple);
+    border-color: var(--aurora-purple);
+    color: var(--aurora-text-primary);
 }
 
-.tab.active {
-    background: var(--aurora-gradient-primary);
-    color: #ffffff;
-    font-weight: 700;
-    transform: translateY(-2px);
-    box-shadow: 
-        0 6px 25px rgba(145, 70, 255, 0.4),
-        var(--aurora-glow-cyan);
-}
-
-.tab.active::before {
-    display: none;
-}
-
-.tab.active:hover {
-    background: linear-gradient(135deg, var(--aurora-purple-light) 0%, var(--aurora-cyan-light) 100%);
-    color: #ffffff;
-    transform: translateY(-2px) scale(1.02);
-}
-
-.tab-icon {
-    font-size: 16px;
-    display: flex;
-    align-items: center;
-}
-
-.tab-label {
-    font-size: 12px;
-    font-weight: inherit;
-}
-
-/* Animation for tab switching */
-.tab.active .tab-icon {
-    animation: iconPulse 1s ease-in-out;
-}
-
-@keyframes iconPulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.2); }
-}
+/* Active tab styling - already handled by aurora-btn-primary */
 
 /* Responsive */
 @media (max-width: 768px) {
-    .tab {
-        padding: 10px var(--aurora-space-lg);
-        font-size: 12px;
+    .tabs-wrapper {
+        flex-wrap: wrap;
     }
     
-    .tab-icon {
-        font-size: 14px;
-    }
-    
-    .tab-label {
-        font-size: 10px;
+    .tabs-wrapper .aurora-btn {
+        flex: 1;
+        min-width: 100px;
     }
 }

@@ -1,0 +1,69 @@
+/* YouTube Settings Dialog - extends base dialog styles */
+.youtube-settings-dialog {
+    /* Override default dialog width for settings */
+    min-width: 400px;
+    max-width: 90vw;
+}
+
+.settings-form {
+    margin: var(--aurora-space-xl) 0;
+    text-align: left;
+}
+
+.setting-group {
+    margin-bottom: var(--aurora-space-xl);
+}
+
+.setting-group label {
+    display: block;
+    margin-bottom: var(--aurora-space-sm);
+    color: var(--aurora-text-primary);
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.aurora-select {
+    width: 100%;
+    padding: var(--aurora-space-md) var(--aurora-space-lg);
+    background: var(--aurora-bg-tertiary);
+    border: 1px solid var(--aurora-border-secondary);
+    border-radius: var(--aurora-radius-md);
+    color: var(--aurora-text-primary);
+    font-size: 14px;
+    font-family: inherit;
+    transition: all var(--aurora-transition-fast);
+    cursor: pointer;
+}
+
+.aurora-select:hover {
+    border-color: var(--aurora-cyan);
+    box-shadow: 0 0 0 1px var(--aurora-cyan);
+}
+
+.aurora-select:focus {
+    outline: none;
+    border-color: var(--aurora-cyan);
+    box-shadow: 0 0 0 2px rgba(0, 245, 255, 0.2);
+}
+
+.aurora-select option {
+    background: var(--aurora-bg-secondary);
+    color: var(--aurora-text-primary);
+    padding: var(--aurora-space-sm);
+}
+
+/* Mobile responsive - inherits from base dialog styles */
+@media (max-width: 768px) {
+    .youtube-settings-dialog {
+        min-width: 280px;
+    }
+    
+    .setting-group label {
+        font-size: 13px;
+    }
+    
+    .aurora-select {
+        font-size: 13px;
+        padding: var(--aurora-space-sm) var(--aurora-space-md);
+    }
+}
