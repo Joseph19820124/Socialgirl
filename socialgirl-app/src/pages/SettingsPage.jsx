@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDialog } from '../contexts/DialogContext';
+import { useToast } from '../contexts/ToastContext';
 import { encryptData, decryptData, saveEncryptedSettings, loadEncryptedSettings, clearStoredSettings } from '../utils/encryption';
 import { getAllQuotaStatus, resetQuota } from '../utils/quotaManager';
 import { useApiKeys } from '../contexts/ApiKeyContext';
@@ -8,6 +9,7 @@ import './SettingsPage.css';
 const SettingsPage = () => {
     const { setApiKeys: setContextApiKeys, clearApiKeys } = useApiKeys();
     const { showConfirm } = useDialog();
+    const { showToast, showErrorToast } = useToast();
     const [apiKeys, setApiKeys] = useState({
         youtubeApiKey: '',
         rapidApiKey: ''
@@ -19,8 +21,6 @@ const SettingsPage = () => {
         rapidApiKey: false
     });
     
-    const [message, setMessage] = useState({ text: '', type: '' });
-    const [exportError, setExportError] = useState('');
     const [hasStoredSettings, setHasStoredSettings] = useState(false);
     const [quotaStatus, setQuotaStatus] = useState({});
 
@@ -44,14 +44,10 @@ const SettingsPage = () => {
         if (confirmed) {
             resetQuota(platform);
             refreshQuotaStatus();
-            showMessage(`${platform.toUpperCase()} quota tracking reset successfully`, 'success');
+            showToast(`${platform.toUpperCase()} quota tracking reset successfully`, 'success');
         }
     };
 
-    const showMessage = (text, type = 'info') => {
-        setMessage({ text, type });
-        setTimeout(() => setMessage({ text: '', type: '' }), 5000);
-    };
 
     const handleInputChange = (field, value) => {
         setApiKeys(prev => ({ ...prev, [field]: value }));
@@ -63,13 +59,13 @@ const SettingsPage = () => {
 
     const handleSave = async () => {
         if (!password.trim()) {
-            showMessage('Please enter a password to encrypt your API keys', 'error');
+            showErrorToast('Please enter a password to encrypt your API keys');
             return;
         }
 
         const hasKeys = Object.values(apiKeys).some(key => key.trim());
         if (!hasKeys) {
-            showMessage('Please enter at least one API key', 'error');
+            showErrorToast('Please enter at least one API key');
             return;
         }
 
@@ -83,23 +79,23 @@ const SettingsPage = () => {
             setContextApiKeys(apiKeys);
             
             setHasStoredSettings(true);
-            showMessage('Settings saved successfully!', 'success');
+            showToast('Settings saved successfully!', 'success');
             setPassword('');
         } catch (error) {
             console.error('[Settings] Failed to save settings:', error);
-            showMessage('Failed to save settings: ' + error.message, 'error');
+            showErrorToast('Failed to save settings: ' + error.message);
         }
     };
 
     const handleLoad = async () => {
         if (!password.trim()) {
-            showMessage('Please enter your password to decrypt settings', 'error');
+            showErrorToast('Please enter your password to decrypt settings');
             return;
         }
 
         const stored = loadEncryptedSettings();
         if (!stored) {
-            showMessage('No stored settings found', 'error');
+            showErrorToast('No stored settings found');
             return;
         }
 
@@ -114,71 +110,14 @@ const SettingsPage = () => {
             console.log('[Settings] Storing loaded keys in context for session use');
             setContextApiKeys(decrypted);
             
-            showMessage('Settings loaded successfully!', 'success');
+            showToast('Settings loaded successfully!', 'success');
             setPassword('');
         } catch (error) {
             console.error('[Settings] Failed to load settings:', error);
-            showMessage('Failed to load settings: ' + error.message, 'error');
+            showErrorToast('Failed to load settings: ' + error.message);
         }
     };
 
-    const handleExport = async () => {
-        if (!password.trim()) {
-            setExportError('Error. Enter password');
-            return;
-        }
-        setExportError('');
-
-        const hasKeys = Object.values(apiKeys).some(key => key.trim());
-        if (!hasKeys) {
-            setExportError('Error. No API keys to export');
-            return;
-        }
-
-        try {
-            const encrypted = await encryptData(apiKeys, password);
-            const blob = new Blob([JSON.stringify(encrypted, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'socialgirl-settings.json';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            showMessage('Settings exported successfully!', 'success');
-            setPassword('');
-        } catch (error) {
-            showMessage('Failed to export settings: ' + error.message, 'error');
-        }
-    };
-
-    const handleImport = (event) => {
-        const file = event.target.files[0];
-        if (!file) return;
-
-        const reader = new FileReader();
-        reader.onload = async (e) => {
-            if (!password.trim()) {
-                showMessage('Please enter the password for this settings file', 'error');
-                return;
-            }
-
-            try {
-                const importedData = JSON.parse(e.target.result);
-                const decrypted = await decryptData(importedData, password);
-                setApiKeys(decrypted);
-                saveEncryptedSettings(importedData);
-                setHasStoredSettings(true);
-                showMessage('Settings imported successfully!', 'success');
-                setPassword('');
-            } catch (error) {
-                showMessage('Failed to import settings: ' + error.message, 'error');
-            }
-        };
-        reader.readAsText(file);
-        event.target.value = '';
-    };
 
     const handleClear = async () => {
         const confirmed = await showConfirm(
@@ -201,18 +140,12 @@ const SettingsPage = () => {
             clearApiKeys();
             
             setHasStoredSettings(false);
-            showMessage('All settings cleared', 'success');
+            showToast('All settings cleared', 'success');
         }
     };
 
     return (
         <div className="platform-page">
-            {message.text && (
-                <div className={`message ${message.type}`}>
-                    {message.text}
-                </div>
-            )}
-            
             <div className="settings-grid">
                     <div className="settings-left-column">
                         <div className="settings-section">
@@ -260,14 +193,7 @@ const SettingsPage = () => {
                             </button>
                         </div>
                     </div>
-                        </div>
 
-                        <div className="settings-section">
-                    <h3 className="section-subtitle">Security</h3>
-                    <p className="section-description">
-                        Set a password to encrypt your API keys. This password is required to save, load, or export your settings.
-                    </p>
-                    
                     <div className="form-group">
                         <label>Encryption Password</label>
                         <input
@@ -277,10 +203,6 @@ const SettingsPage = () => {
                             placeholder="Enter password for encryption"
                         />
                     </div>
-                </div>
-
-                <div className="settings-section">
-                    <h3 className="section-subtitle">Actions</h3>
                     
                     <div className="button-group-compact">
                         <button onClick={handleSave} className="aurora-btn aurora-btn-primary aurora-btn-sm">
@@ -297,26 +219,6 @@ const SettingsPage = () => {
                         
                         <span className="button-separator">•</span>
                         
-                        <div className="export-button-wrapper">
-                            <button onClick={handleExport} className="aurora-btn aurora-btn-surface aurora-btn-sm">
-                                Export
-                            </button>
-                            {exportError && <div className="export-error">{exportError}</div>}
-                        </div>
-                        
-                        <button onClick={() => document.getElementById('import-file-input').click()} className="aurora-btn aurora-btn-surface aurora-btn-sm">
-                            Import
-                        </button>
-                        <input
-                            id="import-file-input"
-                            type="file"
-                            accept=".json"
-                            onChange={handleImport}
-                            style={{ display: 'none' }}
-                        />
-                        
-                        <span className="button-separator">•</span>
-                        
                         <button 
                             onClick={handleClear} 
                             className="aurora-btn aurora-btn-danger aurora-btn-sm"
@@ -325,16 +227,6 @@ const SettingsPage = () => {
                             Clear All
                         </button>
                     </div>
-                </div>
-
-                        <div className="settings-info">
-                            <h3 className="section-subtitle">How It Works</h3>
-                            <ul>
-                                <li><strong>Save Settings:</strong> Encrypts and stores your API keys locally in your browser</li>
-                                <li><strong>Export Settings:</strong> Downloads an encrypted file you can use on other browsers/devices</li>
-                                <li><strong>Import Settings:</strong> Upload a previously exported settings file</li>
-                                <li><strong>Security:</strong> All data is encrypted with your password and never leaves your control</li>
-                            </ul>
                         </div>
                     </div>
 

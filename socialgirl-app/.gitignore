@@ -22,3 +22,12 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Test coverage
+coverage/
+coverage_output.txt
+full_output.txt
+
+# Test directories
+src/__tests__/
+src/test/
