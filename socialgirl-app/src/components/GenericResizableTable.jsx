@@ -10,6 +10,7 @@ import '../styles/components/DataVisualization.css';
 import '../styles/performance.css';
 
 const GenericResizableTable = ({ data, isLoading, columns, cellRenderers, skeletonComponents, tableId = 'default', onSelectionChange }) => {
+
     // Initialize sort config from localStorage or default
     const [sortConfig, setSortConfig] = useState(() => {
         const stored = getStoredSortConfig(tableId);
@@ -238,6 +239,36 @@ const GenericResizableTable = ({ data, isLoading, columns, cellRenderers, skelet
                         <span className="about">{value || ''}</span>
                     </AuroraTooltip>
                 );
+            case 'published': {
+                // Format the published date
+                if (!value) return '';
+                const date = new Date(value);
+                const now = new Date();
+                const diffTime = Math.abs(now - date);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                let displayText;
+                if (diffDays === 1) {
+                    displayText = '1 day ago';
+                } else if (diffDays < 7) {
+                    displayText = `${diffDays} days ago`;
+                } else if (diffDays < 30) {
+                    const weeks = Math.floor(diffDays / 7);
+                    displayText = weeks === 1 ? '1 week ago' : `${weeks} weeks ago`;
+                } else if (diffDays < 365) {
+                    const months = Math.floor(diffDays / 30);
+                    displayText = months === 1 ? '1 month ago' : `${months} months ago`;
+                } else {
+                    const years = Math.floor(diffDays / 365);
+                    displayText = years === 1 ? '1 year ago' : `${years} years ago`;
+                }
+
+                return (
+                    <AuroraTooltip content={date.toLocaleDateString()}>
+                        <span className="published">{displayText}</span>
+                    </AuroraTooltip>
+                );
+            }
             case 'performance': {
                 // Use ProgressBar for performance visualization
                 return <ProgressBar value={value || 0} max={100} />;
@@ -302,19 +333,43 @@ const GenericResizableTable = ({ data, isLoading, columns, cellRenderers, skelet
     };
 
 
+    // Calculate paginated data
+    const paginatedData = sortedData.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+    );
+
+    // Determine if scroll is needed - only show scroll when there are more than 15 rows displayed
+    const needsScroll = paginatedData.length > 15;
+
+
+
     if (isLoading) {
         return (
             <div className="table-wrapper">
-                <table ref={tableRef}>
+                <table ref={tableRef} style={{ tableLayout: 'fixed' }}>
                     <thead>
                         <tr>
-                            {columns.map((column) => (
-                                <th 
-                                    key={column.key} 
-                                    className={`${column.key}-col`}
+                            {columns.map((column, index) => (
+                                <th
+                                    key={column.key}
+                                    className={`${column.key}-col ${getHeaderClass(column.key)}`}
+                                    onClick={column.sortable !== false ? () => handleSort(column.key) : undefined}
+                                    style={{
+                                        ...(resizedColumns.has(column.key) && { width: `${columnWidths[column.key]}px` }),
+                                        textAlign: column.align,
+                                        cursor: column.sortable !== false ? (isSorting ? 'wait' : 'pointer') : 'default'
+                                    }}
                                     data-column={column.key}
+                                    title={column.sortable !== false ? `Click to sort by ${column.label}` : undefined}
                                 >
                                     {column.label}
+                                    {index < columns.length - 1 && (
+                                        <div
+                                            className="resize-handle"
+                                            onMouseDown={(e) => handleMouseDown(e, column.key)}
+                                        />
+                                    )}
                                 </th>
                             ))}
                         </tr>
@@ -323,7 +378,11 @@ const GenericResizableTable = ({ data, isLoading, columns, cellRenderers, skelet
                         {[...Array(5)].map((_, index) => (
                             <tr key={index}>
                                 {columns.map((column) => (
-                                    <td key={column.key} className={`${column.key}-col`}>
+                                    <td
+                                        key={column.key}
+                                        className={`${column.key}-col`}
+                                        style={{ textAlign: column.align }}
+                                    >
                                         {renderSkeletonCell(column)}
                                     </td>
                                 ))}
@@ -334,20 +393,13 @@ const GenericResizableTable = ({ data, isLoading, columns, cellRenderers, skelet
             </div>
         );
     }
-
-    // Calculate paginated data
-    const paginatedData = sortedData.slice(
-        (currentPage - 1) * itemsPerPage,
-        currentPage * itemsPerPage
-    );
-
-    // Determine if scroll is needed
-    const needsScroll = paginatedData.length > 0 && itemsPerPage > 15;
     
+    const wrapperClasses = `table-wrapper ${needsScroll ? 'needs-scroll' : ''}`;
+
     return (
         <>
-            <div className={`table-wrapper ${needsScroll ? 'needs-scroll' : ''}`}>
-                <table ref={tableRef}>
+            <div className={wrapperClasses}>
+                <table ref={tableRef} style={{ tableLayout: 'fixed' }}>
                     <thead>
                         <tr>
                             {columns.map((column, index) => (

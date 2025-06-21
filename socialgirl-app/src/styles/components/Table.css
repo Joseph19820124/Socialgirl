@@ -3,10 +3,10 @@
 .table-wrapper {
     background: var(--aurora-gradient-dark);
     border-radius: var(--aurora-radius-xl);
-    overflow-x: hidden;
+    overflow-x: auto;
     overflow-y: hidden;
     max-height: 70vh;
-    box-shadow: 
+    box-shadow:
         0 12px 40px rgba(0, 0, 0, 0.6),
         0 0 80px rgba(0, 245, 255, 0.05),
         inset 0 0 120px rgba(145, 70, 255, 0.03);
@@ -59,8 +59,13 @@
 
 table {
     width: 100%;
+    min-width: 900px;
     border-collapse: collapse;
-    table-layout: fixed;
+    table-layout: auto;
+    background: transparent;
+    font-family: 'Roboto', sans-serif;
+    position: relative;
+    z-index: var(--z-content);
 }
 
 th {
@@ -212,6 +217,71 @@ th:last-child {
     border-right: none;
 }
 
+/* Resize Handle Styles */
+.resize-handle {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 4px;
+    height: 100%;
+    background: transparent;
+    cursor: col-resize;
+    user-select: none;
+    z-index: var(--z-hover);
+    transition: all 0.2s ease;
+    transform: translateZ(0); /* Force GPU layer */
+    backface-visibility: hidden;
+}
+
+.resize-handle:hover {
+    background: linear-gradient(180deg, var(--aurora-purple) 0%, var(--aurora-cyan) 100%);
+    box-shadow: 0 0 8px rgba(145, 70, 255, 0.6);
+    width: 6px;
+}
+
+.resize-handle:active {
+    background: linear-gradient(180deg, var(--aurora-purple-light) 0%, var(--aurora-cyan-light) 100%);
+    box-shadow: 0 0 12px rgba(145, 70, 255, 0.8);
+}
+
+/* Table resizing states - Performance optimized */
+.table-wrapper.resizing {
+    user-select: none;
+}
+
+.table-wrapper.resizing th {
+    cursor: col-resize;
+}
+
+/* Performance optimization: Disable transitions during resize */
+table.resizing th,
+table.resizing td {
+    transition: none !important;
+}
+
+/* Smooth width transitions when not actively resizing */
+th:not(.resizing) {
+    transition: width 0.2s ease;
+}
+
+td:not(.resizing) {
+    transition: width 0.2s ease;
+}
+
+/* Visual feedback during resize */
+body.col-resizing {
+    cursor: col-resize !important;
+}
+
+body.col-resizing * {
+    cursor: col-resize !important;
+}
+
+/* Performance: Contain layout during resize */
+table.resizing {
+    contain: layout style;
+}
+
 td {
     padding: 10px;
     border-bottom: 1px solid var(--aurora-border-secondary);
@@ -346,20 +416,28 @@ tr.selected:hover td {
     min-width: 90px;
 }
 
-.followers-col { 
-    text-align: right; 
+.followers-col {
+    text-align: right;
     width: 70px;
     min-width: 70px;
-    font-family: 'Courier New', monospace;
-    font-weight: 500;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 600;
 }
 
-.views-col, .comments-col, .shares-col, .likes-col { 
-    text-align: right; 
+.views-col {
+    text-align: right;
+    width: 85px;
+    min-width: 85px;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 600;
+}
+
+.comments-col, .shares-col, .likes-col {
+    text-align: right;
     width: 70px;
     min-width: 70px;
-    font-family: 'Courier New', monospace;
-    font-weight: 500;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 600;
 }
 
 .title-col { 
@@ -374,10 +452,18 @@ tr.selected:hover td {
     min-width: 85px;
 }
 
-.performance-col {
-    width: 80px;
-    max-width: 80px;
+.published-col {
+    text-align: center;
+    width: 90px;
     min-width: 80px;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+}
+
+.performance-col {
+    width: 110px;
+    max-width: 110px;
+    min-width: 110px;
     text-align: center;
 }
 
@@ -440,6 +526,16 @@ tr.selected:hover td {
     text-shadow: 0 0 4px rgba(0, 245, 255, 0.3);
 }
 
+.published {
+    font-weight: 600;
+    color: var(--aurora-text-secondary);
+    font-family: 'Roboto', sans-serif;
+    font-size: 11px;
+    white-space: nowrap;
+    transition: color var(--aurora-transition-fast);
+    display: inline-block;
+}
+
 /* Enhanced stat hover effects */
 tr:hover .followers,
 tr:hover .views,
@@ -476,11 +572,15 @@ tr:hover .media {
     color: var(--aurora-purple-light);
 }
 
+tr:hover .published {
+    color: var(--aurora-text-primary);
+}
+
 .title {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    font-weight: 500;
+    font-weight: 600;
     color: var(--aurora-text-secondary);
     transition: color var(--aurora-transition-fast);
     display: block;
@@ -668,9 +768,19 @@ tr:hover .title {
         max-width: 180px;
     }
     
-    .url-col { 
+    .url-col {
         width: 70px;
         min-width: 75px;
+    }
+
+    .published-col {
+        width: 80px;
+        min-width: 80px;
+    }
+
+    /* Disable resize handles on mobile */
+    .resize-handle {
+        display: none;
     }
 }
 

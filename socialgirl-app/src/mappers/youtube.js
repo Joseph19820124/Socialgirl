@@ -33,7 +33,7 @@ export function extractVideoData(apiResponse) {
             comments: parseInt(item.statistics?.commentCount) || 0,
             performance: performance,
             url: `https://youtube.com/watch?v=${videoId}`,
-            publishedAt: item.snippet.publishedAt
+            published: item.snippet.publishedAt
         };
     });
 }
