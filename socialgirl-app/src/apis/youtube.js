@@ -1,15 +1,8 @@
-import { getApiKey } from '../utils/apiKeyManager';
+import { apiClient, API_CONFIG } from '../config/api';
 import { trackOperation, canPerformOperation } from '../utils/quotaManager';
 
-const BASE_URL = 'https://www.googleapis.com/youtube/v3';
-
-// Get API key from storage or environment
-async function getYouTubeApiKey() {
-    return await getApiKey('youtubeApiKey', 'VITE_YOUTUBE_API_KEY');
-}
-
 /**
- * Fetch video data from YouTube API
+ * Fetch video data from YouTube API via backend
  * @param {string} videoId - YouTube video ID
  * @returns {Promise<Object>} Video data response
  */
@@ -20,35 +13,27 @@ async function getVideoData(videoId) {
         throw new Error('YouTube API quota exceeded. Please try again tomorrow.');
     }
     
-    const apiKey = await getYouTubeApiKey();
-    if (!apiKey) {
-        throw new Error('YouTube API key not found. Please configure it in Settings.');
+    try {
+        const result = await apiClient.get(API_CONFIG.ENDPOINTS.YOUTUBE.VIDEO_DETAILS, {
+            pathParams: { videoId }
+        });
+        
+        console.log(`[YouTube API] Video data retrieved:`, {
+            hasItems: !!result.items,
+            itemCount: result.items?.length || 0,
+            videoTitle: result.items?.[0]?.snippet?.title
+        });
+        
+        trackOperation('youtube', 'videos');
+        return result;
+    } catch (error) {
+        console.error(`[YouTube API] Error fetching video data:`, error.message);
+        throw new Error(`YouTube API error: ${error.message}`);
     }
-    const url = `${BASE_URL}/videos?part=snippet,statistics&id=${videoId}&key=${apiKey}`;
-    console.log(`[YouTube API] Making request to: ${url.replace(apiKey, 'API_KEY_HIDDEN')}`);
-    
-    const response = await fetch(url);
-    console.log(`[YouTube API] Response status: ${response.status} ${response.statusText}`);
-    
-    if (!response.ok) {
-        const errorText = await response.text();
-        console.error(`[YouTube API] Error response body:`, errorText);
-        throw new Error(`YouTube API error: ${response.status} - ${errorText}`);
-    }
-    
-    const result = await response.json();
-    console.log(`[YouTube API] Video data retrieved:`, {
-        hasItems: !!result.items,
-        itemCount: result.items?.length || 0,
-        videoTitle: result.items?.[0]?.snippet?.title
-    });
-    
-    trackOperation('youtube', 'videos');
-    return result;
 }
 
 /**
- * Fetch channel data from YouTube API
+ * Fetch channel data from YouTube API via backend
  * @param {string} channelId - YouTube channel ID
  * @returns {Promise<Object>} Channel data response
  */
@@ -59,35 +44,27 @@ async function getChannelData(channelId) {
         throw new Error('YouTube API quota exceeded. Please try again tomorrow.');
     }
     
-    const apiKey = await getYouTubeApiKey();
-    if (!apiKey) {
-        throw new Error('YouTube API key not found. Please configure it in Settings.');
+    try {
+        const result = await apiClient.get(API_CONFIG.ENDPOINTS.YOUTUBE.SEARCH_CHANNELS, {
+            params: { channelId }
+        });
+        
+        console.log(`[YouTube API] Channel data retrieved:`, {
+            hasItems: !!result.items,
+            itemCount: result.items?.length || 0,
+            channelTitle: result.items?.[0]?.snippet?.title
+        });
+        
+        trackOperation('youtube', 'channels');
+        return result;
+    } catch (error) {
+        console.error(`[YouTube API] Error fetching channel data:`, error.message);
+        throw new Error(`YouTube API error: ${error.message}`);
     }
-    const url = `${BASE_URL}/channels?part=snippet,statistics&id=${channelId}&key=${apiKey}`;
-    console.log(`[YouTube API] Making request to: ${url.replace(apiKey, 'API_KEY_HIDDEN')}`);
-    
-    const response = await fetch(url);
-    console.log(`[YouTube API] Response status: ${response.status} ${response.statusText}`);
-    
-    if (!response.ok) {
-        const errorText = await response.text();
-        console.error(`[YouTube API] Error response body:`, errorText);
-        throw new Error(`YouTube API error: ${response.status} - ${errorText}`);
-    }
-    
-    const result = await response.json();
-    console.log(`[YouTube API] Channel data retrieved:`, {
-        hasItems: !!result.items,
-        itemCount: result.items?.length || 0,
-        channelTitle: result.items?.[0]?.snippet?.title
-    });
-    
-    trackOperation('youtube', 'channels');
-    return result;
 }
 
 /**
- * Search for videos by query
+ * Search for videos by query via backend
  * @param {string} query - Search query
  * @param {number} maxResults - Maximum results to return (default: 10)
  * @param {Object} options - Additional search options
@@ -104,58 +81,54 @@ async function searchVideos(query, maxResults = 10, options = {}) {
         throw new Error('YouTube API quota exceeded. Please try again tomorrow.');
     }
     
-    const apiKey = await getYouTubeApiKey();
-    if (!apiKey) {
-        throw new Error('YouTube API key not found. Please configure it in Settings.');
+    try {
+        // Default options
+        const {
+            order = 'viewCount',
+            publishedAfter = null,
+            regionCode = null
+        } = options;
+        
+        // Calculate date 7 days ago if no publishedAfter is provided
+        let publishedAfterISO = publishedAfter;
+        if (!publishedAfterISO) {
+            const pastDate = new Date();
+            pastDate.setDate(pastDate.getDate() - 7);
+            publishedAfterISO = pastDate.toISOString();
+        }
+        
+        const params = {
+            query,
+            maxResults,
+            order,
+            publishedAfter: publishedAfterISO
+        };
+        
+        if (regionCode) {
+            params.regionCode = regionCode;
+        }
+        
+        const result = await apiClient.get(API_CONFIG.ENDPOINTS.YOUTUBE.SEARCH_VIDEOS, {
+            params
+        });
+        
+        console.log(`[YouTube API] Search response:`, {
+            hasItems: !!result.items,
+            itemCount: result.items?.length || 0,
+            nextPageToken: result.nextPageToken,
+            totalResults: result.pageInfo?.totalResults
+        });
+        
+        trackOperation('youtube', 'search');
+        return result;
+    } catch (error) {
+        console.error(`[YouTube API] Error searching videos:`, error.message);
+        throw new Error(`YouTube API error: ${error.message}`);
     }
-    
-    // Default options
-    const {
-        order = 'viewCount',
-        publishedAfter = null,
-        regionCode = null
-    } = options;
-    
-    // Calculate date 7 days ago if no publishedAfter is provided
-    let publishedAfterISO = publishedAfter;
-    if (!publishedAfterISO) {
-        const pastDate = new Date();
-        pastDate.setDate(pastDate.getDate() - 7);
-        publishedAfterISO = pastDate.toISOString();
-    }
-    
-    let url = `${BASE_URL}/search?part=snippet&q=${encodeURIComponent(query)}&type=video&order=${order}&publishedAfter=${publishedAfterISO}&maxResults=${maxResults}&key=${apiKey}`;
-    
-    // Add regionCode if provided
-    if (regionCode) {
-        url += `&regionCode=${regionCode}`;
-    }
-    
-    console.log(`[YouTube API] Making request to: ${url.replace(apiKey, 'API_KEY_HIDDEN')}`);
-    
-    const response = await fetch(url);
-    console.log(`[YouTube API] Response status: ${response.status} ${response.statusText}`);
-    
-    if (!response.ok) {
-        const errorText = await response.text();
-        console.error(`[YouTube API] Error response body:`, errorText);
-        throw new Error(`YouTube API error: ${response.status} - ${errorText}`);
-    }
-    
-    const result = await response.json();
-    console.log(`[YouTube API] Search response:`, {
-        hasItems: !!result.items,
-        itemCount: result.items?.length || 0,
-        nextPageToken: result.nextPageToken,
-        totalResults: result.pageInfo?.totalResults
-    });
-    
-    trackOperation('youtube', 'search');
-    return result;
 }
 
 /**
- * Fetch statistics for multiple videos
+ * Fetch statistics for multiple videos via backend
  * @param {Array<string>} videoIds - Array of video IDs
  * @returns {Promise<Object>} Videos with statistics
  */
@@ -171,38 +144,31 @@ async function getVideosStatistics(videoIds) {
         throw new Error('YouTube API quota exceeded. Please try again tomorrow.');
     }
     
-    const apiKey = await getYouTubeApiKey();
-    if (!apiKey) {
-        throw new Error('YouTube API key not found. Please configure it in Settings.');
+    try {
+        const result = await apiClient.get(API_CONFIG.ENDPOINTS.YOUTUBE.SEARCH_VIDEOS, {
+            params: { 
+                videoIds: videoIds.join(','),
+                part: 'snippet,statistics'
+            }
+        });
+        
+        console.log(`[YouTube API] Videos statistics retrieved:`, {
+            hasItems: !!result.items,
+            itemCount: result.items?.length || 0,
+            requestedCount: videoIds.length,
+            matchRate: `${((result.items?.length || 0) / videoIds.length * 100).toFixed(1)}%`
+        });
+        
+        trackOperation('youtube', 'videos', videoIds.length);
+        return result;
+    } catch (error) {
+        console.error(`[YouTube API] Error fetching videos statistics:`, error.message);
+        throw new Error(`YouTube API error: ${error.message}`);
     }
-    
-    const url = `${BASE_URL}/videos?part=snippet,statistics&id=${videoIds.join(',')}&key=${apiKey}`;
-    console.log(`[YouTube API] Making request to: ${url.replace(apiKey, 'API_KEY_HIDDEN')}`);
-    console.log(`[YouTube API] Fetching statistics for video IDs:`, videoIds.slice(0, 5), videoIds.length > 5 ? `... and ${videoIds.length - 5} more` : '');
-    
-    const response = await fetch(url);
-    console.log(`[YouTube API] Response status: ${response.status} ${response.statusText}`);
-    
-    if (!response.ok) {
-        const errorText = await response.text();
-        console.error(`[YouTube API] Error response body:`, errorText);
-        throw new Error(`YouTube API error: ${response.status} - ${errorText}`);
-    }
-    
-    const result = await response.json();
-    console.log(`[YouTube API] Videos statistics retrieved:`, {
-        hasItems: !!result.items,
-        itemCount: result.items?.length || 0,
-        requestedCount: videoIds.length,
-        matchRate: `${((result.items?.length || 0) / videoIds.length * 100).toFixed(1)}%`
-    });
-    
-    trackOperation('youtube', 'videos', videoIds.length);
-    return result;
 }
 
 /**
- * Get channel ID from channel handle (@username)
+ * Get channel ID from channel handle (@username) via backend
  * @param {string} handle - Channel handle (with or without @)
  * @returns {Promise<string|null>} Channel ID or null if not found
  */
@@ -213,50 +179,40 @@ async function getChannelByHandle(handle) {
         throw new Error('YouTube API quota exceeded. Please try again tomorrow.');
     }
     
-    const apiKey = await getYouTubeApiKey();
-    if (!apiKey) {
-        throw new Error('YouTube API key not found. Please configure it in Settings.');
-    }
-    
-    // Clean handle - remove @ if present and trim whitespace
-    const cleanHandle = handle.replace('@', '').trim();
-    if (!cleanHandle) {
-        throw new Error('Invalid channel handle provided.');
-    }
-    console.log(`[YouTube API] Cleaned handle: ${cleanHandle}`);
-    
-    // Search for the channel by handle
-    const url = `${BASE_URL}/search?part=snippet&q=${encodeURIComponent(cleanHandle)}&type=channel&maxResults=1&key=${apiKey}`;
-    console.log(`[YouTube API] Making request to: ${url.replace(apiKey, 'API_KEY_HIDDEN')}`);
-    
-    const response = await fetch(url);
-    console.log(`[YouTube API] Response status: ${response.status} ${response.statusText}`);
-    
-    if (!response.ok) {
-        const errorText = await response.text();
-        console.error(`[YouTube API] Error response body:`, errorText);
-        throw new Error(`YouTube API error: ${response.status} - ${errorText}`);
-    }
-    
-    trackOperation('youtube', 'search');
-    const data = await response.json();
-    
-    if (data.items && data.items.length > 0) {
-        const channelId = data.items[0].id.channelId;
-        console.log(`[YouTube API] Channel found:`, {
-            channelId: channelId,
-            channelTitle: data.items[0].snippet?.title,
-            channelHandle: data.items[0].snippet?.customUrl
+    try {
+        // Clean handle - remove @ if present and trim whitespace
+        const cleanHandle = handle.replace('@', '').trim();
+        if (!cleanHandle) {
+            throw new Error('Invalid channel handle provided.');
+        }
+        console.log(`[YouTube API] Cleaned handle: ${cleanHandle}`);
+        
+        const result = await apiClient.get(API_CONFIG.ENDPOINTS.YOUTUBE.SEARCH_CHANNELS, {
+            params: { handle: cleanHandle }
         });
-        return channelId;
+        
+        trackOperation('youtube', 'search');
+        
+        if (result.items && result.items.length > 0) {
+            const channelId = result.items[0].id.channelId;
+            console.log(`[YouTube API] Channel found:`, {
+                channelId: channelId,
+                channelTitle: result.items[0].snippet?.title,
+                channelHandle: result.items[0].snippet?.customUrl
+            });
+            return channelId;
+        }
+        
+        console.log(`[YouTube API] No channel found for handle: ${cleanHandle}`);
+        return null;
+    } catch (error) {
+        console.error(`[YouTube API] Error getting channel by handle:`, error.message);
+        throw new Error(`YouTube API error: ${error.message}`);
     }
-    
-    console.log(`[YouTube API] No channel found for handle: ${cleanHandle}`);
-    return null;
 }
 
 /**
- * Fetch recent videos from a channel
+ * Fetch recent videos from a channel via backend
  * @param {string} channelId - YouTube channel ID
  * @param {number} maxResults - Maximum results to return (default: 20)
  * @param {Object} options - Additional options
@@ -271,53 +227,29 @@ async function getChannelVideos(channelId, maxResults = 20, options = {}) {
         throw new Error('YouTube API quota exceeded. Please try again tomorrow.');
     }
     
-    const apiKey = await getYouTubeApiKey();
-    if (!apiKey) {
-        throw new Error('YouTube API key not found. Please configure it in Settings.');
+    try {
+        const { order = 'date' } = options;
+        
+        const result = await apiClient.get(API_CONFIG.ENDPOINTS.YOUTUBE.CHANNEL_VIDEOS, {
+            pathParams: { channelId },
+            params: { maxResults, order }
+        });
+        
+        console.log(`[YouTube API] Channel videos retrieved:`, {
+            hasItems: !!result.items,
+            itemCount: result.items?.length || 0
+        });
+        
+        trackOperation('youtube', 'search');
+        return result;
+    } catch (error) {
+        console.error(`[YouTube API] Error fetching channel videos:`, error.message);
+        throw new Error(`YouTube API error: ${error.message}`);
     }
-    
-    const { order = 'date' } = options;
-    
-    // Search for videos from the specific channel with specified ordering
-    const url = `${BASE_URL}/search?part=snippet&channelId=${channelId}&type=video&order=${order}&maxResults=${maxResults}&key=${apiKey}`;
-    console.log(`[YouTube API] Making request to: ${url.replace(apiKey, 'API_KEY_HIDDEN')}`);
-    
-    const response = await fetch(url);
-    console.log(`[YouTube API] Response status: ${response.status} ${response.statusText}`);
-    
-    if (!response.ok) {
-        const errorText = await response.text();
-        console.error(`[YouTube API] Error response body:`, errorText);
-        throw new Error(`YouTube API error: ${response.status} - ${errorText}`);
-    }
-    
-    trackOperation('youtube', 'search');
-    const searchData = await response.json();
-    console.log(`[YouTube API] Channel search results:`, {
-        hasItems: !!searchData.items,
-        itemCount: searchData.items?.length || 0,
-        channelTitle: searchData.items?.[0]?.snippet?.channelTitle
-    });
-    
-    // Get video IDs to fetch statistics
-    const videoIds = searchData.items
-        .map(item => item.id?.videoId)
-        .filter(id => id);
-    
-    if (videoIds.length === 0) {
-        console.log(`[YouTube API] No video IDs found in search results`);
-        return { items: [] };
-    }
-    
-    console.log(`[YouTube API] Fetching statistics for ${videoIds.length} videos from channel`);
-    
-    // Fetch detailed statistics for the videos
-    const videosWithStats = await getVideosStatistics(videoIds);
-    return videosWithStats;
 }
 
 /**
- * Fetch videos from a channel using handle (@username)
+ * Fetch videos from a channel using handle (@username) via backend
  * @param {string} handle - Channel handle (with or without @)
  * @param {number} maxResults - Maximum results to return (default: 20)
  * @param {Object} options - Additional options passed to getChannelVideos
@@ -326,14 +258,19 @@ async function getChannelVideos(channelId, maxResults = 20, options = {}) {
 async function getChannelVideosByHandle(handle, maxResults = 20, options = {}) {
     console.log(`[YouTube API] Starting getChannelVideosByHandle for handle: ${handle}`);
     
-    const channelId = await getChannelByHandle(handle);
-    if (!channelId) {
-        console.error(`[YouTube API] Channel not found for handle: ${handle}`);
-        throw new Error(`Channel not found for handle: ${handle}`);
+    try {
+        const channelId = await getChannelByHandle(handle);
+        if (!channelId) {
+            console.error(`[YouTube API] Channel not found for handle: ${handle}`);
+            throw new Error(`Channel not found for handle: ${handle}`);
+        }
+        
+        console.log(`[YouTube API] Found channel ID: ${channelId}, fetching videos...`);
+        return await getChannelVideos(channelId, maxResults, options);
+    } catch (error) {
+        console.error(`[YouTube API] Error fetching channel videos by handle:`, error.message);
+        throw new Error(`YouTube API error: ${error.message}`);
     }
-    
-    console.log(`[YouTube API] Found channel ID: ${channelId}, fetching videos...`);
-    return await getChannelVideos(channelId, maxResults, options);
 }
 
 export {

@@ -1,17 +1,8 @@
-import { getApiKey } from '../utils/apiKeyManager';
+import { apiClient, API_CONFIG } from '../config/api';
 import { trackOperation, canPerformOperation } from '../utils/quotaManager';
 
-// Get API key from storage or environment
-async function getRapidApiKey() {
-    return await getApiKey('rapidApiKey', 'VITE_RAPIDAPI_KEY');
-}
-
-// TikTok RapidAPI configuration
-const RAPIDAPI_HOST = 'tiktok-api23.p.rapidapi.com';
-const BASE_URL = `https://${RAPIDAPI_HOST}/api`;
-
 /**
- * Search TikTok content by keyword using general search
+ * Search TikTok content by keyword using general search via backend
  * @param {string} keyword - Search keyword
  * @param {number} cursor - Pagination cursor (default: 0)
  * @param {number} searchId - Search ID (default: 0)
@@ -24,56 +15,39 @@ async function searchVideos(keyword, cursor = 0, searchId = 0) {
         throw new Error('TikTok API quota exceeded. Please try again next month.');
     }
     
-    const apiKey = await getRapidApiKey();
-    
-    if (!apiKey) {
-        throw new Error('RapidAPI key not found. Please configure it in Settings.');
-    }
-    
-    const url = `${BASE_URL}/search/general?keyword=${encodeURIComponent(keyword)}&cursor=${cursor}&search_id=${searchId}`;
-    console.log(`[TikTok API] Making request to: ${url}`);
-    
-    const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-            'x-rapidapi-key': apiKey,
-            'x-rapidapi-host': RAPIDAPI_HOST
+    try {
+        const result = await apiClient.get(API_CONFIG.ENDPOINTS.TIKTOK.SEARCH_VIDEOS, {
+            params: { keyword, cursor, search_id: searchId }
+        });
+        
+        console.log(`[TikTok API] Search response structure:`, {
+            hasData: !!result,
+            dataType: typeof result,
+            hasDataArray: Array.isArray(result.data),
+            dataLength: result.data?.length || 0,
+            sampleKeys: result && typeof result === 'object' ? Object.keys(result).slice(0, 5) : null
+        });
+        
+        if (result.data) {
+            console.log(`[TikTok API] Found ${result.data.length} items in search response`);
+            if (result.data.length > 0 && result.data[0]) {
+                console.log(`[TikTok API] Sample item structure:`, {
+                    hasItem: !!result.data[0].item,
+                    itemKeys: result.data[0].item ? Object.keys(result.data[0].item).slice(0, 5) : null
+                });
+            }
         }
-    });
-    
-    console.log(`[TikTok API] Response status: ${response.status} ${response.statusText}`);
-    
-    if (!response.ok) {
-        const errorText = await response.text();
-        console.error(`[TikTok API] Error response body:`, errorText);
-        throw new Error(`TikTok API error: ${response.status} - ${errorText}`);
+        
+        trackOperation('tiktok', 'request');
+        return result;
+    } catch (error) {
+        console.error(`[TikTok API] Error searching videos:`, error.message);
+        throw new Error(`TikTok API error: ${error.message}`);
     }
-    
-    const result = await response.json();
-    console.log(`[TikTok API] Search response structure:`, {
-        hasData: !!result,
-        dataType: typeof result,
-        hasDataArray: Array.isArray(result.data),
-        dataLength: result.data?.length || 0,
-        sampleKeys: result && typeof result === 'object' ? Object.keys(result).slice(0, 5) : null
-    });
-    
-    if (result.data) {
-        console.log(`[TikTok API] Found ${result.data.length} items in search response`);
-        if (result.data.length > 0 && result.data[0]) {
-            console.log(`[TikTok API] Sample item structure:`, {
-                hasItem: !!result.data[0].item,
-                itemKeys: result.data[0].item ? Object.keys(result.data[0].item).slice(0, 5) : null
-            });
-        }
-    }
-    
-    trackOperation('tiktok', 'request');
-    return result;
 }
 
 /**
- * Get TikTok user info including secUid
+ * Get TikTok user info including secUid via backend
  * @param {string} uniqueId - TikTok username (uniqueId)
  * @returns {Promise<Object>} User info response with secUid
  */
@@ -84,45 +58,28 @@ async function getUserInfo(uniqueId) {
         throw new Error('TikTok API quota exceeded. Please try again next month.');
     }
     
-    const apiKey = await getRapidApiKey();
-    
-    if (!apiKey) {
-        throw new Error('RapidAPI key not found. Please configure it in Settings.');
+    try {
+        const result = await apiClient.get(API_CONFIG.ENDPOINTS.TIKTOK.USER_INFO, {
+            pathParams: { username: uniqueId }
+        });
+        
+        console.log(`[TikTok API] User info retrieved:`, {
+            hasUserInfo: !!result.userInfo,
+            hasUser: !!result.userInfo?.user,
+            username: result.userInfo?.user?.uniqueId,
+            secUid: result.userInfo?.user?.secUid
+        });
+        
+        trackOperation('tiktok', 'request');
+        return result;
+    } catch (error) {
+        console.error(`[TikTok API] Error fetching user info:`, error.message);
+        throw new Error(`TikTok API error: ${error.message}`);
     }
-    
-    const url = `${BASE_URL}/user/info?uniqueId=${uniqueId}`;
-    console.log(`[TikTok API] Making request to: ${url}`);
-    
-    const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-            'x-rapidapi-key': apiKey,
-            'x-rapidapi-host': RAPIDAPI_HOST
-        }
-    });
-    
-    console.log(`[TikTok API] Response status: ${response.status} ${response.statusText}`);
-    
-    if (!response.ok) {
-        const errorText = await response.text();
-        console.error(`[TikTok API] Error response body:`, errorText);
-        throw new Error(`TikTok API error: ${response.status} - ${errorText}`);
-    }
-    
-    const result = await response.json();
-    console.log(`[TikTok API] User info retrieved:`, {
-        hasUserInfo: !!result.userInfo,
-        hasUser: !!result.userInfo?.user,
-        username: result.userInfo?.user?.uniqueId,
-        secUid: result.userInfo?.user?.secUid
-    });
-    
-    trackOperation('tiktok', 'request');
-    return result;
 }
 
 /**
- * Get TikTok user's popular posts
+ * Get TikTok user's popular posts via backend
  * @param {string} secUid - User's secure ID from getUserInfo
  * @param {number} count - Number of posts to fetch (default: 35)
  * @param {number} cursor - Pagination cursor (default: 0)
@@ -135,58 +92,35 @@ async function getUserPopularPosts(secUid, count = 35, cursor = 0) {
         throw new Error('TikTok API quota exceeded. Please try again next month.');
     }
     
-    const apiKey = await getRapidApiKey();
-    
-    if (!apiKey) {
-        throw new Error('RapidAPI key not found. Please configure it in Settings.');
-    }
-    
-    const url = `${BASE_URL}/user/popular-posts?secUid=${secUid}&count=${count}&cursor=${cursor}`;
-    console.log(`[TikTok API] Making request to: ${url}`);
-    
-    const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-            'x-rapidapi-key': apiKey,
-            'x-rapidapi-host': RAPIDAPI_HOST
+    try {
+        const result = await apiClient.get(API_CONFIG.ENDPOINTS.TIKTOK.USER_POSTS, {
+            pathParams: { secUid },
+            params: { count, cursor }
+        });
+        
+        console.log(`[TikTok API] Success! Response data structure:`, {
+            hasData: !!result,
+            dataType: typeof result,
+            hasDataObject: !!result.data,
+            hasItemList: !!result.data?.itemList,
+            itemListLength: result.data?.itemList?.length || 0,
+            sampleKeys: result && typeof result === 'object' ? Object.keys(result).slice(0, 5) : null
+        });
+        
+        if (result.data?.itemList) {
+            console.log(`[TikTok API] Found ${result.data.itemList.length} items in response`);
         }
-    });
-    
-    console.log(`[TikTok API] Response status: ${response.status} ${response.statusText}`);
-    
-    if (!response.ok) {
-        const errorText = await response.text();
-        console.error(`[TikTok API] Error response body:`, errorText);
-        throw new Error(`TikTok API error: ${response.status} - ${errorText}`);
-    }
-    
-    // Handle 204 No Content response (user has no popular posts)
-    if (response.status === 204) {
-        console.log(`[TikTok API] No content (204) - user has no popular posts`);
+        
         trackOperation('tiktok', 'request');
-        return { data: { itemList: [] } }; // Return empty list structure
+        return result;
+    } catch (error) {
+        console.error(`[TikTok API] Error fetching user popular posts:`, error.message);
+        throw new Error(`TikTok API error: ${error.message}`);
     }
-    
-    const result = await response.json();
-    console.log(`[TikTok API] Success! Response data structure:`, {
-        hasData: !!result,
-        dataType: typeof result,
-        hasDataObject: !!result.data,
-        hasItemList: !!result.data?.itemList,
-        itemListLength: result.data?.itemList?.length || 0,
-        sampleKeys: result && typeof result === 'object' ? Object.keys(result).slice(0, 5) : null
-    });
-    
-    if (result.data?.itemList) {
-        console.log(`[TikTok API] Found ${result.data.itemList.length} items in response`);
-    }
-    
-    trackOperation('tiktok', 'request');
-    return result;
 }
 
 /**
- * Search TikTok videos with pagination support to get more results
+ * Search TikTok videos with pagination support to get more results via backend
  * @param {string} keyword - Search keyword
  * @param {number} maxResults - Maximum number of results to fetch (default: 36)
  * @returns {Promise<Object>} Combined search results with all items
