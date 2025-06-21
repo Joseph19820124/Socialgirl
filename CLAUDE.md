@@ -151,3 +151,35 @@ docker-compose --profile dev up -d
 1. 将 `.env` 文件挂载到容器中（推荐用于本地开发）
 2. 在 docker-compose.yml 中直接设置环境变量
 3. 使用 Docker secrets 管理敏感信息（推荐用于生产环境）
+
+## Zeabur 云部署
+
+项目支持部署到 Zeabur 云平台，提供完整的容器化部署解决方案。
+
+### 快速部署到 Zeabur
+
+**准备文件：**
+- `Dockerfile.zeabur`：优化的生产环境 Dockerfile
+- `nginx.zeabur.conf`：适配 Zeabur 的 Nginx 配置
+- `zbpack.json`：Zeabur 构建配置
+- `.env.zeabur`：环境变量模板
+
+**部署步骤：**
+```bash
+# 1. 推送代码到 Git 仓库
+git add .
+git commit -m "Add Zeabur deployment configuration"
+git push origin main
+
+# 2. 在 Zeabur 控制台创建项目并连接仓库
+# 3. 配置环境变量（API 密钥）
+# 4. 部署完成，获得公网域名
+```
+
+**关键配置：**
+- 端口：8080（Zeabur 标准）
+- 健康检查：`/health` 端点
+- 非特权用户运行
+- 自动 HTTPS 和 CDN 加速
+
+详细部署指南请参考 `ZEABUR_DEPLOY.md`。
