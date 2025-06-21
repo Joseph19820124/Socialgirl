@@ -115,3 +115,46 @@
         font-size: 13px;
     }
 }
+
+/* Authentication section styles */
+.nav-auth-section {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.nav-user-info {
+    padding: var(--aurora-space-lg) 25px;
+    color: var(--aurora-text-primary);
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.8;
+}
+
+.nav-username {
+    color: var(--aurora-cyan);
+    font-weight: 600;
+}
+
+.auth-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+}
+
+@media (max-width: 768px) {
+    .nav-auth-section {
+        margin-top: 1rem;
+        padding-top: 1rem;
+    }
+    
+    .nav-user-info {
+        padding: var(--aurora-space-xl) 30px;
+        font-size: 14px;
+    }
+}
