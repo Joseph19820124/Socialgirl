@@ -172,6 +172,11 @@ git commit -m "Add Zeabur deployment configuration"
 git push origin main
 
 # 2. 在 Zeabur 控制台创建项目并连接仓库
+#    - 访问 zeabur.com，使用 GitHub 账户登录
+#    - 创建新项目，选择合适的区域（香港/美西/法兰克福）
+#    - 添加 Git 服务，授权访问 GitHub 仓库
+#    - 选择 Socialgirl 仓库和 main 分支
+#    - 确认 Docker 构建配置（自动检测 zbpack.json）
 # 3. 配置环境变量（API 密钥）
 # 4. 部署完成，获得公网域名
 ```
