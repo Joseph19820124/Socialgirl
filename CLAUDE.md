@@ -188,3 +188,5 @@ git push origin main
 - 自动 HTTPS 和 CDN 加速
 
 详细部署指南请参考 `ZEABUR_DEPLOY.md`。
+
+https://girlsy.zeabur.app/youtube
