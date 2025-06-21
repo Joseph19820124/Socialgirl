@@ -1,17 +1,8 @@
-import { getApiKey } from '../utils/apiKeyManager';
+import { apiClient, API_CONFIG } from '../config/api';
 import { trackOperation, canPerformOperation } from '../utils/quotaManager';
 
-// Get API key from storage or environment  
-async function getRapidApiKey() {
-    return await getApiKey('rapidApiKey', 'VITE_RAPIDAPI_KEY');
-}
-
-// Instagram RapidAPI configuration - using Vite proxy to bypass CORS
-const RAPIDAPI_HOST = 'instagram-scraper-20251.p.rapidapi.com';
-const BASE_URL = `/api/instagram`; // Vite proxy will route to https://instagram-scraper-20251.p.rapidapi.com
-
 /**
- * Search for Instagram reels by keyword
+ * Search for Instagram reels by keyword via backend
  * @param {string} keyword - Search keyword
  * @param {string} paginationToken - Optional pagination token for fetching more results
  * @returns {Promise<Object>} Search results response
@@ -25,46 +16,17 @@ async function searchReels(keyword, paginationToken = null) {
         throw new Error(errorMsg);
     }
     
-    const apiKey = await getRapidApiKey();
-    if (!apiKey) {
-        throw new Error('RapidAPI key not found. Please configure it in Settings.');
-    }
-    
-    console.log(`[Instagram API] API key retrieved successfully (length: ${apiKey.length})`);
-    
-    let url = `${BASE_URL}/searchreels/?keyword=${encodeURIComponent(keyword)}`;
-    if (paginationToken) {
-        url += `&pagination_token=${encodeURIComponent(paginationToken)}`;
-        console.log(`[Instagram API] Using pagination token`);
-    }
-    console.log(`[Instagram API] Making request to: ${url}`);
-    
-    const options = {
-        method: 'GET',
-        headers: {
-            'x-rapidapi-key': apiKey
-            // x-rapidapi-host header is added by Vite proxy
-        }
-    };
-    
-    console.log(`[Instagram API] Request headers:`, {
-        'x-rapidapi-key': `${apiKey.substring(0, 8)}...`, // Log only first 8 chars for security
-        'x-rapidapi-host': `${RAPIDAPI_HOST} (added by Vite proxy)`
-    });
-    
     try {
-        const response = await fetch(url, options);
-        
-        console.log(`[Instagram API] Response status: ${response.status} ${response.statusText}`);
-        console.log(`[Instagram API] Response headers:`, Object.fromEntries(response.headers.entries()));
-        
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error(`Instagram API: Error response body:`, errorText);
-            throw new Error(`Instagram API error: ${response.status} - ${errorText}`);
+        const params = { keyword };
+        if (paginationToken) {
+            params.pagination_token = paginationToken;
+            console.log(`[Instagram API] Using pagination token`);
         }
         
-        const result = await response.json();
+        const result = await apiClient.get(API_CONFIG.ENDPOINTS.INSTAGRAM.SEARCH_REELS, {
+            params
+        });
+        
         console.log(`[Instagram API] Success! Response data structure:`, {
             hasData: !!result,
             dataType: typeof result,
@@ -84,7 +46,7 @@ async function searchReels(keyword, paginationToken = null) {
 }
 
 /**
- * Fetch user reels/posts from Instagram
+ * Fetch user reels/posts from Instagram via backend
  * @param {string} usernameOrId - Instagram username or user ID
  * @param {string} paginationToken - Optional pagination token for fetching more results
  * @returns {Promise<Object>} User reels data response
@@ -98,46 +60,18 @@ async function getUserReels(usernameOrId, paginationToken = null) {
         throw new Error(errorMsg);
     }
     
-    const apiKey = await getRapidApiKey();
-    if (!apiKey) {
-        throw new Error('RapidAPI key not found. Please configure it in Settings.');
-    }
-    
-    console.log(`[Instagram API] API key retrieved successfully (length: ${apiKey.length})`);
-    
-    let url = `${BASE_URL}/userreels/?username_or_id=${encodeURIComponent(usernameOrId)}`;
-    if (paginationToken) {
-        url += `&pagination_token=${encodeURIComponent(paginationToken)}`;
-        console.log(`[Instagram API] Using pagination token`);
-    }
-    console.log(`[Instagram API] Making request to: ${url}`);
-    
-    const options = {
-        method: 'GET',
-        headers: {
-            'x-rapidapi-key': apiKey
-            // x-rapidapi-host header is added by Vite proxy
-        }
-    };
-    
-    console.log(`[Instagram API] Request headers:`, {
-        'x-rapidapi-key': `${apiKey.substring(0, 8)}...`, // Log only first 8 chars for security
-        'x-rapidapi-host': `${RAPIDAPI_HOST} (added by Vite proxy)`
-    });
-    
     try {
-        const response = await fetch(url, options);
-        
-        console.log(`[Instagram API] Response status: ${response.status} ${response.statusText}`);
-        console.log(`[Instagram API] Response headers:`, Object.fromEntries(response.headers.entries()));
-        
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error(`Instagram API: Error response body:`, errorText);
-            throw new Error(`Instagram API error: ${response.status} - ${errorText}`);
+        const params = {};
+        if (paginationToken) {
+            params.pagination_token = paginationToken;
+            console.log(`[Instagram API] Using pagination token`);
         }
         
-        const result = await response.json();
+        const result = await apiClient.get(API_CONFIG.ENDPOINTS.INSTAGRAM.USER_REELS, {
+            pathParams: { username: usernameOrId },
+            params
+        });
+        
         console.log(`[Instagram API] Success! Response data structure:`, {
             hasData: !!result,
             dataType: typeof result,
@@ -157,7 +91,7 @@ async function getUserReels(usernameOrId, paginationToken = null) {
 }
 
 /**
- * Search for Instagram reels with pagination support to get more results
+ * Search for Instagram reels with pagination support to get more results via backend
  * @param {string} keyword - Search keyword
  * @param {number} maxResults - Maximum number of results to fetch (default: 24)
  * @returns {Promise<Object>} Combined search results with all items and pagination info
@@ -232,7 +166,7 @@ async function searchReelsWithPagination(keyword, maxResults = 24) {
 }
 
 /**
- * Fetch user reels with pagination support to get more results
+ * Fetch user reels with pagination support to get more results via backend
  * @param {string} usernameOrId - Instagram username or user ID
  * @param {number} maxResults - Maximum number of results to fetch (default: 24)
  * @returns {Promise<Object>} Combined user reels with all items and pagination info
@@ -312,17 +246,6 @@ async function getUserReelsWithPagination(usernameOrId, maxResults = 24) {
         console.log(`[Instagram API] Pagination complete. Total unique items: ${allItems.length}`);
         
         // Return in the same format as the original API response
-        // Check if original response was array or object format
-        if (Array.isArray(allItems) && allItems.length > 0) {
-            return {
-                data: {
-                    items: allItems,
-                    count: allItems.length
-                },
-                pagination_token: paginationToken // Include last pagination token if user wants to continue
-            };
-        }
-        
         return {
             data: {
                 items: allItems,

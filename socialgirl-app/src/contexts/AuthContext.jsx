@@ -67,67 +67,110 @@ export const AuthProvider = ({ children }) => {
 
     const register = async (userData) => {
         try {
-            const existingUsers = JSON.parse(localStorage.getItem('socialgirl_users') || '[]');
-            
-            if (existingUsers.find(u => u.email === userData.email)) {
-                throw new Error('用户已存在');
-            }
 
-            const newUser = {
-                id: Date.now().toString(),
-                email: userData.email,
+            console.log('[Auth] Attempting to register user:', { 
+                email: userData.email, 
+                username: userData.username 
+            });
+
+            // 调用后端注册API
+            const response = await apiClient.post(API_CONFIG.ENDPOINTS.AUTH.REGISTER, {
                 username: userData.username,
-                password: userData.password,
-                createdAt: new Date().toISOString()
-            };
+                email: userData.email,
+                password: userData.password
+            });
 
-            existingUsers.push(newUser);
-            localStorage.setItem('socialgirl_users', JSON.stringify(existingUsers));
+            if (response.success && response.user) {
+                const userSession = {
+                    id: response.user.id,
+                    email: response.user.email,
+                    username: response.user.username
+                };
 
-            const userSession = {
-                id: newUser.id,
-                email: newUser.email,
-                username: newUser.username
-            };
+                // 如果后端返回token，保存它
+                if (response.token) {
+                    localStorage.setItem('socialgirl_auth_token', response.token);
+                    apiClient.setToken(response.token);
+                }
 
-            setUser(userSession);
-            localStorage.setItem('socialgirl_user', JSON.stringify(userSession));
+                setUser(userSession);
+                localStorage.setItem('socialgirl_user', JSON.stringify(userSession));
 
-            return { success: true };
+                console.log('[Auth] Registration successful');
+                return { success: true };
+            } else {
+                throw new Error(response.error || '注册失败');
+            }
         } catch (error) {
+            console.error('[Auth] Registration failed:', error.message);
+
             return { success: false, error: error.message };
         }
     };
 
     const login = async (credentials) => {
         try {
-            const existingUsers = JSON.parse(localStorage.getItem('socialgirl_users') || '[]');
-            const user = existingUsers.find(u => 
-                u.email === credentials.email && u.password === credentials.password
-            );
 
-            if (!user) {
-                throw new Error('邮箱或密码错误');
+            console.log('[Auth] Attempting to login user:', { 
+                email: credentials.email 
+            });
+
+            // 调用后端登录API
+            const response = await apiClient.post(API_CONFIG.ENDPOINTS.AUTH.LOGIN, {
+                email: credentials.email,
+                password: credentials.password
+            });
+
+            if (response.success && response.user) {
+                const userSession = {
+                    id: response.user.id,
+                    email: response.user.email,
+                    username: response.user.username
+                };
+
+                // 保存token
+                if (response.token) {
+                    localStorage.setItem('socialgirl_auth_token', response.token);
+                    apiClient.setToken(response.token);
+                }
+
+                setUser(userSession);
+                localStorage.setItem('socialgirl_user', JSON.stringify(userSession));
+
+                console.log('[Auth] Login successful');
+                return { success: true };
+            } else {
+                throw new Error(response.error || '登录失败');
             }
-
-            const userSession = {
-                id: user.id,
-                email: user.email,
-                username: user.username
-            };
-
-            setUser(userSession);
-            localStorage.setItem('socialgirl_user', JSON.stringify(userSession));
-
-            return { success: true };
         } catch (error) {
+            console.error('[Auth] Login failed:', error.message);
+
             return { success: false, error: error.message };
         }
     };
 
-    const logout = () => {
-        setUser(null);
-        localStorage.removeItem('socialgirl_user');
+
+    const logout = async () => {
+        try {
+            // 如果有token，通知后端登出（可选）
+            if (apiClient.getToken()) {
+                try {
+                    await apiClient.post(API_CONFIG.ENDPOINTS.AUTH.LOGOUT);
+                } catch (error) {
+                    console.warn('[Auth] Logout API call failed (non-critical):', error.message);
+                }
+            }
+        } catch (error) {
+            console.warn('[Auth] Logout cleanup error:', error.message);
+        } finally {
+            // 无论后端调用是否成功，都清理本地状态
+            setUser(null);
+            localStorage.removeItem('socialgirl_user');
+            localStorage.removeItem('socialgirl_auth_token');
+            apiClient.clearToken();
+            console.log('[Auth] User logged out and tokens cleared');
+        }
+
     };
 
     const contextValue = {
