@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { apiClient, API_CONFIG } from '../config/api';
 
 const AuthContext = createContext({
     user: null,
@@ -23,36 +22,52 @@ export const AuthProvider = ({ children }) => {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        // 检查本地存储的认证token
-        const checkAuthToken = async () => {
-            const token = localStorage.getItem('socialgirl_auth_token');
-            const userData = localStorage.getItem('socialgirl_user');
-            
-            if (token && userData) {
-                try {
-                    // 设置token到API客户端
-                    apiClient.setToken(token);
-                    
-                    // 验证token是否仍然有效（可选，发送到后端验证）
-                    const parsedUser = JSON.parse(userData);
-                    setUser(parsedUser);
-                    console.log('[Auth] Restored user session from local storage');
-                } catch (error) {
-                    console.error('[Auth] Failed to restore user session:', error);
-                    // 清理无效的数据
-                    localStorage.removeItem('socialgirl_auth_token');
-                    localStorage.removeItem('socialgirl_user');
-                    apiClient.clearToken();
+        // Initialize test users if none exist
+        const existingUsers = JSON.parse(localStorage.getItem('socialgirl_users') || '[]');
+        if (existingUsers.length === 0) {
+            const testUsers = [
+                {
+                    id: '1',
+                    email: 'test@example.com',
+                    username: 'testuser',
+                    password: '123456',
+                    createdAt: new Date().toISOString()
+                },
+                {
+                    id: '2',
+                    email: 'admin@socialgirl.com',
+                    username: 'admin',
+                    password: 'admin123',
+                    createdAt: new Date().toISOString()
+                },
+                {
+                    id: '3',
+                    email: 'demo@demo.com',
+                    username: 'demo',
+                    password: 'demo123',
+                    createdAt: new Date().toISOString()
                 }
-            }
-            setIsLoading(false);
-        };
+            ];
+            localStorage.setItem('socialgirl_users', JSON.stringify(testUsers));
+            console.log('[Auth] Initialized test users');
+        }
 
-        checkAuthToken();
+        const storedUser = localStorage.getItem('socialgirl_user');
+        if (storedUser) {
+            try {
+                const userData = JSON.parse(storedUser);
+                setUser(userData);
+            } catch (error) {
+                console.error('[Auth] Failed to parse stored user data:', error);
+                localStorage.removeItem('socialgirl_user');
+            }
+        }
+        setIsLoading(false);
     }, []);
 
     const register = async (userData) => {
         try {
+
             console.log('[Auth] Attempting to register user:', { 
                 email: userData.email, 
                 username: userData.username 
@@ -88,12 +103,14 @@ export const AuthProvider = ({ children }) => {
             }
         } catch (error) {
             console.error('[Auth] Registration failed:', error.message);
+
             return { success: false, error: error.message };
         }
     };
 
     const login = async (credentials) => {
         try {
+
             console.log('[Auth] Attempting to login user:', { 
                 email: credentials.email 
             });
@@ -127,9 +144,11 @@ export const AuthProvider = ({ children }) => {
             }
         } catch (error) {
             console.error('[Auth] Login failed:', error.message);
+
             return { success: false, error: error.message };
         }
     };
+
 
     const logout = async () => {
         try {
@@ -151,6 +170,7 @@ export const AuthProvider = ({ children }) => {
             apiClient.clearToken();
             console.log('[Auth] User logged out and tokens cleared');
         }
+
     };
 
     const contextValue = {

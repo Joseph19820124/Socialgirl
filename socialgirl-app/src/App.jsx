@@ -6,12 +6,15 @@ import YouTubePage from './pages/YouTubePage';
 import InstagramPage from './pages/InstagramPage';
 import TikTokPage from './pages/TikTokPage';
 import SettingsPage from './pages/SettingsPage';
+import DebugPage from './pages/DebugPage';
 import usePlatformData from './hooks/usePlatformData';
 import useSearch from './hooks/useSearch';
 import { PLATFORMS, DEFAULT_PLATFORM } from './config/platforms';
 import { ApiKeyProvider, useApiKeys } from './contexts/ApiKeyContext';
 import { ToastProvider } from './contexts/ToastContext';
 import { DialogProvider } from './contexts/DialogContext';
+import { AuthProvider } from './contexts/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
 import { setApiKeyContextGetter } from './utils/apiKeyManager';
 import './App.css';
 
@@ -57,43 +60,50 @@ function AppContent() {
                     <Route 
                         path="/youtube" 
                         element={
-                            <YouTubePage 
-                                videosData={platformData.getPlatformData('youtube').videosData} 
-                                usersData={platformData.getPlatformData('youtube').usersData} 
-                                userVideosData={platformData.getPlatformData('youtube').userVideosData}
-                                isLoading={platformData.getPlatformData('youtube').isLoading}
-                                onSearch={handleYouTubeSearch}
-                                onClearData={() => platformData.clearPlatformData('youtube')}
-                            />
+                            <ProtectedRoute>
+                                <YouTubePage 
+                                    videosData={platformData.getPlatformData('youtube').videosData} 
+                                    usersData={platformData.getPlatformData('youtube').usersData} 
+                                    userVideosData={platformData.getPlatformData('youtube').userVideosData}
+                                    isLoading={platformData.getPlatformData('youtube').isLoading}
+                                    onSearch={handleYouTubeSearch}
+                                    onClearData={() => platformData.clearPlatformData('youtube')}
+                                />
+                            </ProtectedRoute>
                         } 
                     />
                     <Route 
                         path="/instagram" 
                         element={
-                            <InstagramPage 
-                                videosData={platformData.getPlatformData('instagram').videosData} 
-                                usersData={platformData.getPlatformData('instagram').usersData} 
-                                userVideosData={platformData.getPlatformData('instagram').userVideosData}
-                                isLoading={platformData.getPlatformData('instagram').isLoading}
-                                onSearch={handleInstagramSearch}
-                                onClearData={() => platformData.clearPlatformData('instagram')}
-                            />
+                            <ProtectedRoute>
+                                <InstagramPage 
+                                    videosData={platformData.getPlatformData('instagram').videosData} 
+                                    usersData={platformData.getPlatformData('instagram').usersData} 
+                                    userVideosData={platformData.getPlatformData('instagram').userVideosData}
+                                    isLoading={platformData.getPlatformData('instagram').isLoading}
+                                    onSearch={handleInstagramSearch}
+                                    onClearData={() => platformData.clearPlatformData('instagram')}
+                                />
+                            </ProtectedRoute>
                         } 
                     />
                     <Route 
                         path="/tiktok" 
                         element={
-                            <TikTokPage 
-                                videosData={platformData.getPlatformData('tiktok').videosData} 
-                                usersData={platformData.getPlatformData('tiktok').usersData} 
-                                userVideosData={platformData.getPlatformData('tiktok').userVideosData}
-                                isLoading={platformData.getPlatformData('tiktok').isLoading}
-                                onSearch={handleTikTokSearch}
-                                onClearData={() => platformData.clearPlatformData('tiktok')}
-                            />
+                            <ProtectedRoute>
+                                <TikTokPage 
+                                    videosData={platformData.getPlatformData('tiktok').videosData} 
+                                    usersData={platformData.getPlatformData('tiktok').usersData} 
+                                    userVideosData={platformData.getPlatformData('tiktok').userVideosData}
+                                    isLoading={platformData.getPlatformData('tiktok').isLoading}
+                                    onSearch={handleTikTokSearch}
+                                    onClearData={() => platformData.clearPlatformData('tiktok')}
+                                />
+                            </ProtectedRoute>
                         } 
                     />
                     <Route path="/settings" element={<SettingsPage />} />
+                    <Route path="/debug" element={<DebugPage />} />
                 </Routes>
             </div>
             </div>
@@ -109,16 +119,18 @@ function App() {
     };
 
     return (
-        <ApiKeyProvider>
-            <DialogProvider>
-                <ToastProvider>
-                    {isLoading && <Preloader onLoadComplete={handleLoadComplete} />}
-                    <Router>
-                        <AppContent />
-                    </Router>
-                </ToastProvider>
-            </DialogProvider>
-        </ApiKeyProvider>
+        <AuthProvider>
+            <ApiKeyProvider>
+                <DialogProvider>
+                    <ToastProvider>
+                        {isLoading && <Preloader onLoadComplete={handleLoadComplete} />}
+                        <Router>
+                            <AppContent />
+                        </Router>
+                    </ToastProvider>
+                </DialogProvider>
+            </ApiKeyProvider>
+        </AuthProvider>
     );
 }
 
