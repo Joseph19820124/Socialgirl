@@ -6,6 +6,7 @@ import YouTubePage from './pages/YouTubePage';
 import InstagramPage from './pages/InstagramPage';
 import TikTokPage from './pages/TikTokPage';
 import SettingsPage from './pages/SettingsPage';
+import DebugPage from './pages/DebugPage';
 import usePlatformData from './hooks/usePlatformData';
 import useSearch from './hooks/useSearch';
 import { PLATFORMS, DEFAULT_PLATFORM } from './config/platforms';
@@ -94,6 +95,7 @@ function AppContent() {
                         } 
                     />
                     <Route path="/settings" element={<SettingsPage />} />
+                    <Route path="/debug" element={<DebugPage />} />
                 </Routes>
             </div>
             </div>

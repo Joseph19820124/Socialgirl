@@ -1,4 +1,5 @@
 import { loadEncryptedSettings } from './encryption';
+import { getEnvVar } from './env';
 
 // Global variable to store API key context getter
 // This will be set by the ApiKeyProvider when the app initializes
@@ -47,9 +48,9 @@ export async function getApiKey(keyName, envVar) {
             console.log('[API Key Manager] No encrypted settings found in localStorage');
         }
         
-        // Third priority: Fall back to environment variable
+        // Third priority: Fall back to environment variable (runtime or buildtime)
         console.log(`[API Key Manager] Checking environment variable: ${envVar}`);
-        const envValue = import.meta.env[envVar];
+        const envValue = getEnvVar(envVar);
         if (envValue) {
             console.log(`[API Key Manager] Found key in environment: ${envVar} (length: ${envValue.length})`);
             return envValue;
