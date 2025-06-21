@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  socialgirl-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    environment:
+      - NODE_ENV=production
+    volumes:
+      # 可选：挂载环境变量文件
+      - ./socialgirl-app/.env:/usr/share/nginx/html/.env:ro
+    restart: unless-stopped
+    container_name: socialgirl-app
+    
+  # 可选：添加开发环境服务
+  socialgirl-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./socialgirl-app:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    restart: unless-stopped
+    container_name: socialgirl-dev
+    profiles:
+      - dev
+
+networks:
+  default:
+    name: socialgirl-network
