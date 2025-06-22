@@ -25,6 +25,7 @@ export const useColumnResize = (columns) => {
             'comments': 70,
             'likes': 70,
             'shares': 70,
+            'published': 90,
             'performance': 70,
             
             // Users table specific columns
@@ -54,6 +55,7 @@ export const useColumnResize = (columns) => {
             'comments': 70,
             'likes': 70,
             'shares': 70,
+            'published': 80,
             'performance': 70,
             
             // Users table specific columns
